@@ -1,2 +1,2 @@
 # procedural-forest
-Final project for cs123 with Smitri Vaidyanathan, Krishi Saripalli, Neil Xu
+Final project for cs123 with Smriti Vaidyanathan, Krishi Saripalli, Neil Xu
