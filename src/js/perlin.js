@@ -2,9 +2,9 @@ import { createNoise2D } from "simplex-noise";
 
 export var perlinParams = new (function () {
   this.OCTAVECNT = 3;
-  this.LACUNARITY = 2;
-  this.PERSISTANCE = 0.5;
-  this.SMOOTHING = 450;
+  this.LACUNARITY = 2.4;
+  this.PERSISTANCE = 0.22;
+  this.SMOOTHING = 700;
 })();
 
 const NOISE2D = createNoise2D();

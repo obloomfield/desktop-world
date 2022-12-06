@@ -7,11 +7,13 @@ export var stats = new Stats();
 
 export function makeGUI() {
   const gui = new GUI();
+  const generalFolder = gui.addFolder("General");
+  // generalFolder.add(terrainParams, "FLAT_SHADING");
   const centerFolder = gui.addFolder("Center");
   centerFolder.add(terrainParams.ORIGIN, "x", -50, 50);
   centerFolder.add(terrainParams.ORIGIN, "y", -50, 50);
   const terrainFolder = gui.addFolder("Terrain");
-  terrainFolder.add(terrainParams, "PEAK", 0, 100);
+  terrainFolder.add(terrainParams, "PEAK", 0, 500);
   terrainFolder.add(terrainParams, "RAD", 200, 1000);
   const perlinFolder = gui.addFolder("Perlin");
   perlinFolder.add(perlinParams, "OCTAVECNT", 1, 10);

@@ -29,7 +29,7 @@ light.position
   .normalize();
 scene.add(light);
 
-var geometry = new THREE.PlaneGeometry(800, 800, 20, 20);
+var geometry = new THREE.PlaneGeometry(1000, 1000, 20, 20);
 var material = new THREE.MeshStandardMaterial({
   color: 0x00ff00,
   side: THREE.DoubleSide,
