@@ -1,5 +1,6 @@
 import { GUI } from "dat.gui";
 import Stats from "stats.js";
+import { fireflyParams } from "./particles";
 import { perlinParams } from "./perlin";
 import { terrainParams } from "./terrain";
 
@@ -20,6 +21,8 @@ export function makeGUI() {
   perlinFolder.add(perlinParams, "LACUNARITY", 1, 10);
   perlinFolder.add(perlinParams, "PERSISTANCE", 0, 1);
   perlinFolder.add(perlinParams, "SMOOTHING", 1, 1000);
+  const fireflyFolder = gui.addFolder("Firefly");
+  fireflyFolder.add(fireflyParams, "FLY_RADIUS", 200, 1000);
 }
 
 export function makeStats() {

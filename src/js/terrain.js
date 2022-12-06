@@ -31,10 +31,7 @@ export function updateTerrain(terrain) {
       perlin(perlinParams, verts[i], verts[i + 1]);
   }
   terrain.geometry.attributes.position.needsUpdate = true;
-  if (terrainParams.FLAT_SHADING) {
-    terrain.geometry = terrain.geometry.toNonIndexed();
-  }
-  // no way back from flat shading !! loss of info !!
 
+  // no way back from flat shading !! loss of info !!
   terrain.geometry.computeVertexNormals();
 }
