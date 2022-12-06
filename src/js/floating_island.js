@@ -60,36 +60,63 @@ export function generateBase(x, y, n, w, h) {
 
     // const x = 0, y = 0, z = 0;
     const base = new THREE.Shape();
-    const hull = outerHull(sample2D(n, w, h));
+    // const hull = outerHull(sample2D(n, w, h));
 
-    const randPoints = sample2D(50, w, h);
+    const randPoints = sample2D(100, w, h);
     const coords = randPoints.flat();
     const delaunay = new Delaunator(coords);
+
+    const hullSet = new Set();
+    for (var i = 0; i < delaunay.hull.length; i++) {
+        var randCoord = randPoints[delaunay.hull[i]];
+        // console.log("RAND COORD " + randCoord);
+        hullSet.add(randCoord[0].toString() + "," + randCoord[1].toString());
+    }
+    // console.log(hullSet);
 
     const vertices = forEachTriangle(randPoints, delaunay, handleTriangle);
     
     var geometry = new THREE.BufferGeometry();
+    var geometry2 = new THREE.BufferGeometry();
     geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+    geometry2.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+
     geometry = BufferGeometryUtils.mergeVertices(geometry);
+    geometry2 = BufferGeometryUtils.mergeVertices(geometry2);
+
+    augmentVerts(geometry, hullSet, true);
+    augmentVerts(geometry2, hullSet, false);
+
+    console.log(geometry, geometry2);
+    var merged = BufferGeometryUtils.mergeBufferGeometries([geometry, geometry2]);
+
     var material = new THREE.MeshStandardMaterial({
         color: 0xff3951,
         side: THREE.DoubleSide,
       });
-    const mesh = new THREE.Mesh( geometry, material );
-
-    augmentVerts(mesh);
-
+    const mesh = new THREE.Mesh( merged, material );
     mesh.rotation.x = -Math.PI / 2;
-    mesh.translateZ(10);
+    mesh.translateZ(100);
     return mesh; // scene.add( mesh );
 }
 
 
-function augmentVerts(mesh) {
-    var verts = mesh.geometry.attributes.position.array;
-    for (var i = 0; i <= verts.length; i += 3) {
-        verts[i + 2] += Math.floor(Math.random() * 30);
+function augmentVerts(geometry, hull, positive) {
+    var verts = geometry.attributes.position.array;
+    const zVals = [];
+    for (var i = 0; i < verts.length; i += 3) {
+        // console.log("VERTS, " + verts[i] + " " + verts[i+1]);
+        var testStr = verts[i].toString() + "," + verts[i+1].toString();
+        
+        if (hull.has(testStr)) {
+            // console.log("CHECKING " + testStr);
+            continue;
+        }
+        var newZ = Math.floor(Math.random() * 30);
+        newZ *= positive ? 1 : -3;
+        
+        verts[i + 2] += newZ;
     }
-    mesh.geometry.attributes.position.needsUpdate = true;
-    mesh.geometry.computeVertexNormals();
+    geometry.attributes.position.needsUpdate = true;
+    geometry.computeVertexNormals();
 }
