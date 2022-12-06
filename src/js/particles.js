@@ -16,4 +16,5 @@ export function updateFirefly(particle, elapsed) {
   particle.position.x = fireflyParams.FLY_RADIUS * Math.sin(elapsed);
   particle.position.z = fireflyParams.FLY_RADIUS * Math.cos(elapsed);
   particle.position.y = (fireflyParams.FLY_RADIUS * Math.cos(elapsed)) / 2 + 1;
+  // particle.rotateOnAxis(axis, speed);
 }
