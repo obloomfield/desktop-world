@@ -6,6 +6,8 @@ import { Vector2 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../public/style.css";
 
+import {generateBase} from "./floating_island.js"
+
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 
@@ -42,6 +44,9 @@ var terrain = new THREE.Mesh(geometry, material);
 terrain.rotation.x = -Math.PI / 2;
 scene.add(terrain);
 
+const islandBase = generateBase(0,0,50,100,100);
+scene.add(islandBase);
+
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
 controls.enableDamping = true;
@@ -65,7 +70,7 @@ function falloff(point, rad) {
 }
 
 const NOISE2D = createNoise2D();
-const PEAK = 60;
+const PEAK = 1;
 const RAD = 400;
 function updateMesh() {
   var verts = terrain.geometry.attributes.position.array;
