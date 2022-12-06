@@ -1,7 +1,5 @@
 import * as THREE from "three";
-import { Vector2 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { generateUUID } from "three/src/math/MathUtils";
 import "../public/style.css";
 import { addLights, updateSun } from "./lighting";
 
@@ -31,7 +29,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(WIDTH, HEIGHT);
 document.body.appendChild(renderer.domElement);
 
-addLights(scene, camera);
+var [sunlight, hemiLight] = addLights(scene, camera);
 
 var geometry = new THREE.PlaneGeometry(1000, 1000, 20, 20);
 var material = new THREE.MeshStandardMaterial({
@@ -56,7 +54,6 @@ controls.dampingFactor = 0.05;
 
 var clock = new THREE.Clock();
 
-const SPEED = 100;
 var i = 0;
 function update() {
   var delta = clock.getDelta();

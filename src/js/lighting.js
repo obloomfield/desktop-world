@@ -9,23 +9,22 @@ export var sunParams = new (function () {
   this.ORBIT_SPEED = 0.005;
 })();
 
-var sunlight = new THREE.DirectionalLight(0xffffff, 1);
-var pivot = new THREE.Object3D();
-
-export var sun = new THREE.Mesh(
-  new THREE.SphereGeometry(5, 5, 5),
-  new THREE.MeshBasicMaterial({ color: 0xffff000 })
-);
+var sun_pivot = new THREE.Object3D();
 
 export function addLights(scene, camera) {
+  var sunlight = new THREE.DirectionalLight(0xffffff, 1);
   sunlight.position
     .set(camera.position.x, camera.position.y + 500, camera.position.z + 500)
     .normalize();
   scene.add(sunlight);
   console.log(sunlight.color);
 
-  pivot.add(sun);
-  pivot.add(sunlight);
+  var sun = new THREE.Mesh(
+    new THREE.SphereGeometry(5, 5, 5),
+    new THREE.MeshBasicMaterial({ color: 0xffff000 })
+  );
+  sun_pivot.add(sun);
+  sun_pivot.add(sunlight);
 
   sun.position.set(0, 500, 0);
   sunlight.position.set(
@@ -34,7 +33,7 @@ export function addLights(scene, camera) {
     sun.position.z * 300
   );
   console.log(sun.position);
-  scene.add(pivot);
+  scene.add(sun_pivot);
 
   const hemiLight = new THREE.HemisphereLight(
     0xffffff,
@@ -45,9 +44,10 @@ export function addLights(scene, camera) {
   hemiLight.groundColor.setHSL(0.095, 1, 0.75);
   hemiLight.position.set(0, 50, 0);
   scene.add(hemiLight);
+  return [sunlight, hemiLight];
 }
 
 export function updateSun() {
-  pivot.rotateOnAxis(sunParams.SUN_AXIS, sunParams.ORBIT_SPEED);
+  sun_pivot.rotateOnAxis(sunParams.SUN_AXIS, sunParams.ORBIT_SPEED);
   // console.log(sunlight.rotation);
 }
