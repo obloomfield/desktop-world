@@ -3,7 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../public/style.css";
 import { addLights, updateSun } from "./lighting";
 
-import { createFireFly, updateFirefly } from "./particles";
+import { createClusters, updateParticles } from "./particles";
 import { terrainParams, updateTerrain } from "./terrain";
 import { makeGUI, makeStats, stats } from "./ui";
 
@@ -45,7 +45,7 @@ if (terrainParams.FLAT_SHADING) {
 terrain.rotation.x = -Math.PI / 2;
 scene.add(terrain);
 
-var firefly = createFireFly(scene);
+createClusters(scene);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
@@ -62,7 +62,7 @@ function update() {
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
   updateSun();
-  updateFirefly(firefly, elapsed);
+  updateParticles(elapsed, scene);
   updateTerrain(terrain);
   i++;
 }

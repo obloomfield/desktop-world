@@ -29,7 +29,10 @@ export function makeGUI() {
   perlinFolder.add(perlinParams, "PERSISTANCE", 0, 1);
   perlinFolder.add(perlinParams, "SMOOTHING", 1, 1000);
   const particleFolder = gui.addFolder("Particles");
-  particleFolder.add(fireflyParams, "FLY_RADIUS", 200, 1000);
+  particleFolder.add(fireflyParams, "SPREAD", 1, 50);
+  particleFolder.add(fireflyParams, "NUMCLUSTERS", 1, 5);
+
+
 }
 
 export function makeStats() {
