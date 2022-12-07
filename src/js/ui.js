@@ -23,6 +23,7 @@ export function makeGUI() {
   const terrainFolder = gui.addFolder("Terrain");
   terrainFolder.add(terrainParams, "PEAK", 0, 500);
   terrainFolder.add(terrainParams, "RAD", 200, 1000);
+  terrainFolder.add(terrainParams, "SHOW_INTERSECTION");
   const perlinFolder = gui.addFolder("Perlin");
   perlinFolder.add(perlinParams, "OCTAVECNT", 1, 10);
   perlinFolder.add(perlinParams, "LACUNARITY", 1, 10);

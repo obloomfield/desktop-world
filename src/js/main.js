@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../public/style.css";
+import { setupEvents } from "./events";
 import { addLights, updateSun } from "./lighting";
 
 import { createFireFly, updateFirefly } from "./particles";
@@ -39,9 +40,10 @@ var material = new THREE.MeshStandardMaterial({
   transparent: true,
 });
 var terrain = new THREE.Mesh(geometry, material);
-if (terrainParams.FLAT_SHADING) {
-  terrain.geometry = terrain.geometry.toNonIndexed();
-}
+
+// if (terrainParams.FLAT_SHADING) {
+//   terrain.geometry = terrain.geometry.toNonIndexed();
+// }
 terrain.rotation.x = -Math.PI / 2;
 scene.add(terrain);
 
@@ -81,4 +83,5 @@ function loop() {
 }
 makeStats();
 makeGUI();
+setupEvents(renderer, terrain, camera, scene);
 loop();
