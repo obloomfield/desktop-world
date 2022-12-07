@@ -5,8 +5,10 @@ export var fireflyParams = new (function () {
 })();
 
 export function createFireFly(scene) {
+  
   let particle = new THREE.Sprite();
-  particle.scale.set(5, 5, 5);
+  particle.material.color.set("#EF8AFF")
+  particle.scale.set(20, 20, 20);
   particle.position.set(0, 100, 0);
   scene.add(particle);
   return particle;

@@ -6,25 +6,27 @@ export var lightParams = new (function () {
 
 export var sunParams = new (function () {
   this.SUN_AXIS = new THREE.Vector3(4, 0, 7).normalize();
-  this.ORBIT_SPEED = 0.005;
+  this.ORBIT_SPEED = 0.01;
 })();
 
 var sun_pivot = new THREE.Object3D();
 
 export function addLights(scene, camera) {
-  var sunlight = new THREE.DirectionalLight(0xffffff, 1);
+  var sunlight = new THREE.DirectionalLight(0xffffff, 0.5);
   sunlight.position
     .set(camera.position.x, camera.position.y + 500, camera.position.z + 500)
     .normalize();
+    
   scene.add(sunlight);
   console.log(sunlight.color);
 
   var sun = new THREE.Mesh(
-    new THREE.SphereGeometry(5, 5, 5),
-    new THREE.MeshBasicMaterial({ color: 0xffff000 })
+    new THREE.SphereGeometry(20, 20, 20),
+    new THREE.MeshBasicMaterial({ color: 0xEF8AFF })
   );
   sun_pivot.add(sun);
   sun_pivot.add(sunlight);
+  
 
   sun.position.set(0, 500, 0);
   sunlight.position.set(
@@ -32,6 +34,7 @@ export function addLights(scene, camera) {
     sun.position.y * 300,
     sun.position.z * 300
   );
+  
   console.log(sun.position);
   scene.add(sun_pivot);
 
@@ -49,5 +52,6 @@ export function addLights(scene, camera) {
 
 export function updateSun() {
   sun_pivot.rotateOnAxis(sunParams.SUN_AXIS, sunParams.ORBIT_SPEED);
+  
   // console.log(sunlight.rotation);
 }

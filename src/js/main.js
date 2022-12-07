@@ -1,6 +1,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../public/style.css";
+
+import {EffectComposer} from "three/examples/jsm/postprocessing/EffectComposer.js";
+import {RenderPass} from "three/examples/jsm/postprocessing/RenderPass.js";
+import {UnrealBloomPass} from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+
 import { addLights, updateSun } from "./lighting";
 
 import { createFireFly, updateFirefly } from "./particles";
@@ -10,11 +15,13 @@ import { makeGUI, makeStats, stats } from "./ui";
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 
+
+
 const loader = new THREE.TextureLoader();
 const alpha = loader.load("/public/alpha3.png");
 
 var scene = new THREE.Scene();
-scene.background = new THREE.Color().setHSL(0.3, 0, 0.8);
+scene.background = new THREE.Color("black")
 // scene.fog = new THREE.Fog(scene.background, 1, 5000);
 
 var camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 1, 3000);
@@ -43,7 +50,7 @@ if (terrainParams.FLAT_SHADING) {
   terrain.geometry = terrain.geometry.toNonIndexed();
 }
 terrain.rotation.x = -Math.PI / 2;
-scene.add(terrain);
+// scene.add(terrain);
 
 var firefly = createFireFly(scene);
 
@@ -53,6 +60,11 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
 var clock = new THREE.Clock();
+
+//bloom
+var composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new UnrealBloomPass({x: 1024, y: 1024}, 2.0, 0.0, 0.5));
 
 var i = 0;
 function update() {
@@ -69,7 +81,8 @@ function update() {
 
 function render() {
   controls.update();
-  renderer.render(scene, camera);
+  // renderer.render(scene, camera);
+  composer.render();
 }
 
 function loop() {
