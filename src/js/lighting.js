@@ -9,7 +9,7 @@ export var sunParams = new (function () {
   this.ORBIT_SPEED = 0.005;
 })();
 
-var sun_pivot = new THREE.Object3D();
+export var sun_pivot = new THREE.Object3D();
 
 export function addLights(scene, camera) {
   var sunlight = new THREE.DirectionalLight(0xffffff, 1);

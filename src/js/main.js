@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../public/style.css";
-import { addLights, updateSun } from "./lighting";
+import { addLights, updateSun, sun_pivot} from "./lighting";
 
 import { createClusters, updateParticles } from "./particles";
+import { buildWater2, updateWater2} from "./water";
 import { terrainParams, updateTerrain } from "./terrain";
 import { makeGUI, makeStats, stats } from "./ui";
 
@@ -46,6 +47,8 @@ terrain.rotation.x = -Math.PI / 2;
 scene.add(terrain);
 
 createClusters(scene);
+//const water = buildWater(scene);
+buildWater2(scene, alpha)
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
@@ -62,8 +65,11 @@ function update() {
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
   updateSun();
+  
   updateParticles(elapsed, scene);
   updateTerrain(terrain);
+  //updateWater(water, sun_pivot.position);
+  updateWater2(elapsed)
   i++;
 }
 
