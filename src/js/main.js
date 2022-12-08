@@ -6,7 +6,8 @@ import { Vector2 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../public/style.css";
 
-import {generateBase} from "./floating_island.js"
+import {generateBase} from "./floating_island.js";
+import {FloatingIsland} from "./floating_island_2.js";
 
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
@@ -44,8 +45,20 @@ var terrain = new THREE.Mesh(geometry, material);
 terrain.rotation.x = -Math.PI / 2;
 scene.add(terrain);
 
-const islandBase = generateBase(0,0,50,100,100);
-scene.add(islandBase);
+// const islandBase = generateBase(0,0,50,100,100);
+const islandGenerator = new FloatingIsland();
+
+const islands = [];
+
+const islandLocs = [[200,150,150], [-200,140,100], [75, 76, 85], [-150, -190, 125], [-145, 160, 104]];
+const islandSize = [[100,150],[30,50],[60,90],[100,70],[45,36]];
+for (var i = 0; i < islandLocs.length; i++) {
+  var islandLoc = islandLocs[i];
+  var islandDim = islandSize[i];
+  var islandBase = islandGenerator.generateIslandBase(islandLoc[0], islandLoc[1], islandLoc[2], islandDim[0], islandDim[1]);
+  islands.push(islandBase);
+  scene.add(islandBase);
+}
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
@@ -59,6 +72,7 @@ centerFolder.add(ORIGIN, "y", -50, 50);
 centerFolder.open();
 
 var clock = new THREE.Clock();
+// clock.start();
 
 function perlin(amp, freq, v_i, v_i2) {
   return amp * NOISE2D(v_i / freq, v_i2 / freq);
@@ -70,7 +84,7 @@ function falloff(point, rad) {
 }
 
 const NOISE2D = createNoise2D();
-const PEAK = 1;
+const PEAK = 20;
 const RAD = 400;
 function updateMesh() {
   var verts = terrain.geometry.attributes.position.array;
@@ -97,8 +111,12 @@ function updateMesh() {
 
 const SPEED = 100;
 var i = 0;
+
 function update() {
   var delta = clock.getDelta();
+  for (var i = 0; i < islands.length; i++) {
+    // islands[i].position.z += SPEED * Math.sin(clock.getElapsedTime());
+  }
   // terrain.position.z += SPEED * delta;
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */

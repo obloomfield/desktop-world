@@ -8,9 +8,18 @@ import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUti
 
 function sample2D(n, w, h) {
     const points = [];
+    // while (points.length < n) {
+    //     var x = Math.floor(Math.random() * w);
+    //     var y = Math.floor(Math.random() * h);
+    //     if (Math.pow(x/w,2) + Math.pow(y/h,2) < 1) {
+    //         points.push([x,y])
+    //     }
+    // }
+    const halfw = w/2;
+    const halfh = h/2;
     for (var i = 0; i < n; i++) {
-        var x = Math.floor(Math.random() * w);
-        var y = Math.floor(Math.random() * h);
+        var x = Math.floor(Math.random() * w) - halfw;
+        var y = Math.floor(Math.random() * h) - halfh;
         points.push([x,y])
     }
     return points;
@@ -32,7 +41,7 @@ function pointsOfTriangle(delaunay, t) {
         .map(e => delaunay.triangles[e]);
 }
 
-function forEachTriangle(points, delaunay, callback) {
+function forEachTriangle(points, delaunay) {
     const vertices = [];
     // const vertices = new Float32Array(delaunay.triangles.length*3);
     for (let t = 0; t < delaunay.triangles.length / 3; t++) {
@@ -62,7 +71,7 @@ export function generateBase(x, y, n, w, h) {
     const base = new THREE.Shape();
     // const hull = outerHull(sample2D(n, w, h));
 
-    const randPoints = sample2D(100, w, h);
+    const randPoints = sample2D(64*64, w, h);
     const coords = randPoints.flat();
     const delaunay = new Delaunator(coords);
 
@@ -74,7 +83,7 @@ export function generateBase(x, y, n, w, h) {
     }
     // console.log(hullSet);
 
-    const vertices = forEachTriangle(randPoints, delaunay, handleTriangle);
+    const vertices = forEachTriangle(randPoints, delaunay);
     
     var geometry = new THREE.BufferGeometry();
     var geometry2 = new THREE.BufferGeometry();
@@ -100,22 +109,59 @@ export function generateBase(x, y, n, w, h) {
     return mesh; // scene.add( mesh );
 }
 
+// const simplexNoise = new SimplexNoise(this.seed);
+    // this.getPerlin = (x, y) => {
+    //   return (simplexNoise.noise2D(x,y) + 1.0) / 2; // normalize to between 0 and 1
+    // };
+const NOISE2D = createNoise2D();
+function perlin(amp, freq, v_i, v_i2) {
+    // return amp * NOISE2D(v_i / freq, v_i2 / freq);
+    let perlin = (NOISE2D(v_i * 100,v_i2 * 100) + 1.0) / 2;
+    perlin = Math.min(Math.max(perlin, 0.5), 1);
+    return perlin;
+  }
+  
+function falloff(point, rad) {
+    const len = point.length();
+    if (len > rad) {
+        return 0;
+    }
+    let x = len / rad;
+    return -Math.pow(x, 20) + 1;
+}
 
 function augmentVerts(geometry, hull, positive) {
+    const ORIGIN = new THREE.Vector2(0, 0);
+    const PEAK = 15;
+    const RAD = 50;
     var verts = geometry.attributes.position.array;
     const zVals = [];
     for (var i = 0; i < verts.length; i += 3) {
+        let pt = new THREE.Vector2(verts[i], verts[i + 1]);
+        let pt_len = pt.length();
+        if (pt_len > RAD) {
+            verts[i] *= RAD / pt_len;
+            verts[i + 1] *= RAD / pt_len;
+            verts[i + 2] = 0;
+            continue;
+        }
         // console.log("VERTS, " + verts[i] + " " + verts[i+1]);
         var testStr = verts[i].toString() + "," + verts[i+1].toString();
         
         if (hull.has(testStr)) {
-            // console.log("CHECKING " + testStr);
             continue;
         }
-        var newZ = Math.floor(Math.random() * 30);
+        // var newZ = Math.floor(Math.random() * 30);
+        let r = pt.addScaledVector(ORIGIN, -1);
+        var newZ = Math.abs(PEAK *
+        // (2 / (r.length())) *
+        falloff(pt, RAD) *
+        (perlin(1, 2, verts[i], verts[i + 1]) + 0));
+        //   perlin(1 / 2, 40, verts[i], verts[i + 1]) +
+        //   perlin(1, 100, verts[i], verts[i + 1])));
         newZ *= positive ? 1 : -3;
         
-        verts[i + 2] += newZ;
+        verts[i + 2] = newZ;
     }
     geometry.attributes.position.needsUpdate = true;
     geometry.computeVertexNormals();
