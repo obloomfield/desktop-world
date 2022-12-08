@@ -57,9 +57,6 @@ export class FloatingIsland {
         return Math.random() * (max - min) + min;
     }
 
-    
-
-    
     polarSample(n, w, h) {
         this.width = w;
         this.height = h;

@@ -5,7 +5,6 @@ import * as THREE from "three";
 import { Vector2 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../public/style.css";
-
 import {generateBase} from "./floating_island.js";
 import {FloatingIsland} from "./floating_island_2.js";
 
@@ -72,7 +71,6 @@ centerFolder.add(ORIGIN, "y", -50, 50);
 centerFolder.open();
 
 var clock = new THREE.Clock();
-// clock.start();
 
 function perlin(amp, freq, v_i, v_i2) {
   return amp * NOISE2D(v_i / freq, v_i2 / freq);
@@ -110,18 +108,21 @@ function updateMesh() {
 }
 
 const SPEED = 100;
-var i = 0;
+var times = [0,Math.PI/3, -Math.PI/4,Math.PI/6, Math.PI/5];
 
 function update() {
   var delta = clock.getDelta();
+  // console.log(times);
   for (var i = 0; i < islands.length; i++) {
-    // islands[i].position.z += SPEED * Math.sin(clock.getElapsedTime());
+    islands[i].position.y += 0.15*Math.sin(times[i]);
   }
   // terrain.position.z += SPEED * delta;
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
+  const newTimes = times.map((x) => x+delta);
+  times = newTimes;
+  // times[i] = Math.min(Math.max(0, times[i]), 10000);
   updateMesh();
-  i++;
 }
 
 function render() {
