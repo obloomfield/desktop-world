@@ -33,7 +33,7 @@ export function createFireFly(scene, x, y, z){
   particle.scale.set( 2, 2,2 );
   particle.position.set((Math.random() * fireflyParams.SPREAD)+ x,(Math.random() * fireflyParams.SPREAD)+ y,(Math.random() * fireflyParams.SPREAD) + z);
 
-  let plight = new THREE.PointLight("#a833ff", 1, 100, 5);
+  let plight = new THREE.PointLight("#a833ff", 1, 100, 2);
   plight.position.set(particle.position.x, particle.position.y, particle.position.z);
 
   particles.push(particle);

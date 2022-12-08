@@ -4,9 +4,10 @@ import "../public/style.css";
 import { addLights, updateSun, sun_pivot} from "./lighting";
 
 import { createClusters, updateParticles } from "./particles";
-import { buildWater2, updateWater2} from "./water";
+import { buildWater2, updateWater2, buildWater, updateWater} from "./water";
 import { terrainParams, updateTerrain } from "./terrain";
 import { makeGUI, makeStats, stats } from "./ui";
+import { CullFaceFrontBack } from "three";
 
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
@@ -39,6 +40,7 @@ var material = new THREE.MeshStandardMaterial({
   alphaMap: alpha,
   transparent: true,
 });
+
 var terrain = new THREE.Mesh(geometry, material);
 if (terrainParams.FLAT_SHADING) {
   terrain.geometry = terrain.geometry.toNonIndexed();
@@ -49,6 +51,15 @@ scene.add(terrain);
 createClusters(scene);
 //const water = buildWater(scene);
 buildWater2(scene, alpha)
+
+var back =  new THREE.SphereGeometry( 500, 100, 100, 0, 2 * Math.PI, 0, Math.PI);
+let m = new THREE.MeshStandardMaterial({
+  color: "pink",
+  roughness: 1.0,
+  });
+  m.side = THREE.BackSide
+  let o = new THREE.Mesh(back, m);
+scene.add(o);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
