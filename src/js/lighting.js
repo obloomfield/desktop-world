@@ -12,7 +12,7 @@ export var sunParams = new (function () {
 export var sun_pivot = new THREE.Object3D();
 
 export function addLights(scene, camera) {
-  var sunlight = new THREE.DirectionalLight(0xffffff, 1);
+  var sunlight = new THREE.SpotLight(0xffffff, 1);
   sunlight.position
     .set(camera.position.x, camera.position.y + 500, camera.position.z + 500)
     .normalize();

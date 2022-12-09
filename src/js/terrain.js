@@ -22,13 +22,13 @@ export function updateTerrain(terrain) {
     let r = pt.addScaledVector(terrainParams.ORIGIN, -1);
     // if (terrainParams.ORIGIN.distanceTo(pt) > terrainParams.RAD) {
     //   verts[i] *= terrainParams.RAD / pt_len;
-    //   verts[i + 1] *= terrainParams.RAD / pt_len;
+    //   verts[i +z 1] *= terrainParams.RAD / pt_len;
     //   verts[i + 2] = 0;
     // }
     verts[i + 2] =
       terrainParams.PEAK *
-       //(300 / (r.length() + 50)) *
-       //falloff(pt, terrainParams.RAD) *
+      //(300 / (r.length() + 50)) *
+      //falloff(pt, terrainParams.RAD) *
       perlin(perlinParams, verts[i], verts[i + 1]);
   }
   terrain.geometry.attributes.position.needsUpdate = true;
@@ -59,5 +59,5 @@ export function modifyTerrain(terrain, intersect, scene) {
   console.log(intersect.index);
   console.log(terrain.geometry);
 
-  console.log(terrain.geometry.vertices[intersect.index]);
+  // console.log(terrain.geometry.vertices[intersect.index]);
 }
