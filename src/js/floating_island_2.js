@@ -85,8 +85,6 @@ export class FloatingIsland {
         return coords;
     }
     
-
-    
     findClosest(point, hull) {
         var hullClone = hull.slice();
         hullClone.sort(function(p1, p2) {
@@ -126,18 +124,73 @@ export class FloatingIsland {
         return -Math.pow(x, 10) + 1;
     }
 
+    augmentVerts(geometry, hull, positive) {
+        var verts = geometry.attributes.position.array;
+        for (var i = 0; i < verts.length; i += 3) {
+            let pt = [verts[i], verts[i + 1]];
+            if (!this.IsPointInPolygon(hull, pt)) {
+                continue;
+            }
+            var eHeight = this.ellipsoid(pt[0],pt[1])
+            // eHeight *= positive ? 1.5 : 3;
+            var newZ = eHeight + Math.abs(this.PEAK * 
+                (-(1.5/(this.width)) * Math.abs(verts[i]) + 1.5) *
+                (-(1.5/(this.height)) * Math.abs(verts[i+1]) + 1.5) *
+                this.falloff(pt, this.RAD) * 
+                (this.perlin(1 / 8, 10, verts[i], verts[i + 1]) +
+                this.perlin(1 / 4, 40, verts[i], verts[i + 1]) + 
+                this.perlin(1, 400, verts[i], verts[i + 1])));
+            verts[i+2] = positive ? 1.5*newZ : -3*newZ;
+        }
+        geometry.attributes.position.needsUpdate = true;
+        geometry.computeVertexNormals();
+    }
+
+    sampleTrees(geometry) {
+        const norms = geometry.attributes.normal.array;
+        const verts = geometry.attributes.position.array;
+        const vert = [0,0,1];
+        const locs = [];
+        for (var i = 0; i < norms.length; i+=3) {
+            // const curr = norms[i];
+            // console.log(curr);
+            // const dot = curr[2];
+            if (norms[i+2] > 0.8 && verts[i+2] > 10) {
+                // console.log("VALID");
+                if (Math.random() > 0.9) {
+                    locs.push(i);
+                }
+            }
+        }
+        return locs
+    }
+
     generateIslandBase(x, y, z, w, h) {
         // Instantiating plane mesh
-        var geometry = new THREE.PlaneGeometry(150, 150, 256, 256);
-        var geometry2 = new THREE.PlaneGeometry(150, 150, 256, 256);
+        var geometry = new THREE.PlaneGeometry(200, 200, 512, 512);
+        var geometry2 = new THREE.PlaneGeometry(200, 200, 512, 512);
 
-        const hull = this.polarSample(20, w, h);
+        const hull = this.polarSample(30, w, h);
         
         this.augmentVerts(geometry, hull, true);
         this.augmentVerts(geometry2, hull, false);
-    
-        const mergedGeos = BufferGeometryUtils.mergeBufferGeometries([geometry, geometry2]);
+
+        const treeLocs = this.sampleTrees(geometry);
+        console.log(treeLocs);
+
+        const geos = [geometry, geometry2];
+        const posArr = geometry.attributes.position.array;
+        for (var i = 0; i < treeLocs.length; i++) {
+            const idx = treeLocs[i];
+            const boxGeo = new THREE.BoxGeometry( 5, 5, 5 );
+            boxGeo.translate(posArr[idx], posArr[idx+1], posArr[idx+2]);
+            geos.push(boxGeo); 
+        }
+
+        let mergedGeos = BufferGeometryUtils.mergeBufferGeometries(geos);
         const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
+
+
     
         var material = new THREE.MeshStandardMaterial({
         color: 0x836582,
@@ -153,33 +206,7 @@ export class FloatingIsland {
         return terrain;
     }
     
-    augmentVerts(geometry, hull, positive) {
-        
-        var verts = geometry.attributes.position.array;
-        for (var i = 0; i < verts.length; i += 3) {
-            let pt = [verts[i], verts[i + 1]];
-            if (!this.IsPointInPolygon(hull, pt)) {
-                // outside of the hull
-                // var closest = this.findClosest(pt, hull);
-                // verts[i] = closest[0];
-                // verts[i+1] = closest[1];
-                // verts[i+2] = -10;
-                continue;
-            }
     
-            var newZ = this.ellipsoid(pt[0],pt[1]) + Math.abs(this.PEAK * 
-                (-(2/(this.width)) * Math.abs(verts[i]) + 1.5) *
-                (-(2/(this.height)) * Math.abs(verts[i+1]) + 1.5) *
-                // (50 / (euclideanDistance(pt, [0,0]) + 10)) *
-                this.falloff(pt, this.RAD) * 
-                (this.perlin(1 / 8, 10, verts[i], verts[i + 1]) +
-                this.perlin(1 / 4, 40, verts[i], verts[i + 1]) + 
-                this.perlin(1, 400, verts[i], verts[i + 1])));
-            verts[i+2] = positive ? newZ*1.5 : -3 * newZ;
-        }
-        geometry.attributes.position.needsUpdate = true;
-        geometry.computeVertexNormals();
-    }
 }
 
 
