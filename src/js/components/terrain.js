@@ -1,6 +1,9 @@
 import * as THREE from "three";
 import { perlin, perlinParams } from "./perlin";
 
+import { SCENEDATA } from "../setup";
+import { circle_constraint_material } from "./shader";
+
 function falloff(point, rad) {
   let x = point.length() / rad;
   return -Math.pow(x, 10) + 1;
@@ -14,7 +17,26 @@ export var terrainParams = new (function () {
   this.SHOW_INTERSECTION = true;
 })();
 
-export function updateTerrain(terrain) {
+export function addTerrain() {
+  var geometry = new THREE.PlaneGeometry(1000, 1000, 20, 20);
+  // var material = new THREE.MeshStandardMaterial({
+  //   color: 0x00ff00,
+  //   side: THREE.Side,
+  // });
+  var terrain = new THREE.Mesh(
+    geometry,
+    circle_constraint_material(new THREE.Vector4(0, 1, 0, 1))
+  );
+
+  // if (terrainParams.FLAT_SHADING) {
+  //   terrain.geometry = terrain.geometry.toNonIndexed();
+  // }
+  terrain.rotation.x = -Math.PI / 2;
+  SCENEDATA.add("terrain", terrain);
+}
+
+export function updateTerrain() {
+  var terrain = SCENEDATA.get("terrain");
   var verts = terrain.geometry.attributes.position.array;
   for (var i = 0; i <= verts.length; i += 3) {
     let pt = new THREE.Vector2(verts[i], verts[i + 1]);

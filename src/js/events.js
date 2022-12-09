@@ -1,30 +1,16 @@
 import * as THREE from "three";
-import { modifyTerrain } from "./terrain";
+import { modifyTerrain } from "./components/terrain";
+import { SCENEDATA } from "./setup";
 
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
-var renderer;
-var terrain;
-var camera;
-var scene;
-
-export function setupEvents(
-  renderer_main,
-  terrain_main,
-  camera_main,
-  scene_main
-) {
-  renderer = renderer_main;
-  terrain = terrain_main;
-  camera = camera_main;
-  scene = scene_main;
-
-  terrain.callback = function (intersect) {
+export function setupEvents() {
+  SCENEDATA.get("terrain").callback = function (intersect) {
     console.log("clicked the plane!");
-    modifyTerrain(intersect.object, intersect, scene);
+    modifyTerrain(intersect.object, intersect, SCENEDATA.scene);
   };
-  renderer.domElement.addEventListener(
+  SCENEDATA.renderer.domElement.addEventListener(
     "pointerdown",
     onDocumentPointerDown,
     false
@@ -35,12 +21,13 @@ function onDocumentPointerDown(event) {
   console.log("raycast!!");
   event.preventDefault();
 
-  mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
-  mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+  mouse.x = (event.clientX / SCENEDATA.renderer.domElement.clientWidth) * 2 - 1;
+  mouse.y =
+    -(event.clientY / SCENEDATA.renderer.domElement.clientHeight) * 2 + 1;
 
-  raycaster.setFromCamera(mouse, camera);
+  raycaster.setFromCamera(mouse, SCENEDATA.camera);
 
-  var intersects = raycaster.intersectObject(terrain);
+  var intersects = raycaster.intersectObject(SCENEDATA.get("terrain"));
   // console.log(intersects);
 
   if (intersects.length > 0) {

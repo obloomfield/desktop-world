@@ -32,8 +32,6 @@ export function makeGUI() {
   const particleFolder = gui.addFolder("Particles");
   particleFolder.add(fireflyParams, "SPREAD", 1, 50);
   particleFolder.add(fireflyParams, "NUMCLUSTERS", 1, 5);
-
-
 }
 
 export function makeStats() {

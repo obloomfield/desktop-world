@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { SCENEDATA } from "../setup";
 
 const loader = new GLTFLoader();
 
-function load_model(model_filepath, scene) {
+function load_model(model_filepath, model_name) {
   loader.load(
     model_filepath,
     function (gltf) {
@@ -21,7 +22,7 @@ function load_model(model_filepath, scene) {
       //         l.shadow.mapSize.height = 2048
       //     }
       // })
-      scene.add(gltf.scene);
+      SCENEDATA.add(model_name, gltf.scene);
     },
     (xhr) => {
       console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
@@ -32,7 +33,7 @@ function load_model(model_filepath, scene) {
   );
 }
 
-export function addModels(scene) {
-  load_model("public/models/simple_dirty_desk.glb", scene);
-  load_model("public/models/desk_lamp.glb", scene);
+export function addModels() {
+  load_model("public/models/simple_dirty_desk.glb", "desk");
+  load_model("public/models/desk_lamp.glb", "lamp");
 }

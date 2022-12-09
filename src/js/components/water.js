@@ -4,8 +4,10 @@ import { Water } from "three/examples/jsm/objects/Water.js";
 import { sunParams } from "./lighting";
 import { circle_constraint_material } from "./shader";
 
+import { SCENEDATA } from "../setup";
+
 var sunDirection = new THREE.Vector3(0, 50, 0);
-export function buildWater(scene) {
+export function buildWater() {
   const waterGeometry = new THREE.CircleGeometry(500, 100);
 
   const water = new Water(waterGeometry, {
@@ -25,13 +27,13 @@ export function buildWater(scene) {
     fog: false,
   });
   water.rotation.x = -Math.PI / 2;
-  scene.add(water);
+  SCENEDATA.add("water", water);
 
-  const waterUniforms = water.material.uniforms;
-  return water;
+  // const waterUniforms = water.material.uniforms;
+  // return water;
 }
 
-export function updateWater(water, sunDirection) {
+export function updateWater(water) {
   water.material.uniforms["time"].value += 1.0 / 60.0;
 }
 var vertData = [];
@@ -47,7 +49,7 @@ export function updateWater2(time) {
   g.computeVertexNormals();
 }
 
-export function buildWater2(scene) {
+export function buildWater2() {
   g = new THREE.PlaneGeometry(1000, 1000, 15, 15);
   bottom = new THREE.SphereGeometry(
     500,
@@ -86,7 +88,7 @@ export function buildWater2(scene) {
     circle_constraint_material(new THREE.Vector4(0, 0, 1, 1))
   );
   o.position.y = -0;
-  scene.add(o);
+  SCENEDATA.add("water_top", o);
   let o2 = new THREE.Mesh(bottom, m2);
-  scene.add(o2);
+  SCENEDATA.add("water_bowl", o2);
 }
