@@ -27,8 +27,8 @@ export function updateTerrain(terrain) {
     // }
     verts[i + 2] =
       terrainParams.PEAK *
-      // (300 / (r.length() + 50)) *
-      // falloff(pt, terrainParams.RAD) *
+       //(300 / (r.length() + 50)) *
+       //falloff(pt, terrainParams.RAD) *
       perlin(perlinParams, verts[i], verts[i + 1]);
   }
   terrain.geometry.attributes.position.needsUpdate = true;

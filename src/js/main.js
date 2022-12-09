@@ -1,12 +1,15 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import "../public/style.css";
+
 import { setupEvents } from "./events";
 import { addLights, updateSun } from "./lighting";
 
-import { createFireFly, updateFirefly } from "./particles";
+import { createClusters, updateParticles } from "./particles";
+import { buildWater2, updateWater2, buildWater, updateWater} from "./water";
 import { terrainParams, updateTerrain } from "./terrain";
 import { makeGUI, makeStats, stats } from "./ui";
+import { CullFaceFrontBack } from "three";
 
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
@@ -39,6 +42,7 @@ var material = new THREE.MeshStandardMaterial({
   alphaMap: alpha,
   transparent: true,
 });
+
 var terrain = new THREE.Mesh(geometry, material);
 
 // if (terrainParams.FLAT_SHADING) {
@@ -47,7 +51,18 @@ var terrain = new THREE.Mesh(geometry, material);
 terrain.rotation.x = -Math.PI / 2;
 scene.add(terrain);
 
-var firefly = createFireFly(scene);
+createClusters(scene);
+//const water = buildWater(scene);
+buildWater2(scene, alpha)
+
+var back =  new THREE.SphereGeometry( 500, 100, 100, 0, 2 * Math.PI, 0, Math.PI);
+let m = new THREE.MeshStandardMaterial({
+  color: "pink",
+  roughness: 1.0,
+  });
+  m.side = THREE.BackSide
+  let o = new THREE.Mesh(back, m);
+scene.add(o);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0);
@@ -64,8 +79,11 @@ function update() {
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
   updateSun();
-  updateFirefly(firefly, elapsed);
+  
+  updateParticles(elapsed, scene);
   updateTerrain(terrain);
+  //updateWater(water, sun_pivot.position);
+  updateWater2(elapsed)
   i++;
 }
 
