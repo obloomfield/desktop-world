@@ -6,6 +6,8 @@ import Delaunator from 'delaunator';
 import NormalDistribuion from 'normal-distribution';
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { generateBase } from "./floating_island";
+import {islandMaterial} from "./island_textures.js";
+
 
 function euclideanDistance(p1, p2) {
     return Math.sqrt(Math.pow(p1[0]-p2[0], 2) + Math.pow(p1[1]-p2[1], 2));
@@ -27,6 +29,7 @@ export class FloatingIsland {
 
         this.width = 0;
         this.height = 0;
+        this.ellipseHeight = 20;
     }
 
     IsPointInPolygon(poly_array, test_point) {
@@ -67,7 +70,7 @@ export class FloatingIsland {
         const hRad = h/2;
 
         const max = 1.00;
-        const min = 0.8;
+        const min = .80;
         const coords = [];
         for (var i = 0; i < 2*Math.PI; i += this.randomInRange(Math.PI/n, 2*Math.PI/n)) {
             var cosT = Math.cos(i);
@@ -90,6 +93,14 @@ export class FloatingIsland {
             return euclideanDistance(p1, point) - euclideanDistance(p2, point);
         });
         return hullClone[0];
+    }
+
+    ellipsoid(x, y) {
+        const a = this.width/2;
+        const b = this.height/2;
+        const xyComp = Math.abs(1 - (x*x)/(a*a) - (y*y)/(b*b));
+        const c2 = this.ellipseHeight*this.ellipseHeight;
+        return Math.sqrt(c2*xyComp);
     }
     
     falloff(point, rad) {
@@ -119,19 +130,21 @@ export class FloatingIsland {
         // Instantiating plane mesh
         var geometry = new THREE.PlaneGeometry(150, 150, 256, 256);
         var geometry2 = new THREE.PlaneGeometry(150, 150, 256, 256);
-    
-        const hull = this.polarSample(50, w, h);
+
+        const hull = this.polarSample(20, w, h);
         
         this.augmentVerts(geometry, hull, true);
         this.augmentVerts(geometry2, hull, false);
     
-        const merged = BufferGeometryUtils.mergeBufferGeometries([geometry, geometry2]);
+        const mergedGeos = BufferGeometryUtils.mergeBufferGeometries([geometry, geometry2]);
+        const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
     
         var material = new THREE.MeshStandardMaterial({
         color: 0x836582,
         side: THREE.DoubleSide,
         });
-        var terrain = new THREE.Mesh(merged, material);
+
+        var terrain = new THREE.Mesh(merged, islandMaterial);
     
         terrain.rotation.x = -Math.PI / 2;
         terrain.translateX(x);
@@ -147,14 +160,14 @@ export class FloatingIsland {
             let pt = [verts[i], verts[i + 1]];
             if (!this.IsPointInPolygon(hull, pt)) {
                 // outside of the hull
-                var closest = this.findClosest(pt, hull);
-                verts[i] = closest[0];
-                verts[i+1] = closest[1];
+                // var closest = this.findClosest(pt, hull);
+                // verts[i] = closest[0];
+                // verts[i+1] = closest[1];
                 // verts[i+2] = -10;
                 continue;
             }
     
-            var newZ = Math.abs(this.PEAK * 
+            var newZ = this.ellipsoid(pt[0],pt[1]) + Math.abs(this.PEAK * 
                 (-(2/(this.width)) * Math.abs(verts[i]) + 1.5) *
                 (-(2/(this.height)) * Math.abs(verts[i+1]) + 1.5) *
                 // (50 / (euclideanDistance(pt, [0,0]) + 10)) *
@@ -162,7 +175,7 @@ export class FloatingIsland {
                 (this.perlin(1 / 8, 10, verts[i], verts[i + 1]) +
                 this.perlin(1 / 4, 40, verts[i], verts[i + 1]) + 
                 this.perlin(1, 400, verts[i], verts[i + 1])));
-            verts[i+2] = positive ? newZ*1.5 : -4 * newZ;
+            verts[i+2] = positive ? newZ*1.5 : -3 * newZ;
         }
         geometry.attributes.position.needsUpdate = true;
         geometry.computeVertexNormals();

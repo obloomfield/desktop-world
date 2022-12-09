@@ -49,7 +49,7 @@ const islandGenerator = new FloatingIsland();
 
 const islands = [];
 
-const islandLocs = [[200,150,150], [-200,140,100], [75, 76, 85], [-150, -190, 125], [-145, 160, 104]];
+const islandLocs = [[200,150,150]]; //, [-200,140,100], [75, 76, 85], [-150, -190, 125], [-145, 160, 104]];
 const islandSize = [[100,150],[30,50],[60,90],[100,70],[45,36]];
 for (var i = 0; i < islandLocs.length; i++) {
   var islandLoc = islandLocs[i];

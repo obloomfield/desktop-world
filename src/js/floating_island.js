@@ -5,6 +5,8 @@ import {GrahamScan} from "./graham_scan_TEST.js";
 import Delaunator from 'delaunator';
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
+import {islandMaterial} from "./island_textures.js";
+
 
 function sample2D(n, w, h) {
     const points = [];
@@ -103,7 +105,8 @@ export function generateBase(x, y, n, w, h) {
         color: 0xff3951,
         side: THREE.DoubleSide,
       });
-    const mesh = new THREE.Mesh( merged, material );
+      
+    const mesh = new THREE.Mesh( merged, islandMaterial );
     mesh.rotation.x = -Math.PI / 2;
     mesh.translateZ(100);
     return mesh; // scene.add( mesh );
