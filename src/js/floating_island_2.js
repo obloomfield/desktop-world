@@ -209,26 +209,6 @@ export class FloatingIsland {
         
         const result = await this.loadObj();
         return result[0];
-        // console.log("post load", result);
-        // const geometries = [];
-        // result[0].traverse(function(node) {
-        //     if ( node.isMesh ) {
-        //         const g1 = new THREE.BufferGeometry();
-        //         g1.copy(node.geometry);
-        //         // g1.center();
-        //         // g1.setAttribute("position", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.position.arr)));
-        //         // g1.setAttribute("normal", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.normal.arr)));
-        //         // g1.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.uv.arr)));
-        //         geometries.push(g1);
-        //     }
-        // });
-        // console.log("GEOS", geometries);
-        // const newBG = BufferGeometryUtils.mergeBufferGeometries(geometries);
-        // newBG.rotateX(Math.PI/2);
-        // newBG.center();
-        // newBG.scale(0.5,0.5,0.5);
-        // newBG.translate(0,0,3.5);
-        // return newBG;
     }
 
     async generateIslandBase(x, y, z, w, h) {
@@ -256,40 +236,27 @@ export class FloatingIsland {
         const posArr = merged.attributes.position.array;
         const treeLocs = this.sampleTrees(merged);
 
+        const islandLoc = new THREE.Vector3(x,y,z);
+        const islandLocLen = islandLoc.length();
+        islandLoc.normalize();
+        islandLoc.applyAxisAngle(new THREE.Vector3(1,0,0), -Math.PI/2);
+
         for (var i = 0; i < treeLocs.length; i++) {
             const idx = treeLocs[i];
-            // console.log("INDEX", posArr[idx], posArr[idx+1], posArr[idx+2]);
-            // const newTree = new THREE.BufferGeometry();
-            // newTree.copy(treeGeo);
-            // console.log("NEW TREE", treeGeo);
             const newTree = new Object3D();
             newTree.copy(treeOBJ);
-            
-            // const target = new THREE.Vector3(0);
-            // treeOBJ.getWorldPosition(target);
-            // console.log("Tree pos", target);
-            // newTree.translate(posArr[idx], posArr[idx+1], posArr[idx+2]);
-
-            // newTree.translateX(x);
-            // newTree.translateY(y-10);
-            // newTree.translateZ(-z);
-            // newTree.rotateY(this.randomInRange(0,2*Math.PI));
             const dir = new THREE.Vector3(posArr[idx],posArr[idx+1],posArr[idx+2]);
             dir.applyAxisAngle(new THREE.Vector3(1,0,0), -Math.PI/2);
             const len = dir.length();
             // console.log(dir.normalize(), dir.length());
             // newTree.translateY(-10);
-            // newTree.setRotationFromAxisAngle(new THREE.Vector3(0,1,0), this.randomInRange(0,2*Math.PI));
-            console.log("POST ROTATION", newTree.position);
+            // const rotAxis = new THREE.Vector3(0,1,0);
+            // newTree.rotateOnWorldAxis(rotAxis, this.randomInRange(0,2*Math.PI));
+            // console.log("POST ROTATION", newTree.position);
+            newTree.translateOnAxis(islandLoc, islandLocLen);
             newTree.translateOnAxis(dir.normalize(), len);
-            // newTree.translateX(posArr[idx]);
-            // newTree.translateY(posArr[idx+1]);
-            // newTree.translateZ(posArr[idx+2]);
             // console.log("new pos", newTree.position);
 
-
-            // this should instead make a bunch of 3d objects with the materials
-            // const treeMesh = new THREE.Mesh(merged, )
             trees.push(newTree); 
         }
         // console.log(trees);
@@ -304,9 +271,9 @@ export class FloatingIsland {
         var terrain = new THREE.Mesh(merged, islandMaterial);
     
         terrain.rotation.x = -Math.PI / 2;
-        // terrain.translateX(x);
-        // terrain.translateY(y);
-        // terrain.translateZ(z);
+        terrain.translateX(x);
+        terrain.translateY(y);
+        terrain.translateZ(z);
 
         return {
             islandTerrain: terrain, 
