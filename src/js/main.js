@@ -54,7 +54,7 @@ const islandSize = [[100,150],[30,50],[60,90],[100,70],[45,36]];
 for (var i = 0; i < islandLocs.length; i++) {
   var islandLoc = islandLocs[i];
   var islandDim = islandSize[i];
-  var islandBase = islandGenerator.generateIslandBase(islandLoc[0], islandLoc[1], islandLoc[2], islandDim[0], islandDim[1]);
+  var islandBase = await islandGenerator.generateIslandBase(islandLoc[0], islandLoc[1], islandLoc[2], islandDim[0], islandDim[1]);
   islands.push(islandBase);
   scene.add(islandBase);
 }
