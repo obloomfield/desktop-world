@@ -56,7 +56,12 @@ for (var i = 0; i < islandLocs.length; i++) {
   var islandDim = islandSize[i];
   var islandBase = await islandGenerator.generateIslandBase(islandLoc[0], islandLoc[1], islandLoc[2], islandDim[0], islandDim[1]);
   islands.push(islandBase);
-  scene.add(islandBase);
+  scene.add(islandBase.islandTerrain);
+  // console.log("")
+  for (var j=0; j < islandBase.islandTrees.length; j++) {
+    // console.log(islandBase.islandTrees[j]);
+    scene.add(islandBase.islandTrees[j]);
+  } 
 }
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -82,7 +87,7 @@ function falloff(point, rad) {
 }
 
 const NOISE2D = createNoise2D();
-const PEAK = 20;
+const PEAK = 1;
 const RAD = 400;
 function updateMesh() {
   var verts = terrain.geometry.attributes.position.array;
@@ -114,7 +119,10 @@ function update() {
   var delta = clock.getDelta();
   // console.log(times);
   for (var i = 0; i < islands.length; i++) {
-    islands[i].position.y += 0.15*Math.sin(times[i]);
+    islands[i].islandTerrain.position.y += 0.15*Math.sin(times[i]);
+    for (var j = 0; j < islands[i].islandTrees.length; j++) {
+      islands[i].islandTrees[j].translateY(0.15*Math.sin(times[i]));
+    }
   }
   // terrain.position.z += SPEED * delta;
   // camera.position.z += SPEED * delta;

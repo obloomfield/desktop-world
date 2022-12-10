@@ -6,10 +6,11 @@ import Delaunator from 'delaunator';
 import NormalDistribuion from 'normal-distribution';
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader.js";
+import {MTLLoader} from "three/examples/jsm/loaders/MTLLoader.js";
 
 import { generateBase } from "./floating_island";
 import {islandMaterial} from "./island_textures.js";
-import { BufferGeometry } from "three";
+import { BufferGeometry, Object3D } from "three";
 
 
 function euclideanDistance(p1, p2) {
@@ -163,7 +164,7 @@ export class FloatingIsland {
             // const dot = curr[2];
             if (norms[i+2] > 0.8 && verts[i+2] > 10) {
                 // console.log("VALID");
-                if (Math.random() > 0.9) {
+                if (Math.random() > 0.995) {
                     locs.push(i);
                 }
             }
@@ -177,97 +178,57 @@ export class FloatingIsland {
 
     loadObj() {
         return new Promise((resolve, reject) => {
-            var loader = new OBJLoader();
-            const objs = [];
-            // setTimeout(() => {
+            var matLoader = new MTLLoader();
+            matLoader.load('../models/tree.mtl', function(materials) {
+                console.log("MATERIALS", materials);
+                materials.preload();
+
+                var loader = new OBJLoader();
+                loader.setMaterials(materials);
+                const objs = [];
                 loader.load('../models/tree.obj', function ( object ) {
-                    objs.push(object);
-                    resolve(objs);
-                    // object.traverse( function ( node ) {
-                    //    if ( node.isMesh ) {
-                    //        objs.push('hello!'); //node.geometry.clone());
-                    //    }
-                    // }); 
-                    // console.log("COPIED ATTRS1", object);
-                    // geometry.copy(object);
-                });
-                
-            // }, 2000);
-            
-            // return objs;
+                objs.push(object);
+                resolve(objs);
+            });
+            });
         });
-        // callback(objs);
     }
+
+    // loadObj() {
+    //     return new Promise((resolve, reject) => {
+    //         var loader = new OBJLoader();
+    //         const objs = [];
+    //         loader.load('../models/tree.obj', function ( object ) {
+    //             objs.push(object);
+    //             resolve(objs);
+    //         });
+    //     });
+    // }
 
     async loadAlienTree(treeBuffer) {
         
         const result = await this.loadObj();
+        return result[0];
         // console.log("post load", result);
-        const geometries = [];
-        result[0].traverse(function(node) {
-            if ( node.isMesh ) {
-                const g1 = new THREE.BufferGeometry();
-                g1.copy(node.geometry);
-                // g1.center();
-                // g1.setAttribute("position", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.position.arr)));
-                // g1.setAttribute("normal", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.normal.arr)));
-                // g1.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.uv.arr)));
-                geometries.push(g1);
-            }
-        });
-        console.log("GEOS", geometries);
-        const newBG = BufferGeometryUtils.mergeBufferGeometries(geometries);
-        return newBG;
-        // this.loadObj(function(objs) {
-        //     console.log("OBJS", objs);
-        // })
-        // var loader = new OBJLoader();
-        // var geometry = new THREE.BufferGeometry();
-        // const objs = [];
-
-        // loader.load('../models/tree.obj', function ( object ) {
-        //     // objs.push(object);
-        //     object.traverse( function ( node ) {
-        //        if ( node.isMesh ) {
-        //         //    node.geometry.setIndex(null);
-        //         //    node.geometry.
-        //            objs.push('hello!'); //node.geometry.clone());
-        //     //         // this.treeGeometry = node.geometry;
-        //     //         console.log("node geomentry", node.geometry);
-        //     //         console.log("NODE ATTR positions", node.geometry.attributes.position);
-        //     //         // treeBuffer.setAttribute("position", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.position.arr)));
-        //     //         treeBuffer.copy(node.geometry);
-        //     //         console.log("COPIED ATTRS", treeBuffer.attributes);
-        //     //         // treeBuffer.attributes.position.needsUpdate = true;
-        //     //         // treeBuffer.computeVertexNormals();
-        //     //         // return;
-        //     //         // treeBuffer.setAttribute("normal", node.geometry.attributes.normal);
-        //     //         // treeBuffer.setAttribute("uv", node.geometry.attributes.uv);
-
-        //     //         // console.log(treeBuffer);
-        //        }
-        //     }); 
-        //     // console.log("COPIED ATTRS1", object);
-        //     // geometry.copy(object);
+        // const geometries = [];
+        // result[0].traverse(function(node) {
+        //     if ( node.isMesh ) {
+        //         const g1 = new THREE.BufferGeometry();
+        //         g1.copy(node.geometry);
+        //         // g1.center();
+        //         // g1.setAttribute("position", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.position.arr)));
+        //         // g1.setAttribute("normal", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.normal.arr)));
+        //         // g1.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(node.geometry.attributes.uv.arr)));
+        //         geometries.push(g1);
+        //     }
         // });
-        // console.log("objects", objs);
-
-        // const g1 = new THREE.BufferGeometry();
-        // g1.setAttribute("position", new THREE.BufferAttribute(new Float32Array(objs[0].attributes.position.arr)));
-        // g1.setAttribute("normal", new THREE.BufferAttribute(new Float32Array(objs[0].attributes.normal.arr)));
-        // g1.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(objs[0].attributes.uv.arr)));
-
-        // const g2 = new THREE.BufferGeometry();
-        // g2.setAttribute("position", new THREE.BufferAttribute(new Float32Array(objs[1].attributes.position.arr)));
-        // g2.setAttribute("normal", new THREE.BufferAttribute(new Float32Array(objs[1].attributes.normal.arr)));
-        // g2.setAttribute("uv", new THREE.BufferAttribute(new Float32Array(objs[1].attributes.uv.arr)));
-        
-        // const newBG = BufferGeometryUtils.mergeBufferGeometries(objs);
-
-        // treeBuffer.copy(objs[1]);
-        // return objs[1]; //
-        // console.log("TREE GEO", this.treeGeometry);
-        // return geometry;
+        // console.log("GEOS", geometries);
+        // const newBG = BufferGeometryUtils.mergeBufferGeometries(geometries);
+        // newBG.rotateX(Math.PI/2);
+        // newBG.center();
+        // newBG.scale(0.5,0.5,0.5);
+        // newBG.translate(0,0,3.5);
+        // return newBG;
     }
 
     async generateIslandBase(x, y, z, w, h) {
@@ -280,37 +241,58 @@ export class FloatingIsland {
         this.augmentVerts(geometry, hull, true);
         this.augmentVerts(geometry2, hull, false);
 
-        const treeLocs = this.sampleTrees(geometry);
-        // console.log(treeLocs);
+        
+        // var treeGeo = new THREE.BufferGeometry();
 
-        var treeGeo = new THREE.BufferGeometry();
-        // treeGeo.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array([0,0,0]), 3 ) );
+        const treeOBJ = await this.loadAlienTree();
+        console.log("TREE OBJ", treeOBJ);
 
-        // console.log("LOADING TREE", this.loadAlienTree(treeGeo));
-        // treeGeo = ;
-        treeGeo = await this.loadAlienTree(treeGeo);
-        // geometry.setIndex(null);
-        // geometry = geometry.toNonIndexed ();
-        // geometry2.setIndex(null);
-        // treeGeo.setIndex(null);
+        const geos = [geometry, geometry2];
+        const trees = [];
+        // const geos = [];
+        let merged = BufferGeometryUtils.mergeBufferGeometries(geos);
+        // merged.rotateY(-Math.PI/2);
+        // const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
+        const posArr = merged.attributes.position.array;
+        const treeLocs = this.sampleTrees(merged);
 
-        console.log("Treegeo", treeGeo);
-        console.log("tree attributes", treeGeo.attributes);
-        console.log("GEO2", geometry2);
-
-        const geos = [geometry.toNonIndexed(), geometry2.toNonIndexed()];
-        const posArr = geometry.attributes.position.array;
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < treeLocs.length; i++) {
             const idx = treeLocs[i];
+            // console.log("INDEX", posArr[idx], posArr[idx+1], posArr[idx+2]);
             // const newTree = new THREE.BufferGeometry();
             // newTree.copy(treeGeo);
-            console.log("NEW TREE", treeGeo);
-            treeGeo.translate(posArr[idx], posArr[idx+1], posArr[idx+2]);
-            geos.push(treeGeo); 
-        }
+            // console.log("NEW TREE", treeGeo);
+            const newTree = new Object3D();
+            newTree.copy(treeOBJ);
+            
+            // const target = new THREE.Vector3(0);
+            // treeOBJ.getWorldPosition(target);
+            // console.log("Tree pos", target);
+            // newTree.translate(posArr[idx], posArr[idx+1], posArr[idx+2]);
 
-        let mergedGeos = BufferGeometryUtils.mergeBufferGeometries(geos);
-        const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
+            // newTree.translateX(x);
+            // newTree.translateY(y-10);
+            // newTree.translateZ(-z);
+            // newTree.rotateY(this.randomInRange(0,2*Math.PI));
+            const dir = new THREE.Vector3(posArr[idx],posArr[idx+1],posArr[idx+2]);
+            dir.applyAxisAngle(new THREE.Vector3(1,0,0), -Math.PI/2);
+            const len = dir.length();
+            // console.log(dir.normalize(), dir.length());
+            // newTree.translateY(-10);
+            // newTree.setRotationFromAxisAngle(new THREE.Vector3(0,1,0), this.randomInRange(0,2*Math.PI));
+            console.log("POST ROTATION", newTree.position);
+            newTree.translateOnAxis(dir.normalize(), len);
+            // newTree.translateX(posArr[idx]);
+            // newTree.translateY(posArr[idx+1]);
+            // newTree.translateZ(posArr[idx+2]);
+            // console.log("new pos", newTree.position);
+
+
+            // this should instead make a bunch of 3d objects with the materials
+            // const treeMesh = new THREE.Mesh(merged, )
+            trees.push(newTree); 
+        }
+        // console.log(trees);
 
 
     
@@ -322,10 +304,14 @@ export class FloatingIsland {
         var terrain = new THREE.Mesh(merged, islandMaterial);
     
         terrain.rotation.x = -Math.PI / 2;
-        terrain.translateX(x);
-        terrain.translateY(y);
-        terrain.translateZ(z);
-        return terrain;
+        // terrain.translateX(x);
+        // terrain.translateY(y);
+        // terrain.translateZ(z);
+
+        return {
+            islandTerrain: terrain, 
+            islandTrees: trees
+        };
     }
     
     
