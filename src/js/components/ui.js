@@ -1,5 +1,6 @@
 import { GUI } from "dat.gui";
 import Stats from "stats.js";
+import { SCENEDATA } from "../setup";
 import { lightParams, sunParams } from "./lighting";
 import { fireflyParams } from "./particles";
 import { perlinParams } from "./perlin";
@@ -10,6 +11,7 @@ export var stats = new Stats();
 export function makeGUI() {
   const gui = new GUI();
   const generalFolder = gui.addFolder("General");
+  generalFolder.add(SCENEDATA.controls, "enableZoom");
   // generalFolder.add(terrainParams, "FLAT_SHADING");
   // const centerFolder = gui.addFolder("Center");
   // centerFolder.add(terrainParams.ORIGIN, "x", -50, 50);
