@@ -11,6 +11,7 @@ import { makeGUI, makeStats } from "./components/ui";
 import { buildWater2 } from "./components/water";
 import { setupEvents } from "./events";
 import { loop } from "./update";
+import { addIslands, FloatingIsland } from "./floating_island_2"
 
 export class SCENEDATA {
   static WIDTH;
@@ -22,6 +23,7 @@ export class SCENEDATA {
   static controls;
 
   static objects = new Map();
+  static islands = new Array();
 
   // # means private in JS - strange lol
   static #setupScene() {
@@ -84,6 +86,8 @@ export class SCENEDATA {
     addLights();
 
     addTerrain();
+
+    await addIslands();
 
     createClusters();
 

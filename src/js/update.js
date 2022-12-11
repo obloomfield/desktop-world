@@ -4,9 +4,11 @@ import { updateParticles } from "./components/particles";
 import { updateTerrain } from "./components/terrain";
 import { stats } from "./components/ui";
 import { updateWater2 } from "./components/water";
+import {updateIslands} from "./floating_island_2"
 import { SCENEDATA } from "./setup";
 
 var clock = new THREE.Clock();
+var times = [0,Math.PI/3, -Math.PI/4,Math.PI/6, Math.PI/5];
 
 var i = 0;
 function update() {
@@ -19,6 +21,8 @@ function update() {
 
   updateParticles(elapsed, SCENEDATA.scene);
   updateTerrain(SCENEDATA.terrain);
+
+  updateIslands();
   //updateWater(water, sun_pivot.position);
   updateWater2(elapsed);
   i++;
