@@ -1,6 +1,7 @@
 import * as THREE from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { addIslands, FloatingIsland } from "./components/island";
 import { addLights } from "./components/lighting";
 import { addModels } from "./components/models";
 import { createClusters } from "./components/particles";
@@ -11,7 +12,6 @@ import { makeGUI, makeStats } from "./components/ui";
 import { buildWater2 } from "./components/water";
 import { setupEvents } from "./events";
 import { loop } from "./update";
-import { addIslands, FloatingIsland } from "./floating_island_2"
 
 export class SCENEDATA {
   static WIDTH;
@@ -71,7 +71,7 @@ export class SCENEDATA {
     return this.objects.get(key);
   }
 
-  static setup() {
+  static async setup() {
     this.WIDTH = window.innerWidth;
     this.HEIGHT = window.innerHeight;
 
@@ -99,7 +99,7 @@ export class SCENEDATA {
 
     makeStats();
     makeGUI();
-    
+
     setupEvents();
 
     loop();

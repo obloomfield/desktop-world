@@ -1,14 +1,14 @@
 import * as THREE from "three";
+import { updateIslands } from "./components/island";
 import { updateSun } from "./components/lighting";
 import { updateParticles } from "./components/particles";
 import { updateTerrain } from "./components/terrain";
 import { stats } from "./components/ui";
 import { updateWater2 } from "./components/water";
-import {updateIslands} from "./floating_island_2"
 import { SCENEDATA } from "./setup";
 
 var clock = new THREE.Clock();
-var times = [0,Math.PI/3, -Math.PI/4,Math.PI/6, Math.PI/5];
+var times = [0, Math.PI / 3, -Math.PI / 4, Math.PI / 6, Math.PI / 5];
 
 var i = 0;
 function update() {
@@ -19,7 +19,7 @@ function update() {
   /* Moving the terrain forward. */
   updateSun();
 
-  updateParticles(elapsed, SCENEDATA.scene);
+  updateParticles(elapsed);
   updateTerrain(SCENEDATA.terrain);
 
   updateIslands();
