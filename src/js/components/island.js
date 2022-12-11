@@ -46,11 +46,14 @@ export async function addIslands() {
     );
     SCENEDATA.islands.push(islandBase);
     // scene.add(islandBase.islandTerrain);
-    SCENEDATA.add("island-terrain", islandBase.islandTerrain);
+    SCENEDATA.add(["island", "terrain", i].join("-"), islandBase.islandTerrain);
     // console.log("")
     for (var j = 0; j < islandBase.islandTrees.length; j++) {
       // console.log(islandBase.islandTrees[j]);
-      SCENEDATA.add("island-trees-".concat(j), islandBase.islandTrees[j]);
+      SCENEDATA.add(
+        ["island", "trees", i, j].join("-"),
+        islandBase.islandTrees[j]
+      );
     }
   }
 }
@@ -58,10 +61,14 @@ export async function addIslands() {
 const times = [0, Math.PI / 3, -Math.PI / 4, Math.PI / 6, Math.PI / 5];
 export function updateIslands() {
   // island update code
+  // console.log(SCENEDATA.islands.length);
   for (var i = 0; i < SCENEDATA.islands.length; i++) {
-    SCENEDATA.islands[i].islandTerrain.position.y += 0.15 * Math.sin(times[i]);
+    SCENEDATA.get(["island", "terrain", i].join("-")).position.y +=
+      0.15 * Math.sin(times[i]);
     for (var j = 0; j < SCENEDATA.islands[i].islandTrees.length; j++) {
-      SCENEDATA.islands[i].islandTrees[j].translateY(0.15 * Math.sin(times[i]));
+      SCENEDATA.get(["island", "trees", i, j].join("-")).translateY(
+        0.15 * Math.sin(times[i])
+      );
     }
   }
 }

@@ -19,10 +19,12 @@ uniform float RADIUS;
 uniform vec4 COLOR;
 
 void main() {
+  float lum = (abs(v_Normal[0]) + abs(v_Normal[1]) + abs(v_Normal[2]))/3.0;
+
   if (distance(v_Pos,vec3(0,0,0)) > RADIUS) {
     discard;
   }
-  gl_FragColor = COLOR;
+  gl_FragColor = vec4(vec3(COLOR)*lum,1);
 }
 `;
 
