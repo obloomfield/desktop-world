@@ -4,11 +4,13 @@ const vShader = `
 
 varying vec3 v_Normal;
 varying vec3 v_Pos;
+varying vec2 vertexUV;
 
 void main() {
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     v_Normal = normal;
     v_Pos = position;
+    vertexUV = uv;
 }
 `
 
@@ -16,6 +18,9 @@ const fShader = `
 
 varying vec3 v_Normal;
 varying vec3 v_Pos;
+varying vec2 vertexUV;
+
+uniform sampler2D islandTexture;
 
 void main() {
 
@@ -37,6 +42,7 @@ void main() {
         gl_FragColor = vec4(vec3(0,1,0) * lum, 1);
     } else {
         if (abs(n[2]) < .12) {
+            // gl_FragColor = texture2D(islandTexture, gl_PointCoord);
             gl_FragColor = vec4(vec3(0,1,0) * lum, 1);
         } else {
             gl_FragColor = vec4(vec3(.58,.24,0) * lum, 1);
@@ -46,7 +52,11 @@ void main() {
 `
 
 export const islandMaterial = new THREE.ShaderMaterial({
-    uniforms: {},
+    uniforms: {
+        islandTexture : {
+            value : new THREE.TextureLoader().load('../models/texturetest.jpeg')
+        }
+    },
     vertexShader: vShader,
     fragmentShader: fShader
 });

@@ -140,7 +140,9 @@ export class FloatingIsland {
             }
             var eHeight = this.ellipsoid(pt[0],pt[1])
             // eHeight *= positive ? 1.5 : 3;
-            var newZ = eHeight + Math.abs(this.PEAK * 
+            var newZ = 
+            eHeight + 
+            Math.abs(this.PEAK * 
                 (-(1.5/(this.width/2)) * Math.abs(verts[i]) + 1.5) *
                 (-(1.5/(this.height/2)) * Math.abs(verts[i+1]) + 1.5) *
                 this.falloff(pt, this.RAD) * 
@@ -176,17 +178,17 @@ export class FloatingIsland {
         return new Float32Array(attr);
     }
 
-    loadObj() {
+    loadObj(matFile, objFile) {
         return new Promise((resolve, reject) => {
             var matLoader = new MTLLoader();
-            matLoader.load('../models/tree.mtl', function(materials) {
+            matLoader.load(matFile, function(materials) {
                 console.log("MATERIALS", materials);
                 materials.preload();
 
                 var loader = new OBJLoader();
                 loader.setMaterials(materials);
                 const objs = [];
-                loader.load('../models/tree.obj', function ( object ) {
+                loader.load(objFile, function ( object ) {
                 objs.push(object);
                 resolve(objs);
             });
@@ -194,19 +196,12 @@ export class FloatingIsland {
         });
     }
 
-    // loadObj() {
-    //     return new Promise((resolve, reject) => {
-    //         var loader = new OBJLoader();
-    //         const objs = [];
-    //         loader.load('../models/tree.obj', function ( object ) {
-    //             objs.push(object);
-    //             resolve(objs);
-    //         });
-    //     });
-    // }
+    async loadAlienTree() {
+        const result = await this.loadObj('../models/lowpolytree.mtl', '../models/lowpolytree.obj');
+        return result[0];
+    }
 
-    async loadAlienTree(treeBuffer) {
-        
+    async loadVine() {
         const result = await this.loadObj();
         return result[0];
     }
@@ -230,9 +225,9 @@ export class FloatingIsland {
         const geos = [geometry, geometry2];
         const trees = [];
         // const geos = [];
-        let merged = BufferGeometryUtils.mergeBufferGeometries(geos);
+        let mergedGeos = BufferGeometryUtils.mergeBufferGeometries(geos);
         // merged.rotateY(-Math.PI/2);
-        // const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
+        const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
         const posArr = merged.attributes.position.array;
         const treeLocs = this.sampleTrees(merged);
 
@@ -251,7 +246,7 @@ export class FloatingIsland {
             // console.log(dir.normalize(), dir.length());
             // newTree.translateY(-10);
             // const rotAxis = new THREE.Vector3(0,1,0);
-            // newTree.rotateOnWorldAxis(rotAxis, this.randomInRange(0,2*Math.PI));
+            // newTree.rotateOnAxis(rotAxis, this.randomInRange(0,2*Math.PI));
             // console.log("POST ROTATION", newTree.position);
             newTree.translateOnAxis(islandLoc, islandLocLen);
             newTree.translateOnAxis(dir.normalize(), len);
