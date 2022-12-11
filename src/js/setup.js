@@ -13,6 +13,13 @@ import { buildWater2 } from "./components/water";
 import { setupEvents } from "./events";
 import { loop } from "./update";
 
+import {EffectComposer} from "three/examples/jsm/postprocessing/EffectComposer.js";
+import {RenderPass} from "three/examples/jsm/postprocessing/RenderPass.js";
+import {UnrealBloomPass} from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import {ShaderPass} from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { vertShader,fragShader,uniformData } from "./components/interp_shader";
+
+
 export class SCENEDATA {
   static WIDTH;
   static HEIGHT;
@@ -21,6 +28,11 @@ export class SCENEDATA {
   static camera;
   static renderer;
   static controls;
+
+  static bloomComposer;
+  static finalComposer;
+  static bloomLayer;
+  static materials = {};
 
   static objects = new Map();
   static islands = new Array();
@@ -46,6 +58,7 @@ export class SCENEDATA {
 
   static #setupRenderer() {
     this.renderer = new THREE.WebGLRenderer({ alpha: true });
+    console.log("reached setup");
     this.renderer.setClearColor(0xffffff, 0);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.WIDTH, this.HEIGHT);
@@ -59,6 +72,55 @@ export class SCENEDATA {
     this.controls.dampingFactor = 0.05;
     this.controls.enableZoom = false;
   }
+
+  static #setupBloom() {
+
+    const ENTIRE_SCENE = 0, BLOOM_SCENE = 1;
+
+
+const darkMaterial = new THREE.MeshBasicMaterial( { color: 'black' } );
+const materials = {};
+this.bloomLayer = new THREE.Layers();
+this.bloomLayer.set( BLOOM_SCENE );
+
+
+
+const bloomParams = {
+        exposure: 1,
+        bloomStrength: 5,
+        bloomThreshold: 0,
+        bloomRadius: 0,
+        scene: 'Scene with Glow'
+      };
+
+this.bloomComposer = new EffectComposer(SCENEDATA.renderer);
+const renderScene = new RenderPass(SCENEDATA.scene, SCENEDATA.camera);
+this.bloomComposer.renderToScreen = false;
+this.bloomComposer.addPass(renderScene);
+this.bloomComposer.addPass(new UnrealBloomPass({x: 1024, y: 1024}, 1.0, 0.0, 0.0));
+
+// uniformData.bloomTexture.value = this.bloomComposer.renderTarget2.texture;
+
+const finalPass = new ShaderPass(
+        new THREE.ShaderMaterial( {
+          uniforms: {
+            baseTexture: { value: null },
+            bloomTexture: { value: this.bloomComposer.renderTarget2.texture }
+          },
+          vertexShader: vertShader(),
+          fragmentShader: fragShader(),
+          defines: {}
+        } ), 'baseTexture'
+      );
+finalPass.needsSwap = true;
+
+this.finalComposer = new EffectComposer( SCENEDATA.renderer );
+      this.finalComposer.addPass( renderScene );
+      this.finalComposer.addPass( finalPass );
+
+
+}
+
 
   // add keyed object3d to scene
   static add(key, object) {
@@ -82,6 +144,8 @@ export class SCENEDATA {
     this.#setupRenderer();
 
     this.#setupControls();
+
+    this.#setupBloom();
 
     addLights();
 
