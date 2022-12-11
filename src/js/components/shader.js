@@ -83,7 +83,7 @@ export const circle_constraint_material = function (color) {
   return new THREE.ShaderMaterial({
     uniforms: {
       RADIUS: {
-        value: 500,
+        value: 499.5,
       },
       COLOR: {
         value: color,

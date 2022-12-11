@@ -39,6 +39,8 @@ export function updateWater(water) {
 var vertData = [];
 var g;
 var bottom;
+var rimData = [];
+
 export function updateWater2(time) {
   vertData.forEach((vd, idx) => {
     let y =
@@ -47,6 +49,15 @@ export function updateWater2(time) {
   });
   g.attributes.position.needsUpdate = true;
   g.computeVertexNormals();
+
+  rimData.forEach((vd, idx) => {
+    let y =
+      vd.initH + Math.sin((time + vd.phase) * vd.frequency) * vd.amplitude;
+    bottom.attributes.position.setY(idx, y);
+  });
+  bottom.attributes.position.needsUpdate = true;
+  bottom.computeVertexNormals();
+
 }
 
 export function buildWater2() {
@@ -57,7 +68,7 @@ export function buildWater2() {
     100,
     0,
     2 * Math.PI,
-    Math.PI / 2,
+    Math.PI / 2.1,
     Math.PI
   );
   g.rotateX(-Math.PI * 0.5);
@@ -70,6 +81,17 @@ export function buildWater2() {
       phase: THREE.MathUtils.randFloat(0, Math.PI),
       frequency: THREE.MathUtils.randFloat(0, 10),
     });
+  }
+  for (let i = 0; i < bottom.attributes.position.count; i++) {
+    v3.fromBufferAttribute(bottom.attributes.position, i);
+    if (v3.y > 0){
+      rimData.push({
+        initH: v3.y,
+        amplitude: THREE.MathUtils.randFloatSpread(30),
+        phase: THREE.MathUtils.randFloat(0, Math.PI),
+        frequency: THREE.MathUtils.randFloat(0, 10),
+      });
+    }
   }
   let m = new THREE.MeshStandardMaterial({
     color: "blue",
