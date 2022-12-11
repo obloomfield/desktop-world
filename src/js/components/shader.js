@@ -46,6 +46,32 @@ varying vec2 vertexUV;
 
 uniform sampler2D islandTexture;
 
+const float _TRI_SCALE = 100.0;
+
+// vec4 texture_UV(in sampler2DArray srcTexture, in vec3 x) {
+//   float k = texture(noiseMap, 0.0025*x.xy).x; // cheap (cache friendly) lookup
+//   float l = k*8.0;
+//   float f = fract(l);
+  
+//   float ia = floor(l+0.5); // suslik's method (see comments)
+//   float ib = floor(l);
+//   f = min(f, 1.0-f)*2.0;
+//   vec2 offa = sin(vec2(3.0,7.0)*ia); // can replace with any other hash
+//   vec2 offb = sin(vec2(3.0,7.0)*ib); // can replace with any other hash
+//   vec4 cola = texture(srcTexture, vec3(x.xy + offa, x.z));
+//   vec4 colb = texture(srcTexture, vec3(x.xy + offb, x.z));
+//   return mix(cola, colb, smoothstep(0.2,0.8,f-0.1*sum(cola.xyz-colb.xyz)));
+// }
+
+vec4 _Triplanar_UV(vec3 pos, vec3 normal) {
+  vec4 dx = texture(islandTexture, pos.zy); //texture_UV(tex, vec3(pos.zy / _TRI_SCALE, texSlice));
+  vec4 dy = texture(islandTexture, pos.xz); //texture_UV(tex, vec3(pos.xz / _TRI_SCALE, texSlice));
+  vec4 dz = texture(islandTexture, pos.xy); //texture_UV(tex, vec3(pos.xy / _TRI_SCALE, texSlice));
+  vec3 weights = abs(normal.xyz);
+  weights = weights / (weights.x + weights.y + weights.z);
+  return dx * weights.x + dy * weights.y + dz * weights.z;
+}
+
 void main() {
 
     vec3 n = v_Normal;
@@ -66,7 +92,7 @@ void main() {
         gl_FragColor = vec4(vec3(0,1,0) * lum, 1);
     } else {
         if (abs(n[2]) < .12) {
-            // gl_FragColor = texture2D(islandTexture, gl_PointCoord);
+            // gl_FragColor = _Triplanar_UV(v_Pos, v_Normal); //texture2D(islandTexture, vertexUV);
             gl_FragColor = vec4(vec3(0,1,0) * lum, 1);
         } else {
             gl_FragColor = vec4(vec3(.58,.24,0) * lum, 1);

@@ -5,7 +5,7 @@ import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUti
 // import { GrahamScan } from "../graham_scan_TEST.js";
 import "../../public/style.css";
 
-import { BufferGeometry, Object3D } from "three";
+import { BufferGeometry, Object3D, Vector2 } from "three";
 import { SCENEDATA } from "../setup";
 import { loadObj } from "./models";
 import { islandMaterial } from "./shader";
@@ -130,8 +130,8 @@ export class FloatingIsland {
     const wRad = w / 2;
     const hRad = h / 2;
 
-    const max = 1.0;
-    const min = 0.8;
+    const max = 1;
+    const min = 0.85;
     const coords = [];
     for (
       var i = 0;
@@ -152,47 +152,103 @@ export class FloatingIsland {
     }
     coords.push(coords[0]);
     console.log(coords.length);
+
+    const newCoords = [];
+    for (var i = 0; i < coords.length; i++) {
+
+    }
+
     return coords;
   }
 
+  distToEdge(pt, p1, p2) {
+    const top = Math.abs((p2[0]-p1[0])*(p1[1]-pt[1]) - (p1[0]-pt[0])*(p2[1]-p1[1]));
+    const bot = Math.sqrt(Math.pow(p2[0]-p1[0],2) + Math.pow(p2[1]-p1[1],2));
+    return top/bot;
+  }
+
   findClosest(point, hull) {
-    var hullClone = hull.slice();
-    hullClone.sort(function (p1, p2) {
-      return euclideanDistance(p1, point) - euclideanDistance(p2, point);
-    });
-    return hullClone[0];
+    var minDist = Number.POSITIVE_INFINITY;
+    var closestPt = [];
+    for (var i = 0; i < hull.length-1; i++) {
+      const dist = this.distToEdge(point, hull[i], hull[(i+1)]);
+      if (dist < minDist) {
+        minDist = dist;
+        const pt = new Vector2(point[0], point[1]);
+        const pt1 = new Vector2(hull[i][0], hull[i][1]);
+        const pt2 = new Vector2(hull[i+1][0], hull[i+1][1]);
+        const dir = (pt2-pt1).normalize();
+        const norm = new Vector2(-dir[1], dir[0]);
+        closestPt = pt + dist*norm; 
+      }
+      // minDist = Math.min(minDist, dist);
+    }
+    return [minDist, closestPt];
+
+    // var hullClone = hull.slice();
+    // hullClone.sort(function (p1, p2) {
+    //   return euclideanDistance(p1, point) - euclideanDistance(p2, point);
+    // });
+    // return hullClone[0];
   }
 
   ellipsoid(x, y) {
     const a = this.width / 2;
     const b = this.height / 2;
+    const hypotenuse = Math.sqrt(x*x + y*y);
+    const cosT = x / hypotenuse;
+    const sinT = y / hypotenuse;
+
+    var rad =
+        Math.sqrt(
+          Math.pow(a * b, 2) /
+            (b * b * cosT * cosT + a * a * sinT * sinT)
+        );
+    
+    if (hypotenuse > rad) {
+      return 0;
+    }
+
     const xyComp = Math.abs(1 - (x * x) / (a * a) - (y * y) / (b * b));
     const c2 = this.ellipseHeight * this.ellipseHeight;
     return Math.sqrt(c2 * xyComp);
   }
 
-  falloff(point, rad) {
-    const pt = new THREE.Vector2(point[0], point[1]);
-    const len = pt.length();
-    // console.log(point);
-    if (point[0] == 0) {
-      return 1;
+  falloff(point, rad, hull) {
+    const minDist = this.findClosest(point, hull);
+    if (minDist < 20) {
+      return -Math.pow((20-minDist)/20, 10) + 1;
     }
-    // const theta = Math.atan(point[1] / point[0]);
-    // const cosT = Math.cos(theta);
-    // const sinT = Math.sin(theta);
+    return 1;
+    // const pt = new THREE.Vector2(point[0], point[1]);
+    // const len = pt.length();
+    // // console.log(point);
+    // if (point[0] == 0) {
+    //   return 1;
+    // }
+    // const x = point[0];
+    // const y = point[1];
+    // const a = this.width / 2;
+    // const b = this.height / 2;
+    // const hypotenuse = Math.sqrt(x*x + y*y);
+    // const cosT = x / hypotenuse;
+    // const sinT = y / hypotenuse;
 
-    // const wRad = this.width/2;
-    // const hRad = this.height/2;
-
-    // const myRad =  Math.sqrt(Math.pow((wRad*hRad),2) / (hRad*hRad*cosT*cosT + wRad*wRad*sinT*sinT)); //Math.max(this.height, this.width);
-    // console.log(myRad);
-    const myRad = Math.max(2 * this.width, 2 * this.height);
-    if (len > myRad) {
-      return 0;
-    }
-    let x = len / myRad;
-    return -Math.pow(x, 10) + 1;
+    // var rad =
+    //     Math.sqrt(
+    //       Math.pow(a * b, 2) /
+    //         (b * b * cosT * cosT + a * a * sinT * sinT)
+    //     );
+    
+    // if (hypotenuse > rad) {
+    //   return 0;
+    // }
+    // const myRad = Math.max(2 * this.width, 2 * this.height);
+    // if (len > myRad) {
+    //   return 0;
+    // }
+    // let rat = len / myRad;
+    // return -Math.pow(rat, 10) + 1;
   }
 
   augmentVerts(geometry, hull, positive) {
@@ -200,6 +256,11 @@ export class FloatingIsland {
     for (var i = 0; i < verts.length; i += 3) {
       let pt = [verts[i], verts[i + 1]];
       if (!this.IsPointInPolygon(hull, pt)) {
+        // const res = this.findClosest;
+        // if (res[0] < 2) {
+        //   verts[i] = res[1][0];
+        //   verts[i+1] = res[1][1];
+        // }
         continue;
       }
       var eHeight = this.ellipsoid(pt[0], pt[1]);
@@ -208,9 +269,9 @@ export class FloatingIsland {
         eHeight +
         Math.abs(
           this.PEAK *
-            (-(1.5 / (this.width / 2)) * Math.abs(verts[i]) + 1.5) *
-            (-(1.5 / (this.height / 2)) * Math.abs(verts[i + 1]) + 1.5) *
-            this.falloff(pt, this.RAD) *
+            (-(1.5 / ((this.width*.9) / 2)) * Math.abs(verts[i]) + 1.5) *
+            (-(1.5 / ((this.height*.9) / 2)) * Math.abs(verts[i + 1]) + 1.5) *
+            // this.falloff(pt, this.RAD, hull) *
             (this.perlin(1 / 8, 10, verts[i], verts[i + 1]) +
               this.perlin(1 / 4, 40, verts[i], verts[i + 1]) +
               this.perlin(1, 400, verts[i], verts[i + 1]))
@@ -278,6 +339,7 @@ export class FloatingIsland {
     let mergedGeos = BufferGeometryUtils.mergeBufferGeometries(geos);
     // merged.rotateY(-Math.PI/2);
     const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
+    merged.computeVertexNormals();
     const posArr = merged.attributes.position.array;
     const treeLocs = this.sampleTrees(merged);
 
