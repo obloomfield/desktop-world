@@ -1,19 +1,27 @@
 import * as THREE from "three";
 
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+
 const STANDARD_VERTEX_SHADER = `
+
 varying vec3 v_Normal;
 varying vec3 v_Pos;
+varying vec2 vertexUV;
 
 void main() {
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     v_Normal = normal;
     v_Pos = position;
+    vertexUV = uv;
 }
 `;
+
+////////////////////////////////////////////////////////
 
 const CIRCULAR_CONSTRAINT_FRAGMENT_SHADER = `
 varying vec3 v_Normal;
 varying vec3 v_Pos;
+varying vec2 vertexUV;
 
 uniform float RADIUS;
 uniform vec4 COLOR;
@@ -29,20 +37,6 @@ void main() {
 `;
 
 ////////////////////////////////////////////////////////
-
-const ISLAND_VERTEX_SHADER = `
-
-varying vec3 v_Normal;
-varying vec3 v_Pos;
-varying vec2 vertexUV;
-
-void main() {
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    v_Normal = normal;
-    v_Pos = position;
-    vertexUV = uv;
-}
-`;
 
 const ISLAND_FRAGMENT_SHADER = `
 
@@ -81,6 +75,31 @@ void main() {
 }
 `;
 
+////////////////////////////////////////////////////////
+
+const BLOOM_FRAGMENT_SHADER = `
+varying vec3 v_Normal;
+varying vec3 v_Pos;
+varying vec2 vertexUV;
+
+uniform float u_time;
+uniform vec4 color_1;
+uniform vec4 color_2;
+
+uniform sampler2D baseTexture;
+uniform sampler2D bloomTexture;
+
+void main() {
+
+  float alpha = sin(u_time);
+  float red = clamp(color_1[0]*alpha + color_2[0]*(1.0-alpha),0.0,1.0);
+  float green = clamp(color_1[1]*alpha + color_2[1]*(1.0-alpha),0.0,1.0);
+  float blue = clamp(color_1[2]*alpha + color_2[2]*(1.0-alpha),0.0,1.0);
+  
+  gl_FragColor = ( texture2D( baseTexture, vertexUV ) + vec4( 1.0 ) * texture2D( bloomTexture, vertexUV ) );
+}
+`;
+
 export const circle_constraint_material = function (color) {
   return new THREE.ShaderMaterial({
     uniforms: {
@@ -105,7 +124,7 @@ export const islandMaterial = new THREE.ShaderMaterial({
       ),
     },
   },
-  vertexShader: ISLAND_VERTEX_SHADER,
+  vertexShader: STANDARD_VERTEX_SHADER,
   fragmentShader: ISLAND_FRAGMENT_SHADER,
 });
 islandMaterial.opacity = 0;
@@ -113,3 +132,20 @@ islandMaterial.transparent = 1;
 islandMaterial.side = THREE.DoubleSide;
 islandMaterial.depthWrite = true;
 // islandMaterial.depthTest =
+
+export const bloomPass = function (bloomTexture) {
+  const finalPass = new ShaderPass(
+    new THREE.ShaderMaterial({
+      uniforms: {
+        baseTexture: { value: null },
+        bloomTexture: { value: bloomTexture },
+      },
+      vertexShader: STANDARD_VERTEX_SHADER,
+      fragmentShader: BLOOM_FRAGMENT_SHADER,
+      defines: {},
+    }),
+    "baseTexture"
+  );
+  finalPass.needsSwap = true;
+  return finalPass;
+};
