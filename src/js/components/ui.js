@@ -5,6 +5,8 @@ import { lightParams, sunParams } from "./lighting";
 import { fireflyParams } from "./particles";
 import { perlinParams } from "./perlin";
 import { terrainParams } from "./terrain";
+import { waterParams } from "./water";
+
 
 export var stats = new Stats();
 
@@ -34,6 +36,11 @@ export function makeGUI() {
   const particleFolder = gui.addFolder("Particles");
   particleFolder.add(fireflyParams, "SPREAD", 1, 50);
   particleFolder.add(fireflyParams, "NUMCLUSTERS", 1, 5);
+  const waterFolder = gui.addFolder("Water");
+  waterFolder.add(waterParams, "FREQUENCY", 1, 100);
+  waterFolder.add(waterParams, "AMPLITUDE", 1, 100);
+  waterFolder.add(waterParams, "PHASE", 1, 100);
+
 }
 
 export function makeStats() {

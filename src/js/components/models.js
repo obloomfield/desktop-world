@@ -56,4 +56,23 @@ export function loadObj(matFile, objFile) {
 export function addModels() {
   load_model("public/models/simple_dirty_desk.glb", "desk");
   load_model("public/models/desk_lamp.glb", "lamp");
+
+  const waterGeometry = new THREE.SphereGeometry(
+    550,
+    100,
+    100,
+    0,
+    2 * Math.PI,
+    0,
+    Math.PI
+  );
+  const material = new THREE.MeshPhysicalMaterial({  
+    roughness: 0,  
+    transmission: 0.9,  
+    
+  });
+  let o = new THREE.Mesh(waterGeometry, material)
+  //SCENEDATA.scene.add(o)
+  
+
 }

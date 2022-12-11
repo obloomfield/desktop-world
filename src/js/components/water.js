@@ -6,6 +6,12 @@ import { circle_constraint_material } from "./shader";
 
 import { SCENEDATA } from "../setup";
 
+export var waterParams = new (function () {
+  this.FREQUENCY = 3;
+  this.AMPLITUDE = 30;
+  this.PHASE = Math.PI;
+})();
+
 var sunDirection = new THREE.Vector3(0, 50, 0);
 export function buildWater() {
   const waterGeometry = new THREE.CircleGeometry(500, 100);
@@ -77,9 +83,9 @@ export function buildWater2() {
     v3.fromBufferAttribute(g.attributes.position, i);
     vertData.push({
       initH: v3.y,
-      amplitude: THREE.MathUtils.randFloatSpread(30),
-      phase: THREE.MathUtils.randFloat(0, Math.PI),
-      frequency: THREE.MathUtils.randFloat(0, 10),
+      amplitude: THREE.MathUtils.randFloatSpread(waterParams.AMPLITUDE),
+      phase: THREE.MathUtils.randFloat(0, waterParams.PHASE),
+      frequency: THREE.MathUtils.randFloat(0, waterParams.FREQUENCY),
     });
   }
   for (let i = 0; i < bottom.attributes.position.count; i++) {
@@ -89,7 +95,7 @@ export function buildWater2() {
         initH: v3.y,
         amplitude: THREE.MathUtils.randFloatSpread(30),
         phase: THREE.MathUtils.randFloat(0, Math.PI),
-        frequency: THREE.MathUtils.randFloat(0, 10),
+        frequency: THREE.MathUtils.randFloat(0, 3),
       });
     }
   }
