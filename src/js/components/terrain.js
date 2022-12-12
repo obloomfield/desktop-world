@@ -26,7 +26,10 @@ export function addTerrain() {
   var terrain = new THREE.Mesh(
     geometry,
     circle_constraint_material(new THREE.Vector4(0, 1, 0, 1))
+    
+  
   );
+  // terrain.layers.enable(1);
 
   // if (terrainParams.FLAT_SHADING) {
   //   terrain.geometry = terrain.geometry.toNonIndexed();

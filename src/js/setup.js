@@ -40,7 +40,8 @@ export class SCENEDATA {
   // # means private in JS - strange lol
   static #setupScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color().setHSL(0.3, 0, 0.8);
+    this.scene.background = new THREE.Color("black")
+    //.setHSL(0.3, 0, 0.8);
   }
 
   static #setupCamera() {
@@ -71,52 +72,40 @@ export class SCENEDATA {
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
     this.controls.enableZoom = false;
+    
   }
 
   static #setupBloom() {
 
     const ENTIRE_SCENE = 0, BLOOM_SCENE = 1;
 
+    this.bloomLayer = new THREE.Layers();
+    this.bloomLayer.set( BLOOM_SCENE );
 
-const darkMaterial = new THREE.MeshBasicMaterial( { color: 'black' } );
-const materials = {};
-this.bloomLayer = new THREE.Layers();
-this.bloomLayer.set( BLOOM_SCENE );
+    this.bloomComposer = new EffectComposer(SCENEDATA.renderer);
+    const renderScene = new RenderPass(SCENEDATA.scene, SCENEDATA.camera);
+    this.bloomComposer.renderToScreen = false;
+    this.bloomComposer.addPass(renderScene);
+    this.bloomComposer.addPass(new UnrealBloomPass({x: 2048, y: 2048}, 0.9, 2.0, 0.0));
 
+    // uniformData.bloomTexture.value = this.bloomComposer.renderTarget2.texture;
 
+    const finalPass = new ShaderPass(
+            new THREE.ShaderMaterial( {
+              uniforms: {
+                baseTexture: { value: null },
+                bloomTexture: { value: this.bloomComposer.renderTarget2.texture }
+              },
+              vertexShader: vertShader(),
+              fragmentShader: fragShader(),
+              defines: {}
+            } ), 'baseTexture'
+          );
+    finalPass.needsSwap = true;
 
-const bloomParams = {
-        exposure: 1,
-        bloomStrength: 5,
-        bloomThreshold: 0,
-        bloomRadius: 0,
-        scene: 'Scene with Glow'
-      };
-
-this.bloomComposer = new EffectComposer(SCENEDATA.renderer);
-const renderScene = new RenderPass(SCENEDATA.scene, SCENEDATA.camera);
-this.bloomComposer.renderToScreen = false;
-this.bloomComposer.addPass(renderScene);
-this.bloomComposer.addPass(new UnrealBloomPass({x: 1024, y: 1024}, 1.0, 0.0, 0.0));
-
-// uniformData.bloomTexture.value = this.bloomComposer.renderTarget2.texture;
-
-const finalPass = new ShaderPass(
-        new THREE.ShaderMaterial( {
-          uniforms: {
-            baseTexture: { value: null },
-            bloomTexture: { value: this.bloomComposer.renderTarget2.texture }
-          },
-          vertexShader: vertShader(),
-          fragmentShader: fragShader(),
-          defines: {}
-        } ), 'baseTexture'
-      );
-finalPass.needsSwap = true;
-
-this.finalComposer = new EffectComposer( SCENEDATA.renderer );
-      this.finalComposer.addPass( renderScene );
-      this.finalComposer.addPass( finalPass );
+    this.finalComposer = new EffectComposer( SCENEDATA.renderer );
+    this.finalComposer.addPass( renderScene );
+    this.finalComposer.addPass( finalPass );
 
 
 }

@@ -6,6 +6,7 @@ import { fireflyParams } from "./particles";
 import { perlinParams } from "./perlin";
 import { terrainParams } from "./terrain";
 import { waterParams } from "./water";
+import { bloomParam } from "./bloom";
 
 
 export var stats = new Stats();
@@ -14,12 +15,16 @@ export function makeGUI() {
   const gui = new GUI();
   const generalFolder = gui.addFolder("General");
   generalFolder.add(SCENEDATA.controls, "enableZoom");
+  
   // generalFolder.add(terrainParams, "FLAT_SHADING");
   // const centerFolder = gui.addFolder("Center");
   // centerFolder.add(terrainParams.ORIGIN, "x", -50, 50);
   // centerFolder.add(terrainParams.ORIGIN, "y", -50, 50);
   const sunFolder = gui.addFolder("Sun");
   sunFolder.add(sunParams, "ORBIT_SPEED", 0.0001, 0.1);
+  
+  const bloomFolder = gui.addFolder("Bloom");
+  bloomFolder.add(bloomParam,"bloomEnabled");
   // sunFolder.add(sunParams.SUN_AXIS, "x", 0, 1);
   // sunFolder.add(sunParams.SUN_AXIS, "y", 0, 1);
   // sunFolder.add(sunParams.SUN_AXIS, "z", 0, 1);

@@ -33,6 +33,7 @@ export function buildWater() {
     fog: false,
   });
   water.rotation.x = -Math.PI / 2;
+  
   SCENEDATA.add("water", water);
 
   // const waterUniforms = water.material.uniforms;
@@ -118,5 +119,6 @@ export function buildWater2() {
   o.position.y = -0;
   SCENEDATA.add("water_top", o);
   let o2 = new THREE.Mesh(bottom, m2);
+  o2.layers.enable(1);
   SCENEDATA.add("water_bowl", o2);
 }

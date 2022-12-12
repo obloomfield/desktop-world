@@ -5,7 +5,7 @@ import { updateParticles } from "./components/particles";
 import { updateTerrain } from "./components/terrain";
 import { stats } from "./components/ui";
 import { updateWater2 } from "./components/water";
-import { renderBloom } from "./components/bloom";
+import { renderBloom,bloomParam } from "./components/bloom";
 import { SCENEDATA } from "./setup";
 
 var clock = new THREE.Clock();
@@ -30,9 +30,16 @@ function update() {
 }
 
 function render() {
+
   SCENEDATA.controls.update();
-  renderBloom();
-  // SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
+  if (bloomParam.bloomEnabled) {
+    renderBloom();
+  }
+  else {
+    SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
+  }
+  
+  
   
 }
 
