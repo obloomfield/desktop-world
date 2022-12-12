@@ -15,8 +15,10 @@ export function addSky() {
   let m = new THREE.MeshStandardMaterial({
     color: "pink",
     roughness: 1.0,
+    // emissive: "0xffffff"
   });
   m.side = THREE.BackSide;
   let o = new THREE.Mesh(back, m);
-  SCENEDATA.add("sky", o);
+  // o.layers.enable(1);
+  // SCENEDATA.add("sky", o);
 }

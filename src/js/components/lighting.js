@@ -26,7 +26,7 @@ export function addLights() {
 
   var sun = new THREE.Mesh(
     new THREE.SphereGeometry(5, 5, 5),
-    new THREE.MeshBasicMaterial({ color: 0xffff000 })
+    new THREE.MeshStandardMaterial({ color: 0xffff000, emissive: 0xffffff })
   );
   sun_pivot.add(sun);
   sun_pivot.add(sunlight);

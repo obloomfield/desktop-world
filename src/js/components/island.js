@@ -313,6 +313,8 @@ export class FloatingIsland {
     var material = new THREE.MeshStandardMaterial({
       color: 0x836582,
       side: THREE.DoubleSide,
+      emissive: 0xffffff,
+      emissiveIntensity: 1,
     });
 
     var terrain = new THREE.Mesh(merged, islandMaterial);
