@@ -87,16 +87,15 @@ void main() {
 
     if (n[0] == 0.0 && n[1] == 0.0 && n[2] == 1.0 && v_Pos[2] == 0.0) {
         discard;
-        // gl_FragColor = vec4(0,0,0,0);
-    } else if (v_Pos[2] >= 0.0) {
+    } 
+    else if (v_Pos[2] > 0.0) {
+      if (n[2] < 0.55) { 
+        gl_FragColor = vec4(lum,lum,lum, 1);
+      } else {
         gl_FragColor = vec4(vec3(0,1,0) * lum, 1);
+      }
     } else {
-        if (abs(n[2]) < .12) {
-            // gl_FragColor = _Triplanar_UV(v_Pos, v_Normal); //texture2D(islandTexture, vertexUV);
-            gl_FragColor = vec4(vec3(0,1,0) * lum, 1);
-        } else {
-            gl_FragColor = vec4(vec3(.58,.24,0) * lum, 1);
-        }
+      gl_FragColor = vec4(lum,lum,lum, 1);
     }
 }
 `;
@@ -157,6 +156,7 @@ islandMaterial.opacity = 0;
 islandMaterial.transparent = 1;
 islandMaterial.side = THREE.DoubleSide;
 islandMaterial.depthWrite = true;
+islandMaterial.flatShading = true;
 // islandMaterial.depthTest =
 
 export const bloomPass = function (bloomTexture) {

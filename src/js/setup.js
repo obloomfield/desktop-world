@@ -36,7 +36,7 @@ export class SCENEDATA {
       45,
       this.WIDTH / this.HEIGHT,
       1,
-      3000
+      10000
     );
     // var cameraTarget = { x: 0, y: 0, z: 0 };
     this.camera.position.y = 700;
@@ -98,7 +98,7 @@ export class SCENEDATA {
 
     addSky();
 
-    addModels();
+    await addModels();
 
     makeStats();
     makeGUI();
