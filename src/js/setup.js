@@ -10,6 +10,7 @@ import { addSky } from "./components/sky";
 import { addTerrain } from "./components/terrain";
 import { makeGUI, makeStats } from "./components/ui";
 import { buildWater2 } from "./components/water";
+import { buildClouds, makeRain } from "./components/clouds";
 import { setupEvents } from "./events";
 import { loop } from "./update";
 
@@ -87,6 +88,7 @@ export class SCENEDATA {
     setupBloom();
 
     addLights();
+    
 
     addTerrain();
 
@@ -95,6 +97,10 @@ export class SCENEDATA {
     createClusters();
 
     buildWater2();
+
+    buildClouds();
+
+    makeRain();
 
     addSky();
 
