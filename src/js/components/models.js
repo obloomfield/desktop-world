@@ -58,17 +58,61 @@ export function loadObj(matFile, objFile) {
 }
 
 export async function addModels() {
-  const desk = await load_model("public/models/simple_dirty_desk.glb", "desk");
-  desk.scale.set(2000,2000,2000);
-  desk.position.y = -2100; //.translate(0,-500,0);
-  SCENEDATA.add("desk", desk);
+  const desk = await loadObj("public/models/toonDesk.mtl", "public/models/toonDesk.obj");
+  const deskObj = desk[0];
+  console.log(deskObj);
 
-  const lamp = await load_model("public/models/desk_lamp.glb", "lamp");
-  lamp.scale.set(650,650,650);
-  lamp.position.y = -500;
-  lamp.position.x = 800;
-  lamp.rotation.y = -Math.PI;
-  SCENEDATA.add("lamp", lamp);
+  deskObj.scale.set(5000,5000,5000);
+  deskObj.translateY(-2400);
+  deskObj.translateZ(-1000);
+  deskObj.translateX(1000);
+
+  // const desk = await load_model("public/models/simple_dirty_desk.glb", "desk");
+  // desk.scale.set(2000,2000,2000);
+  // desk.position.y = -2100; //.translate(0,-500,0);
+  SCENEDATA.add("desk", deskObj);
+
+  // const lamp = await load_model("public/models/desk_lamp.glb", "lamp");
+  // lamp.scale.set(650,650,650);
+  // lamp.position.y = -500;
+  // lamp.position.x = 800;
+  // lamp.rotation.y = -Math.PI;
+  const lamp = await loadObj("public/models/toonLamp.mtl", "public/models/toonLamp.obj");
+  const lampObj = lamp[0];
+  console.log(lampObj);
+  lampObj.scale.set(2500,2500,2500);
+
+  lampObj.rotateY(Math.PI/4);
+  
+  lampObj.translateX(-10300);
+  lampObj.translateY(-2450);
+  lampObj.translateZ(-600);
+  // lampObj.translateZ(3000);
+
+  SCENEDATA.add("lamp", lampObj);
+
+  const lGeometry = new THREE.BoxGeometry( 50, 8000, 10000 );
+  const lMaterial = new THREE.MeshStandardMaterial( {color: 0x00ff00} );
+  const lWall = new THREE.Mesh( lGeometry, lMaterial );
+  lWall.translateX(5000);
+  lWall.translateY(1600);
+  SCENEDATA.add("lWall", lWall);
+
+  const rGeometry = new THREE.BoxGeometry( 10000, 8000, 50 );
+  const rMaterial = new THREE.MeshStandardMaterial( {color: 0x00ff00} );
+  const rWall = new THREE.Mesh( rGeometry, rMaterial );
+  rWall.translateZ(5000);
+  rWall.translateY(1600);
+
+  SCENEDATA.add("rWall", rWall);
+
+  const floorGeometry = new THREE.BoxGeometry( 10000, 50, 10000 );
+  const floorMaterial = new THREE.MeshStandardMaterial( {color: 0x00ff00} );
+  const floor = new THREE.Mesh( floorGeometry, floorMaterial );
+  floor.translateY(-2400);
+  SCENEDATA.add("floor", floor);
+
+  const floorBox = new THREE.BoxGeometry();
 
   const waterGeometry = new THREE.SphereGeometry(
     550,
