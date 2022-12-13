@@ -85,11 +85,10 @@ export class SCENEDATA {
 
     this.#setupControls();
 
-    
+    setupBloom();
 
     addLights();
     
-
     addTerrain();
 
     await addIslands();
@@ -103,8 +102,6 @@ export class SCENEDATA {
     makeRain();
 
     addSky();
-
-    setupBloom();
 
     addModels();
 
