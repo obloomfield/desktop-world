@@ -16,6 +16,11 @@ export function addLights() {
   // var ambLight = new THREE.AmbientLight(0xffffff);
   // SCENEDATA.add("ambient", ambLight);
 
+  var spotLight = new THREE.DirectionalLight({color: 0xffffff, 
+  position: new THREE.Vector3(200, 0, 200)})
+
+  SCENEDATA.add("spotlight", spotLight);
+
   var sunlight = new THREE.DirectionalLight(0xffffff, 1);
   sunlight.position
     .set(
@@ -24,7 +29,7 @@ export function addLights() {
       SCENEDATA.camera.position.z + 500
     )
     .normalize();
-  SCENEDATA.add("sunlight", sunlight);
+  //SCENEDATA.add("sunlight", sunlight);
   // console.log(sunlight.color);
 
   var sun = new THREE.Mesh(
@@ -41,7 +46,7 @@ export function addLights() {
     sun.position.z * 300
   );
   console.log(sun.position);
-  SCENEDATA.add("sun_pivot", sun_pivot);
+  //SCENEDATA.add("sun_pivot", sun_pivot);
 
   const hemiLight = new THREE.HemisphereLight(
     0xffffff,
@@ -51,7 +56,7 @@ export function addLights() {
   hemiLight.color.setHSL(0.6, 1, 0.6);
   hemiLight.groundColor.setHSL(0.095, 1, 0.75);
   hemiLight.position.set(0, 50, 0);
-  SCENEDATA.add("hemiLight", hemiLight);
+  //SCENEDATA.add("hemiLight", hemiLight);
 }
 
 export function updateSun() {
