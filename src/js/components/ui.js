@@ -7,7 +7,7 @@ import { perlinParams } from "./perlin";
 import { terrainParams } from "./terrain";
 import { waterParams } from "./water";
 import { bloomParam } from "./bloom";
-
+import {lampParam} from "./models";
 
 export var stats = new Stats();
 
@@ -44,6 +44,9 @@ export function makeGUI() {
 
   const bloomFolder = gui.addFolder("Bloom");
   bloomFolder.add(bloomParam,"bloomEnabled");
+
+  const buttonFolder = gui.addFolder("Lamp");
+  buttonFolder.add(lampParam, "lampOn");
 
 }
 

@@ -16,8 +16,8 @@ export function addLights() {
   // var ambLight = new THREE.AmbientLight(0xffffff);
   // SCENEDATA.add("ambient", ambLight);
 
-  var spotLight = new THREE.DirectionalLight({color: 0xffffff, 
-  position: new THREE.Vector3(200, 0, 200)})
+  var spotLight = new THREE.PointLight({color: 0xffffff, 
+  position: new THREE.Vector3(-1, 0, 1)})
 
   SCENEDATA.add("spotlight", spotLight);
 

@@ -10,17 +10,28 @@ import { updateClouds, updateWeather } from "./components/clouds";
 import { SCENEDATA } from "./setup";
 import { bloomParam } from "./components/bloom";
 import {updateParticleSystem} from "./components/particleSystem";
+import {lampParam, updateButton} from "./components/models";
 
 var clock = new THREE.Clock();
 var times = [0, Math.PI / 3, -Math.PI / 4, Math.PI / 6, Math.PI / 5];
 
 var i = 0;
+
+var buttonState = false;
+
 function update() {
   var delta = clock.getDelta();
   var elapsed = clock.elapsedTime;
   // terrain.position.z += SPEED * delta;
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
+  
+  // if (buttonState != lampParam.lampOn) {
+  //   updateButton();
+  //   buttonState = lampParam.lampOn
+  // }
+  
+
   updateParticleSystem(delta);
 
   updateSun();
