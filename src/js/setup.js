@@ -29,7 +29,7 @@ export class SCENEDATA {
   // # means private in JS - strange lol
   static #setupScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color().setHSL(0.3, 0, 0.8);
+    // this.scene.background = new THREE.Color("0x00003f");
   }
 
   static #setupCamera() {
@@ -48,7 +48,7 @@ export class SCENEDATA {
   static #setupRenderer() {
     this.renderer = new THREE.WebGLRenderer({ alpha: true });
     console.log("reached setup");
-    this.renderer.setClearColor(0xffffff, 0);
+    this.renderer.setClearColor(0x000000);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.WIDTH, this.HEIGHT);
     document.body.appendChild(this.renderer.domElement);
@@ -85,7 +85,7 @@ export class SCENEDATA {
 
     this.#setupControls();
 
-    setupBloom();
+    
 
     addLights();
     
@@ -103,6 +103,8 @@ export class SCENEDATA {
     makeRain();
 
     addSky();
+
+    setupBloom();
 
     addModels();
 

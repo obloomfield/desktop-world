@@ -6,6 +6,7 @@ import { fireflyParams } from "./particles";
 import { perlinParams } from "./perlin";
 import { terrainParams } from "./terrain";
 import { waterParams } from "./water";
+import { bloomParam } from "./bloom";
 
 
 export var stats = new Stats();
@@ -40,6 +41,9 @@ export function makeGUI() {
   waterFolder.add(waterParams, "FREQUENCY", 1, 100);
   waterFolder.add(waterParams, "AMPLITUDE", 1, 100);
   waterFolder.add(waterParams, "PHASE", 1, 100);
+
+  const bloomFolder = gui.addFolder("Bloom");
+  bloomFolder.add(bloomParam,"bloomEnabled");
 
 }
 
