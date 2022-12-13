@@ -119,19 +119,19 @@ export class SCENEDATA {
 
     this.#setupControls();
 
-    // setupBloom();
+    setupBloom();
 
-    // addLights();
+    addLights();
 
-    // addTerrain();
+    addTerrain();
 
     await addIslands();
 
     // addParticleSystem(150,150,-150);
 
-    // createClusters();
+    createClusters();
 
-    // buildWater2();
+    buildWater2();
 
     buildClouds();
 
@@ -139,7 +139,7 @@ export class SCENEDATA {
 
     addSky();
 
-    // await addModels();
+    await addModels();
 
     this.boidHandler = setupBoids();
 

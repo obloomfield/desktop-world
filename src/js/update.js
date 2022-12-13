@@ -25,21 +25,20 @@ function update() {
   updateSun();
 
   updateParticles(elapsed);
-  // updateTerrain(SCENEDATA.terrain);
+  updateTerrain(SCENEDATA.terrain);
 
   updateIslands();
   updateClouds(elapsed);
   updateWeather();
-  //updateWater(water, sun_pivot.position);
-  // updateWater2(elapsed);
+  // updateWater(water, sun_pivot.position);
+  updateWater2(elapsed);
   i++;
 }
 
 function render() {
   SCENEDATA.controls.update();
-  // renderBloom();
+  renderBloom();
   SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
-  
 }
 
 export function loop() {
