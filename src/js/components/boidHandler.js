@@ -8,18 +8,28 @@ export var sphereRays = [];
 
 export var boidParams = new (function () {
   this.NUM_RAYS = 100;
-  this.NUM_BOIDS = 5;
+  this.NUM_BOIDS = 50;
   this.GEN_HEIGHT_MIN = terrainParams.PEAK; // min offset to make sure boids don't generate under terrain
-  this.FOLLOW_TARGET = false;
+  this.FOLLOW_TARGET = true;
   this.MIN_VELOCITY = -1;
   this.MAX_VELOCITY = 1;
-  this.WANDER_WEIGHT = 0.2;
-  this.COHESION_WEIGHT = 1;
+  this.WANDER_WEIGHT = 0.4;
+  this.WANDER_MIN_DIST = 5;
+  this.WANDER_MAX_CNT = 500;
+  this.COHESION_WEIGHT = 0.8;
+  this.COHESION_DIST = 50;
   this.SEPARATION_WEIGHT = 1;
+  this.SEPARATION_DIST = 30;
   this.ALIGNMENT_WEIGHT = 1;
+  this.ALIGNMENT_DIST = 50;
   this.VISION_MAX = 150;
-  this.BOUNDARY_RAD = terrainParams.RAD;
+  this.BOUNDARY_RAD = terrainParams.RAD + 50;
   this.ORIGIN = new THREE.Vector3(0, 0, 0);
+  this.LOOK_SMOOTHING = true;
+  this.SMOOTHING_SAMPLES = 20;
+  this.TARGETING_ERROR = 10;
+  this.TARGETING_FORGET_CNT = 200; // how many frames required for the boid to forget its previous targeting...
+  this.FLICKER = true;
 })();
 
 function azimuthal(inclination, azimuth) {
@@ -45,17 +55,27 @@ function generateSphereRays() {
 
 generateSphereRays();
 
-function randomStartPos() {
+export function randomPointError(pos, error) {
+  // sample a random point around 'pos' with error radius 'error'
+  return new THREE.Vector3(
+    pos.x + (Math.random() * 2 * error - error),
+    pos.y + (Math.random() * 2 * error - error),
+    pos.z + (Math.random() * 2 * error - error)
+  );
+}
+
+export function randomStartPos() {
   // only generate in top hemisphere
   const r = boidParams.BOUNDARY_RAD - 10; // - 10 to make sure they don't spawn right next to edge
   var x = Math.random() * 2 * r - r;
-  var z = Math.random() * 2 * r - r;
+  const z_max = Math.sqrt(r * r - x * x);
+  var z = Math.random() * 2 * z_max - z_max;
   const y_max = Math.sqrt(r * r - x * x - z * z); // height of hemisphere cap == max generated height
   var y =
     Math.random() * (y_max - boidParams.GEN_HEIGHT_MIN) +
     boidParams.GEN_HEIGHT_MIN; // random height from min height to hemisphere cap
 
-  console.log(x);
+  // console.log(x);
 
   return new THREE.Vector3(x, y, z);
 }
@@ -92,9 +112,18 @@ export default class BoidHandler {
   constructor(numBoids = boidParams.NUM_BOIDS, obstacles = [], target = null) {
     this.obstacles = obstacles;
     this.target = target;
+    this.ticks_since_target = 0;
     // console.log(numBoids);
 
+    this.flicker_offsets = [];
+    // this.generateFlickerOffsets(numBoids);
     this.generateBoids(numBoids);
+  }
+
+  generateFlickerOffsets(n) {
+    for (let i = 0; i < n; n++) {
+      this.flicker_offsets.push(Math.random() * Math.PI);
+    }
   }
 
   generateBoids(numBoids) {
@@ -106,7 +135,7 @@ export default class BoidHandler {
       position = randomStartPos();
       console.log(position);
       color = null; // will use default color in getBoid
-      followTarget = this.FOLLOW_TARGET;
+      followTarget = boidParams.FOLLOW_TARGET;
       quaternion = null;
 
       // first boid is special :)
@@ -121,12 +150,40 @@ export default class BoidHandler {
 
   // updates the target position for all boids
   updateTarget(newTarget) {
+    this.ticks_since_target = 0;
     this.target = newTarget;
+    this.boids.forEach((boid) => {
+      boid.target = randomPointError(newTarget, boidParams.TARGETING_ERROR);
+    });
   }
 
-  updateBoids(delta) {
+  resetTargets() {
+    console.log("RESETTING BOID TARGETING");
     this.boids.forEach((boid) => {
-      boid.update(delta, this.boids, this.obstacles, this.target);
+      boid.target = null;
+    });
+  }
+
+  applyFlicker(elapsed) {
+    for (let i = 0; i < this.numBoids; i++) {
+      var cur_boid = this.boids[i];
+      var alpha = (Math.sin(elapsed * 10) + 1.0) / 2.0;
+      cur_boid.mat.opacity = alpha;
+    }
+  }
+
+  updateBoids(delta, elapsed) {
+    console.log(this.ticks_since_target);
+    if (this.target !== null) this.ticks_since_target++;
+    if (this.ticks_since_target > boidParams.TARGETING_FORGET_CNT) {
+      this.resetTargets();
+    }
+    if (boidParams.FLICKER) {
+      this.applyFlicker(elapsed);
+    }
+
+    this.boids.forEach((boid) => {
+      boid.update(delta, this.boids, SCENEDATA.obstacles);
     });
   }
 }

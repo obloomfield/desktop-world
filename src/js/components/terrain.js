@@ -14,7 +14,7 @@ export var terrainParams = new (function () {
   this.RAD = 400;
   this.ORIGIN = new THREE.Vector2(0, 0);
   this.FLAT_SHADING = true;
-  this.SHOW_INTERSECTION = true;
+  this.SHOW_INTERSECTION = false;
 })();
 
 export function addTerrain() {
@@ -35,8 +35,8 @@ export function addTerrain() {
     terrain.geometry = terrain.geometry.toNonIndexed();
   }
   terrain.rotation.x = -Math.PI / 2;
-   terrain.layers.enable(1);
-  SCENEDATA.add("terrain", terrain);
+  terrain.layers.enable(1);
+  SCENEDATA.addObstacle("terrain", terrain);
 }
 
 export function updateTerrain() {
@@ -60,24 +60,33 @@ export function updateTerrain() {
   terrain.geometry.attributes.position.needsUpdate = true;
 
   // no way back from flat shading !! loss of info !!
-  terrain.geometry.computeVertexNormals();
+  // terrain.geometry.computeVertexNormals();
 }
 
 var intersect_cubes = [];
 export function modifyTerrain(terrain, intersect, scene) {
   var verts = terrain.geometry.attributes.position.array;
 
+  let x = intersect.point.x;
+  let z = intersect.point.z;
+  let y =
+    Math.sqrt(Math.abs(Math.pow(terrainParams.RAD, 2) - x * x - z * z)) / 2;
+  const target = new THREE.Vector3(x, y, z);
+  SCENEDATA.boidHandler.updateTarget(target);
+
   if (terrainParams.SHOW_INTERSECTION) {
     var cube = new THREE.Mesh(
       new THREE.BoxGeometry(5, 5, 5),
       new THREE.MeshBasicMaterial({ color: 0xff00000 })
     );
-    cube.position.set(intersect.point.x, intersect.point.y, intersect.point.z);
+
+    cube.position.set(x, y, z);
     scene.add(cube);
     intersect_cubes.push(cube);
   } else {
     intersect_cubes.forEach((cube) => scene.remove(cube));
   }
+
   const i = intersect.faceIndex * 3;
   console.log(i);
 

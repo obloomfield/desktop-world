@@ -1,13 +1,24 @@
 import * as THREE from "three";
-import { boidParams, randomVelocity, sphereRays } from "./boidHandler";
+import {
+  boidParams,
+  randomStartPos,
+  randomVelocity,
+  sphereRays,
+} from "./boidHandler";
 
+// inspired by the Sebastian Lague implementation: https://www.youtube.com/watch?v=bqtqltqcQhw
 export default class Boid {
-  constructor(position, quaternion, color, followTarget) {
+  constructor(position, quaternion, color, followTarget, target = null) {
     // console.log(position);
 
     this.followTarget = followTarget;
+    this.target = target;
 
-    [this.mesh, this.geom] = this.generateBoid(position, quaternion, color);
+    [this.mesh, this.geom, this.mat] = this.generateBoid(
+      position,
+      quaternion,
+      color
+    );
 
     this.accel = new THREE.Vector3();
     this.vel = randomVelocity();
@@ -30,7 +41,7 @@ export default class Boid {
 
     // pos = new THREE.Vector3(0, 100, 0);
 
-    var geom = new THREE.ConeGeometry(5, 10, 10); // TODO: change geometry to sprite?
+    var geom = new THREE.SphereGeometry(1, 10, 10); // TODO: change geometry to sprite?
 
     geom.rotateX(THREE.MathUtils.degToRad(90));
 
@@ -47,25 +58,47 @@ export default class Boid {
     if (quat) {
       mesh.quaternion.copy(quat);
     }
-    return [mesh, geom];
+    return [mesh, geom, mat];
   }
 
-  update(delta, boids, obstacles, target) {
+  update(delta, boids, obstacles) {
     this.update_cnt++;
     this.wander_cnt++;
 
-    if (target && this.followTarget) {
-      this.accel.add(this.seek(delta, target.position));
+    // console.log(this.mesh.position);
+
+    if (
+      isNaN(this.mesh.position.x) ||
+      this.mesh.position.distanceTo(boidParams.ORIGIN) >
+        boidParams.BOUNDARY_RAD + 100
+    ) {
+      console.log("IMPROPER POSITION FOR BOID... RESETTING");
+      this.mesh.position.copy(randomStartPos());
+    }
+
+    if (this.target && this.followTarget) {
+      // console.log("tracking to target:");
+      // console.log(this.target);
+      this.accel.add(this.seek(delta, this.target));
     } else {
-      if (this.mesh.distanceTo(boidParams.ORIGIN) > boidParams.BOUNDARY_RAD) {
+      if (
+        this.mesh.position.distanceTo(boidParams.ORIGIN) >
+        boidParams.BOUNDARY_RAD
+      ) {
+        //
         this.accel.add(this.wander(delta).multiplyScalar(20));
       } else {
         this.accel.add(
           this.wander(delta).multiplyScalar(boidParams.WANDER_WEIGHT)
         );
+        // console.log(
+        //   this.wander(delta).multiplyScalar(boidParams.WANDER_WEIGHT)
+        // );
       }
     }
 
+    // console.log(Object.getOwnPropertyNames(this));
+    // console.log(Object.getOwnPropertySymbols(this));
     this.accel.add(
       this.alignment(delta, boids).multiplyScalar(boidParams.ALIGNMENT_WEIGHT)
     );
@@ -77,14 +110,20 @@ export default class Boid {
     );
 
     var origin = this.mesh.position.clone();
-    var vert = this.geom.vertices[0].clone();
+    // console.log(this.geom);
+    // console.log(this.geom.isBufferGeometry);
+    var vert = new THREE.Vector3().fromBufferAttribute(
+      this.geom.attributes.position,
+      0
+    );
     var global_vert = vert.applyMatrix4(this.mesh.matrix);
     var dir_vect = global_vert.sub(this.mesh.position);
     var raycast = new THREE.Raycaster(origin, dir_vect.clone().normalize());
 
-    var collisions = raycast.intersectObjects(obstacles.map((o) => o.mesh));
+    var collisions = raycast.intersectObjects(obstacles);
     if (collisions.length > 0) {
-      for (const dir in sphereRays) {
+      for (let i = 0; i < sphereRays.length; i++) {
+        const dir = sphereRays[i];
         raycast = new THREE.Raycaster(origin, dir, 0, boidParams.VISION_MAX);
         var cur_collision = raycast.intersectObject(collisions[0].object);
         if (cur_collision.length === 0) {
@@ -99,14 +138,18 @@ export default class Boid {
   }
 
   applyAcceleration(delta) {
+    // console.log(this.mesh.position);
+    // console.log(this.accel);
     this.vel.add(this.accel);
     this.accel.set(0, 0, 0); // reset accel
     this.vel.clampLength(boidParams.MIN_VELOCITY, boidParams.MAX_VELOCITY);
     this.mesh.position.add(this.vel);
+    // console.log(this.mesh.position);
+    // console.log(this.vel);
   }
 
-  seek(delta, target) {
-    var steer = target.clone().sub(this.mesh.position);
+  seek(delta, target_pos) {
+    var steer = target_pos.clone().sub(this.mesh.position);
     steer.normalize();
     steer.multiplyScalar(boidParams.MAX_VELOCITY);
     steer.sub(this.vel);
@@ -115,11 +158,116 @@ export default class Boid {
     return steer;
   }
 
-  separation(delta, boids, range = 30) {
+  alignment(delta, boids) {
+    var steer = new THREE.Vector3();
+    const avg_dir = new THREE.Vector3();
+
+    var neighbor_cnt = 0;
+
+    boids.forEach((neighbor) => {
+      if (neighbor.mesh.id === this.mesh.id) return;
+
+      const dist = neighbor.mesh.position.distanceTo(this.mesh.position);
+      if (dist <= boidParams.ALIGNMENT_DIST) {
+        avg_dir.add(neighbor.vel.clone());
+        neighbor_cnt++;
+      }
+    });
+
+    if (neighbor_cnt !== 0) {
+      avg_dir.divideScalar(neighbor_cnt);
+      avg_dir.normalize();
+      avg_dir.multiplyScalar(boidParams.MAX_VELOCITY);
+
+      // console.log(this.vel);
+      avg_dir.sub(this.vel);
+      steer = avg_dir;
+      steer.clampLength(0, 5 * delta);
+    }
+    return steer;
+  }
+
+  separation(delta, boids) {
     const steer = new THREE.Vector3();
 
     var neighbor_cnt = 0;
 
-    boids.forEach((neighbor) => {});
+    boids.forEach((neighbor) => {
+      if (neighbor.mesh.id === this.mesh.id) return;
+
+      const dist = neighbor.mesh.position.distanceTo(this.mesh.position);
+      if (dist <= boidParams.SEPARATION_DIST) {
+        var diff = this.mesh.position.clone().sub(neighbor.mesh.position);
+        diff.divideScalar(dist); // weight by distance
+        steer.add(diff);
+        neighbor_cnt++;
+      }
+    });
+
+    if (neighbor_cnt !== 0) {
+      steer.divideScalar(neighbor_cnt);
+      steer.normalize();
+      steer.multiplyScalar(boidParams.MAX_VELOCITY);
+      steer.clampLength(0, delta * 5);
+    }
+    return steer;
+  }
+
+  cohesion(delta, boids) {
+    var steer = new THREE.Vector3();
+    const centerOfMass = new THREE.Vector3();
+
+    var neighbor_cnt = 0;
+
+    boids.forEach((neighbor) => {
+      if (neighbor.mesh.id === this.mesh.id) return;
+
+      const dist = neighbor.mesh.position.distanceTo(this.mesh.position);
+      if (dist <= boidParams.COHESION_DIST) {
+        centerOfMass.add(neighbor.mesh.position);
+        neighbor_cnt++;
+      }
+    });
+
+    if (neighbor_cnt !== 0) {
+      centerOfMass.divideScalar(neighbor_cnt);
+      steer = this.seek(delta, centerOfMass);
+    }
+
+    return steer;
+  }
+
+  wander(delta) {
+    const dist = this.mesh.position.distanceTo(this.wanderTarget);
+
+    // console.log(this.mesh.position);
+
+    if (
+      dist < boidParams.WANDER_MIN_DIST ||
+      this.wander_cnt > boidParams.WANDER_MAX_CNT
+    ) {
+      this.wanderTarget = randomStartPos();
+      this.wander_cnt = 0;
+    }
+
+    return this.seek(delta, this.wanderTarget);
+  }
+
+  updateLook() {
+    var dir = this.vel.clone();
+    if (boidParams.LOOK_SMOOTHING) {
+      if (this.prevVelocities.length == boidParams.SMOOTHING_SAMPLES) {
+        this.prevVelocities.shift();
+      }
+
+      this.prevVelocities.push(this.vel.clone());
+      dir.set(0, 0, 0);
+      this.prevVelocities.forEach((sample) => {
+        dir.add(sample);
+      });
+      dir.divideScalar(this.prevVelocities.length); // avg velocity sample
+    }
+    dir.add(this.mesh.position);
+    this.mesh.lookAt(dir);
   }
 }

@@ -107,7 +107,7 @@ export class SCENEDATA {
 
     // addParticleSystem(150,150,-150);
 
-    createClusters();
+    // createClusters();
 
     buildWater2();
 

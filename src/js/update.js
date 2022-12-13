@@ -1,16 +1,15 @@
 import * as THREE from "three";
+import { bloomParam, renderBloom } from "./components/bloom";
+import { updateClouds, updateWeather } from "./components/clouds";
 import { updateIslands } from "./components/island";
 import { updateSun } from "./components/lighting";
+import { lampParam, updateButton } from "./components/models";
 import { updateParticles } from "./components/particles";
+import { updateParticleSystem } from "./components/particleSystem";
 import { updateTerrain } from "./components/terrain";
 import { stats } from "./components/ui";
 import { updateWater2 } from "./components/water";
-import { renderBloom } from "./components/bloom";
-import { updateClouds, updateWeather } from "./components/clouds";
 import { SCENEDATA } from "./setup";
-import { bloomParam } from "./components/bloom";
-import {updateParticleSystem} from "./components/particleSystem";
-import {lampParam, updateButton} from "./components/models";
 
 var clock = new THREE.Clock();
 var times = [0, Math.PI / 3, -Math.PI / 4, Math.PI / 6, Math.PI / 5];
@@ -25,18 +24,19 @@ function update() {
   // terrain.position.z += SPEED * delta;
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
-  
+
   // if (buttonState != lampParam.lampOn) {
   //   updateButton();
   //   buttonState = lampParam.lampOn
   // }
-  
 
   updateParticleSystem(delta);
 
-  updateSun();
+  // updateSun();
 
-  updateParticles(elapsed);
+  // updateParticles(elapsed);
+  SCENEDATA.boidHandler.updateBoids(delta);
+
   updateTerrain(SCENEDATA.terrain);
 
   updateIslands();

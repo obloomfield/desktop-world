@@ -1,13 +1,13 @@
 import { GUI } from "dat.gui";
 import Stats from "stats.js";
 import { SCENEDATA } from "../setup";
+import { bloomParam } from "./bloom";
 import { lightParams, sunParams } from "./lighting";
+import { lampParam } from "./models";
 import { fireflyParams } from "./particles";
 import { perlinParams } from "./perlin";
 import { terrainParams } from "./terrain";
 import { waterParams } from "./water";
-import { bloomParam } from "./bloom";
-import {lampParam} from "./models";
 
 export var stats = new Stats();
 
@@ -19,8 +19,8 @@ export function makeGUI() {
   // const centerFolder = gui.addFolder("Center");
   // centerFolder.add(terrainParams.ORIGIN, "x", -50, 50);
   // centerFolder.add(terrainParams.ORIGIN, "y", -50, 50);
-  const sunFolder = gui.addFolder("Sun");
-  sunFolder.add(sunParams, "ORBIT_SPEED", 0.0001, 0.1);
+  // const sunFolder = gui.addFolder("Sun");
+  // sunFolder.add(sunParams, "ORBIT_SPEED", 0.0001, 0.1);
   // sunFolder.add(sunParams.SUN_AXIS, "x", 0, 1);
   // sunFolder.add(sunParams.SUN_AXIS, "y", 0, 1);
   // sunFolder.add(sunParams.SUN_AXIS, "z", 0, 1);
@@ -43,11 +43,10 @@ export function makeGUI() {
   waterFolder.add(waterParams, "PHASE", 1, 100);
 
   const bloomFolder = gui.addFolder("Bloom");
-  bloomFolder.add(bloomParam,"bloomEnabled");
+  bloomFolder.add(bloomParam, "bloomEnabled");
 
   const buttonFolder = gui.addFolder("Lamp");
   buttonFolder.add(lampParam, "lampOn");
-
 }
 
 export function makeStats() {
