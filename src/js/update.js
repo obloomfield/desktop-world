@@ -1,12 +1,12 @@
 import * as THREE from "three";
+import { renderBloom } from "./components/bloom";
+import { updateClouds, updateWeather } from "./components/clouds";
 import { updateIslands } from "./components/island";
 import { updateSun } from "./components/lighting";
 import { updateParticles } from "./components/particles";
 import { updateTerrain } from "./components/terrain";
 import { stats } from "./components/ui";
 import { updateWater2 } from "./components/water";
-import { renderBloom } from "./components/bloom";
-import { updateClouds, updateWeather } from "./components/clouds";
 import { SCENEDATA } from "./setup";
 
 var clock = new THREE.Clock();
@@ -19,7 +19,7 @@ function update() {
   // terrain.position.z += SPEED * delta;
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
-  updateSun();
+  // updateSun();
 
   updateParticles(elapsed);
   updateTerrain(SCENEDATA.terrain);
@@ -36,7 +36,6 @@ function render() {
   SCENEDATA.controls.update();
   renderBloom();
   // SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
-  
 }
 
 export function loop() {

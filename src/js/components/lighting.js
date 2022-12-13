@@ -18,9 +18,13 @@ export function addLights() {
     .set(
       SCENEDATA.camera.position.x,
       SCENEDATA.camera.position.y + 500,
-      SCENEDATA.camera.position.z + 500
+      SCENEDATA.camera.position.z
     )
     .normalize();
+  sunlight.castShadow = true;
+  sunlight.shadow.mapSize.width = 512;
+  sunlight.shadow.mapSize.height = 512;
+
   SCENEDATA.add("sunlight", sunlight);
   // console.log(sunlight.color);
 

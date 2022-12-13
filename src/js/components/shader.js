@@ -7,12 +7,15 @@ const STANDARD_VERTEX_SHADER = `
 
 varying vec3 v_Normal;
 varying vec3 v_Pos;
+varying vec3 v_ViewDir;
 varying vec2 vertexUV;
 
 void main() {
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     v_Normal = normal;
     v_Pos = position;
+    vec4 view = modelViewMatrix * vec4(position, 1.0);
+    v_ViewDir = normalize(-view.xyz);
     vertexUV = uv;
 }
 `;
@@ -23,8 +26,9 @@ const TOON_VERTEX_SHADER = `
 #include <common>
 #include <shadowmap_pars_vertex>
 
-varying vec3 vNormal;
-varying vec3 vViewDir;
+varying vec3 v_Normal;
+varying vec3 v_ViewDir;
+varying vec3 v_Pos;
 
 void main() {
     #include <beginnormal_vertex>
@@ -39,8 +43,9 @@ void main() {
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 clipPosition = projectionMatrix * viewPosition;
 
-    vNormal = normalize(normalMatrix * normal);
-    vViewDir = normalize(-viewPosition.xyz);
+    v_Normal = normalize(normalMatrix * normal);
+    v_Pos = position;
+    v_ViewDir = normalize(-viewPosition.xyz);
 
     gl_Position = clipPosition;
 }
@@ -57,47 +62,108 @@ const TOON_FRAGMENT_SHADER = `
 
 uniform vec3 uColor;
 uniform float uGlossiness;
+uniform bool rad_constraint;
+uniform float RADIUS;
 
-varying vec3 vNormal;
-varying vec3 vViewDir;
+varying vec3 v_Normal;
+varying vec3 v_Pos;
+varying vec2 vertexUV;
+varying vec3 v_ViewDir;
 
-void main() {
-    // shadow map
-    DirectionalLightShadow directionalLight = directionalLightShadows[0];
+// for spot lights: (NOT WORKING :( ))
+// void main() {
+// //     // shadow map
+// //     // gl_FragColor = vec4(0,NUM_SPOT_LIGHTS,0,1);
 
-    float shadow = getShadow(
-        directionalShadowMap[0],
-        directionalLight.shadowMapSize,
-        directionalLight.shadowBias,
-        directionalLight.shadowRadius,
-        vDirectionalShadowCoord[0]
-    );
+//     SpotLightShadow spotLight = spotLightShadows[0];
 
-    // directional light
-    float NdotL = dot(vNormal, directionalLights[0].direction);
-    float lightIntensity = smoothstep(0.0, 0.01, NdotL * shadow);
-    vec3 light = directionalLights[0].color * lightIntensity;
+//     float shadow = getShadow(
+//         spotShadowMap[0],
+//         spotLight.shadowMapSize,
+//         spotLight.shadowBias,
+//         spotLight.shadowRadius,
+//         vSpotShadowCoord[0]
+//     );
 
-    // specular light
-    vec3 halfVector = normalize(directionalLights[0].direction + vViewDir);
-    float NdotH = dot(vNormal, halfVector);
+//     // spot light
+//     // float NdotL = dot(v_Normal, spotLights[0].direction);
+//     // float lightIntensity = smoothstep(0.0, 0.01, NdotL * shadow);
+//     // vec3 light = spotLights[0].color * lightIntensity;
 
-    float specularIntensity = pow(NdotH * lightIntensity, uGlossiness * uGlossiness);
-    float specularIntensitySmooth = smoothstep(0.05, 0.1, specularIntensity);
+//     // // specular light
+//     // vec3 halfVector = normalize(spotLights[0].direction + v_ViewDir);
+//     // float NdotH = dot(v_Normal, halfVector);
 
-    vec3 specular = specularIntensitySmooth * directionalLights[0].color;
+//     // float specularIntensity = pow(NdotH * lightIntensity, uGlossiness * uGlossiness);
+//     // float specularIntensitySmooth = smoothstep(0.05, 0.1, specularIntensity);
 
-    // rim lighting
-    float rimDot = 1.0 - dot(vViewDir, vNormal);
-    float rimAmount = 0.6;
+//     // vec3 specular = specularIntensitySmooth * spotLights[0].color;
 
-    float rimThreshold = 0.2;
-    float rimIntensity = rimDot * pow(NdotL, rimThreshold);
-    rimIntensity = smoothstep(rimAmount - 0.01, rimAmount + 0.01, rimIntensity);
+//     // // rim lighting
+//     // float rimDot = 1.0 - dot(v_ViewDir, v_Normal);
+//     // float rimAmount = 0.6;
 
-    vec3 rim = rimIntensity * directionalLights[0].color;
+//     // float rimThreshold = 0.2;
+//     // float rimIntensity = rimDot * pow(NdotL, rimThreshold);
+//     // rimIntensity = smoothstep(rimAmount - 0.01, rimAmount + 0.01, rimIntensity);
 
-    gl_FragColor = vec4(uColor * (ambientLightColor + light + specular + rim), 1.0);
+//     // vec3 rim = rimIntensity * spotLights[0].color;
+
+//     // gl_FragColor = vec4(uColor * (ambientLightColor + light + specular + rim), 1.0);
+//     gl_FragColor = vec4(1,0,0,1);
+//     }
+
+    // DIRECTIONAL LIGHTS
+    void main() {
+      // shadow map
+
+      gl_FragColor = vec4(1,0,0,1);
+      if (distance(v_Pos,vec3(0,0,0)) > RADIUS) {
+        discard;
+      }
+
+      DirectionalLightShadow directionalLight = directionalLightShadows[0];
+  
+      float shadow = getShadow(
+          directionalShadowMap[0],
+          directionalLight.shadowMapSize,
+          directionalLight.shadowBias,
+          directionalLight.shadowRadius,
+          vDirectionalShadowCoord[0]
+      );
+  
+      // directional light
+      float NdotL = dot(v_Normal, directionalLights[0].direction);
+      float lightIntensity = smoothstep(0.0, 0.01, NdotL * shadow);
+      vec3 light = directionalLights[0].color * lightIntensity;
+  
+      // specular light
+      vec3 halfVector = normalize(directionalLights[0].direction + v_ViewDir);
+      float NdotH = dot(v_Normal, halfVector);
+  
+      float specularIntensity = pow(NdotH * lightIntensity, uGlossiness * uGlossiness);
+      float specularIntensitySmooth = smoothstep(0.05, 0.1, specularIntensity);
+  
+      vec3 specular = specularIntensitySmooth * directionalLights[0].color;
+  
+      // rim lighting
+      float rimDot = 1.0 - dot(v_ViewDir, v_Normal);
+      float rimAmount = 0.8;
+  
+      float rimThreshold = 0.2;
+      float rimIntensity = rimDot * pow(NdotL, rimThreshold);
+      rimIntensity = smoothstep(rimAmount - 0.01, rimAmount + 0.01, rimIntensity);
+  
+      vec3 rim = rimIntensity * directionalLights[0].color;
+  
+      float dampening = (abs(v_Normal[0]) + abs(v_Normal[1]) + abs(v_Normal[2]))/3.0;
+      // dampening = smoothstep(0.0, 0.5,lum);
+      // dampening = 0.6;
+      dampening = 1.0;
+
+      gl_FragColor = vec4(dampening*uColor * (ambientLightColor + light + specular + rim), 1.0);
+  }
+  
     `;
 
 ////////////////////////////////////////////////////////
@@ -263,7 +329,13 @@ export const bloomPass = function (bloomTexture) {
 export const toonShader = function (uniformInfo) {
   return new ShaderMaterial({
     lights: true,
-    uniforms: { uniformInfo, ...THREE.UniformsLib.lights },
+    uniforms: {
+      uniformInfo,
+      ...THREE.UniformsLib.lights,
+      uColor: { value: uniformInfo.color },
+      uGlossiness: { value: 10 },
+      RADIUS: { value: 499.5 },
+    },
     vertexShader: TOON_VERTEX_SHADER,
     fragmentShader: TOON_FRAGMENT_SHADER,
   });

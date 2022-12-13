@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { perlin, perlinParams } from "./perlin";
 
 import { SCENEDATA } from "../setup";
-import { circle_constraint_material } from "./shader";
+import { circle_constraint_material, toonShader } from "./shader";
 
 function falloff(point, rad) {
   let x = point.length() / rad;
@@ -23,17 +23,26 @@ export function addTerrain() {
   //   color: 0x00ff00,
   //   side: THREE.Side,
   // });
+  geometry.computeVertexNormals();
+
   var terrain = new THREE.Mesh(
     geometry,
     // new THREE.MeshToonMaterial({
     //   color: new THREE.Color("green"),
     // })
-    circle_constraint_material(new THREE.Vector4(0, 1, 0, 1))
+    // circle_constraint_material(new THREE.Vector4(0, 1, 0, 1))
+    toonShader({
+      color: new THREE.Color(0, 0.2, 0),
+      rad_constraint: { value: true },
+    })
   );
 
-  if (terrainParams.FLAT_SHADING) {
-    terrain.geometry = terrain.geometry.toNonIndexed();
-  }
+  terrain.castShadow = false;
+  terrain.receiveShadow = true;
+
+  // if (terrainParams.FLAT_SHADING) {
+  //   terrain.geometry = terrain.geometry.toNonIndexed();
+  // }
   terrain.rotation.x = -Math.PI / 2;
   SCENEDATA.add("terrain", terrain);
 }
