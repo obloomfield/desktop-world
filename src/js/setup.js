@@ -35,7 +35,6 @@ export class SCENEDATA {
   // # means private in JS - strange lol
   static #setupScene() {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color().setHSL(0.3, 0, 0.8);
   }
 
   static #setupCamera() {

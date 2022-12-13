@@ -60,7 +60,7 @@ function traverseBloom() {
 }
 function darkenNonBloomed(obj) {
   // console.log(bloomLayer);
-  if (obj.isMesh && bloomLayer.test( obj.layers )) {
+  if (!(obj.isMesh && bloomLayer.test( obj.layers ))) {
     materials[obj.uuid] = obj.material;
     obj.material = DARK_MATERIAL;
   }
