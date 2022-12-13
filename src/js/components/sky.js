@@ -19,4 +19,9 @@ export function addSky() {
   m.side = THREE.BackSide;
   let o = new THREE.Mesh(back, m);
   SCENEDATA.add("sky", o);
+
+  
+
+
+    
 }

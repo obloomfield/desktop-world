@@ -6,6 +6,7 @@ import { updateTerrain } from "./components/terrain";
 import { stats } from "./components/ui";
 import { updateWater2 } from "./components/water";
 import { renderBloom } from "./components/bloom";
+import { updateClouds, updateWeather } from "./components/clouds";
 import { SCENEDATA } from "./setup";
 import {updateParticleSystem} from "./components/particleSystem";
 
@@ -27,6 +28,8 @@ function update() {
   // updateTerrain(SCENEDATA.terrain);
 
   updateIslands();
+  updateClouds(elapsed);
+  updateWeather();
   //updateWater(water, sun_pivot.position);
   // updateWater2(elapsed);
   i++;

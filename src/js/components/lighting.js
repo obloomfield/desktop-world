@@ -15,8 +15,8 @@ export var sun_pivot = new THREE.Object3D();
 export function addLights() {
   var ambLight = new THREE.AmbientLight(0xffffff);
   SCENEDATA.add("ambient", ambLight);
-  
-  var sunlight = new THREE.SpotLight(0xffffff, 1);
+
+  var sunlight = new THREE.DirectionalLight(0xffffff, 1);
   sunlight.position
     .set(
       SCENEDATA.camera.position.x,

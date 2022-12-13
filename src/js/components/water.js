@@ -63,7 +63,6 @@ export function updateWater2(time) {
   });
   bottom.attributes.position.needsUpdate = true;
   bottom.computeVertexNormals();
-
 }
 
 export function buildWater2() {
@@ -78,6 +77,7 @@ export function buildWater2() {
     Math.PI
   );
   g.rotateX(-Math.PI * 0.5);
+  g.toNonIndexed(); // flat-shading?
   let v3 = new THREE.Vector3(); // for re-use
   for (let i = 0; i < g.attributes.position.count; i++) {
     v3.fromBufferAttribute(g.attributes.position, i);
@@ -90,7 +90,7 @@ export function buildWater2() {
   }
   for (let i = 0; i < bottom.attributes.position.count; i++) {
     v3.fromBufferAttribute(bottom.attributes.position, i);
-    if (v3.y > 0){
+    if (v3.y > 0) {
       rimData.push({
         initH: v3.y,
         amplitude: THREE.MathUtils.randFloatSpread(30),
