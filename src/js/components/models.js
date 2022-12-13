@@ -106,14 +106,14 @@ export async function addModels() {
   SCENEDATA.add("lamp", lampObj);
 
   const lGeometry = new THREE.BoxGeometry( 50, 8000, 10000 );
-  const lMaterial = new THREE.MeshStandardMaterial( {color: 0x00ff00} );
+  const lMaterial = new THREE.MeshStandardMaterial( {color: 0x453341} );
   const lWall = new THREE.Mesh( lGeometry, lMaterial );
   lWall.translateX(5000);
   lWall.translateY(1600);
   SCENEDATA.add("lWall", lWall);
 
   const rGeometry = new THREE.BoxGeometry( 10000, 8000, 50 );
-  const rMaterial = new THREE.MeshStandardMaterial( {color: 0x00ff00} );
+  const rMaterial = new THREE.MeshStandardMaterial( {color: 0x2d3547} );
   const rWall = new THREE.Mesh( rGeometry, rMaterial );
   rWall.translateZ(5000);
   rWall.translateY(1600);
@@ -121,7 +121,7 @@ export async function addModels() {
   SCENEDATA.add("rWall", rWall);
 
   const floorGeometry = new THREE.BoxGeometry( 10000, 50, 10000 );
-  const floorMaterial = new THREE.MeshStandardMaterial( {color: 0x00ff00} );
+  const floorMaterial = new THREE.MeshStandardMaterial( {color: 0x5e483d} );
   const floor = new THREE.Mesh( floorGeometry, floorMaterial );
   floor.translateY(-2400);
   SCENEDATA.add("floor", floor);
@@ -138,15 +138,23 @@ export async function addModels() {
   wireframe:false,
   emissiveIntensity: 0});
 
+  const material2 = new THREE.MeshBasicMaterial({  
+    color: "white",
+    opacity: 0.1, 
+  transparent: true, 
+wireframe:false,
+emissiveIntensity: 0});
+
  
 
-  let o = new THREE.Mesh(lightCone, material);
+  let o = new THREE.Mesh(lightCone, material2);
 
-  o.translateX(50);
+  o.translateX(-50);
   o.translateY(50);
-  o.rotateZ(-Math.PI/6);
+  o.rotateZ(Math.PI/6);
 
-  //o.layers.enable(1);
+  o.layers.enable(1);
+
   SCENEDATA.scene.add(o)
 
   const waterGeometry = new THREE.SphereGeometry(
