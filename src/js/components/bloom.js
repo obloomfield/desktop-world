@@ -11,13 +11,10 @@ import { bloomPass } from "./shader";
 const ENTIRE_SCENE = 0,
   BLOOM_SCENE = 1;
 
-export var bloomParams = new (function () {
-  this.exposure = 1;
-  this.bloomStrength = 5;
-  this.bloomThreshold = 0;
-  this.bloomRadius = 0;
-  this.scene = "Scene with Glow";
-})();
+
+  export var bloomParam = {
+    bloomEnabled: false
+  }
 
 var bloomLayer = new THREE.Layers();
 var bloomComposer;
@@ -48,6 +45,7 @@ export function setupBloom() {
 export function renderBloom() {
   // renderer.render( scene, camera );
   traverseBloom();
+  
   finalComposer.render();
 }
 
@@ -62,7 +60,7 @@ function traverseBloom() {
 }
 function darkenNonBloomed(obj) {
   // console.log(bloomLayer);
-  if (obj.isMesh && bloomLayer.test(obj.layers) === false) {
+  if (obj.isMesh && bloomLayer.test( obj.layers )) {
     materials[obj.uuid] = obj.material;
     obj.material = DARK_MATERIAL;
   }

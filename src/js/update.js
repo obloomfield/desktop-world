@@ -8,7 +8,7 @@ import { updateWater2 } from "./components/water";
 import { renderBloom } from "./components/bloom";
 import { updateClouds, updateWeather } from "./components/clouds";
 import { SCENEDATA } from "./setup";
-import {updateParticleSystem} from "./components/particleSystem";
+import { bloomParam } from "./components/bloom";
 
 var clock = new THREE.Clock();
 var times = [0, Math.PI / 3, -Math.PI / 4, Math.PI / 6, Math.PI / 5];

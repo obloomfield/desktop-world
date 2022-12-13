@@ -36,27 +36,6 @@ export class SCENEDATA {
   static #setupScene() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color().setHSL(0.3, 0, 0.8);
-
-
-    // let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-    // light.position.set(20, 100, 10);
-    // light.target.position.set(0, 0, 0);
-    // light.castShadow = true;
-    // light.shadow.bias = -0.001;
-    // light.shadow.mapSize.width = 2048;
-    // light.shadow.mapSize.height = 2048;
-    // light.shadow.camera.near = 0.1;
-    // light.shadow.camera.far = 500.0;
-    // light.shadow.camera.near = 0.5;
-    // light.shadow.camera.far = 500.0;
-    // light.shadow.camera.left = 100;
-    // light.shadow.camera.right = -100;
-    // light.shadow.camera.top = 100;
-    // light.shadow.camera.bottom = -100;
-    // this.scene.add(light);
-
-    // light = new THREE.AmbientLight(0x101010);
-    // this.scene.add(light);
   }
 
   static #setupCamera() {
@@ -76,7 +55,7 @@ export class SCENEDATA {
   static #setupRenderer() {
     this.renderer = new THREE.WebGLRenderer({ alpha: true });
     console.log("reached setup");
-    this.renderer.setClearColor(0xffffff, 0);
+    this.renderer.setClearColor(0x000000);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.WIDTH, this.HEIGHT);
     document.body.appendChild(this.renderer.domElement);

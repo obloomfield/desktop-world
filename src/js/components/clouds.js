@@ -73,7 +73,7 @@ function buildCloud(size, height, pos, rotationY) {
   );
   clouds.push(cloud);
   geos.push(geo);
-  bobbing.push(THREE.MathUtils.randFloatSpread(5, 10));
+  bobbing.push(THREE.MathUtils.randFloatSpread(5, 10))
   SCENEDATA.scene.add(cloud);
 }
 
