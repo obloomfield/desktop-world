@@ -41,13 +41,13 @@ export function buildClouds() {
 
 function buildCloud(size, height, pos, rotationY) {
   const tuft1 = new THREE.SphereGeometry(1.5 * size, 7, 8);
-  tuft1.translate(-2.0 * size + pos.x, height, pos.z);
+  tuft1.translate(-2.0 * size, height, 0);
 
   const tuft2 = new THREE.SphereGeometry(1.5 * size, 7, 8);
-  tuft2.translate(2.0 * size + pos.x, height, pos.z);
+  tuft2.translate(2.0 * size , height, 0);
 
   const tuft3 = new THREE.SphereGeometry(2.0 * size, 7, 8);
-  tuft3.translate(0 + pos.x, height, pos.z);
+  tuft3.translate(0, height, 0);
   let geo = BufferGeometryUtils.mergeBufferGeometries([tuft1, tuft2, tuft3]);
 
   var verts = geo.attributes.position.array;
@@ -57,6 +57,7 @@ function buildCloud(size, height, pos, rotationY) {
     verts[i + 1] = Math.max(verts[i + 1], bottom);
   }
   geo.rotateY(rotationY);
+  geo.translate(pos.x, 0, pos.z)
   geo.attributes.position.needsUpdate = true;
   geo.computeVertexNormals();
 
@@ -100,7 +101,6 @@ export function makeRain() {
       particle.scale.set(5, 5, 5);
       particle.position.set(rainDropPos.x, rainDropPos.y, rainDropPos.z);
       rainDrops.push(particle);
-      particle.position.y = -100;
       SCENEDATA.scene.add(particle);
       rainDropPoses.push(rainDropPos);
       rainDropSpeeds.push(THREE.MathUtils.randFloat(1, 3));
