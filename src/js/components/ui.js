@@ -45,8 +45,8 @@ export function makeGUI() {
   const bloomFolder = gui.addFolder("Bloom");
   bloomFolder.add(bloomParam, "bloomEnabled");
 
-  const buttonFolder = gui.addFolder("Lamp");
-  buttonFolder.add(lampParam, "lampOn");
+  // const buttonFolder = gui.addFolder("Lamp");
+  // buttonFolder.add(lampParam, "lampOn");
 }
 
 export function makeStats() {
