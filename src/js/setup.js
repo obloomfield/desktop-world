@@ -14,6 +14,7 @@ import { makeGUI, makeStats } from "./components/ui";
 import { buildWater2 } from "./components/water";
 import { setupEvents } from "./events";
 import { loop } from "./update";
+import {addParticleSystem} from "./components/particleSystem";
 
 export class SCENEDATA {
   static WIDTH;
@@ -35,6 +36,27 @@ export class SCENEDATA {
   static #setupScene() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color().setHSL(0.3, 0, 0.8);
+
+
+    // let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+    // light.position.set(20, 100, 10);
+    // light.target.position.set(0, 0, 0);
+    // light.castShadow = true;
+    // light.shadow.bias = -0.001;
+    // light.shadow.mapSize.width = 2048;
+    // light.shadow.mapSize.height = 2048;
+    // light.shadow.camera.near = 0.1;
+    // light.shadow.camera.far = 500.0;
+    // light.shadow.camera.near = 0.5;
+    // light.shadow.camera.far = 500.0;
+    // light.shadow.camera.left = 100;
+    // light.shadow.camera.right = -100;
+    // light.shadow.camera.top = 100;
+    // light.shadow.camera.bottom = -100;
+    // this.scene.add(light);
+
+    // light = new THREE.AmbientLight(0x101010);
+    // this.scene.add(light);
   }
 
   static #setupCamera() {
@@ -42,12 +64,13 @@ export class SCENEDATA {
       45,
       this.WIDTH / this.HEIGHT,
       1,
-      3000
+      10000
     );
-    // var cameraTarget = { x: 0, y: 0, z: 0 };
+    var cameraTarget = { x: 0, y: 0, z: 0 };
     this.camera.position.y = 700;
     this.camera.position.z = 2000;
     this.camera.rotation.x = (-15 * Math.PI) / 180;
+    // this.camera.position.set(25,10,0);
   }
 
   static #setupRenderer() {
@@ -96,17 +119,19 @@ export class SCENEDATA {
 
     this.#setupControls();
 
-    setupBloom();
+    // setupBloom();
 
-    addLights();
+    // addLights();
 
-    addTerrain();
+    // addTerrain();
 
     await addIslands();
 
-    createClusters();
+    // addParticleSystem(150,150,-150);
 
-    buildWater2();
+    // createClusters();
+
+    // buildWater2();
 
     buildClouds();
 
@@ -114,14 +139,14 @@ export class SCENEDATA {
 
     addSky();
 
-    addModels();
+    // await addModels();
 
     this.boidHandler = setupBoids();
 
     makeStats();
     makeGUI();
 
-    setupEvents();
+    // setupEvents();
 
     loop();
   }

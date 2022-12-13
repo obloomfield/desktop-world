@@ -9,6 +9,7 @@ import { BufferGeometry, Object3D, Vector2 } from "three";
 import { SCENEDATA } from "../setup";
 import { loadObj } from "./models";
 import { islandMaterial } from "./shader";
+import {ParticleSystem} from "./particleSystem";
 
 function euclideanDistance(p1, p2) {
   return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
@@ -49,12 +50,19 @@ export async function addIslands() {
     SCENEDATA.add(["island", "terrain", i].join("-"), islandBase.islandTerrain);
     // console.log("")
     for (var j = 0; j < islandBase.islandTrees.length; j++) {
-      // console.log(islandBase.islandTrees[j]);
       SCENEDATA.add(
         ["island", "trees", i, j].join("-"),
         islandBase.islandTrees[j]
       );
     }
+    for (var j = 0; j < islandBase.islandVines.length; j++) {
+      SCENEDATA.add(
+        ["island", "vines", i, j].join("-"),
+        islandBase.islandVines[j]
+      );
+    }
+    console.log(islandBase.islandWaterfall);
+    SCENEDATA.add(["waterfall", i].join("-"), islandBase.islandWaterfall.points);
   }
 }
 
@@ -86,6 +94,7 @@ export class FloatingIsland {
     this.ellipseHeight = 20;
 
     this.treeGeometry = null;
+    this. waterfallLoc = [];
   }
 
   IsPointInPolygon(poly_array, test_point) {
@@ -151,39 +160,64 @@ export class FloatingIsland {
       coords.push([x, y]);
     }
     coords.push(coords[0]);
-    console.log(coords.length);
-
-    const newCoords = [];
-    for (var i = 0; i < coords.length; i++) {
-
-    }
+    // console.log(coords);
+    this.waterfallLoc = coords[Math.floor(Math.random() * coords.length)];
+    console.log("waterfall loc", this.waterfallLoc);
 
     return coords;
   }
 
-  distToEdge(pt, p1, p2) {
-    const top = Math.abs((p2[0]-p1[0])*(p1[1]-pt[1]) - (p1[0]-pt[0])*(p2[1]-p1[1]));
-    const bot = Math.sqrt(Math.pow(p2[0]-p1[0],2) + Math.pow(p2[1]-p1[1],2));
-    return top/bot;
+  distToEdge(p, p1, p2) {
+    const x1 = p1[0];
+    const x2 = p2[0];
+    const y1 = p1[1];
+    const y2 = p2[1];
+    const x = p[0];
+    const y = p[1];
+
+    const x2x1 = x2-x1;
+    const y2y1 = y2 - y1;
+    const u = ((x - x1)*x2x1+(y - y1)*y2y1) / (x2x1*x2x1 + y2y1*y2y1);
+
+    const xu = x1 + u*(x2 - x1);
+    const yu = y1 + u*(y2- y1);
+
+    var pc = [];
+    if (u < 0) {
+      pc = p1;
+    } else if (u > 1) {
+      pc = p2;
+    } else {
+      pc = [xu,yu];
+    }
+
+    // sqrt((x3 - xc)^2 + (y3 - yc)^2)
+    const x_xc = p[0] - pc[0];
+    const y_yc = p[1] - pc[1];
+    return Math.sqrt(x_xc * x_xc + y_yc * y_yc);
+
+    // const top = Math.abs((p2[0]-p1[0])*(p1[1]-pt[1]) - (p1[0]-pt[0])*(p2[1]-p1[1]));
+    // const bot = Math.sqrt(Math.pow(p2[0]-p1[0],2) + Math.pow(p2[1]-p1[1],2));
+    // return top/bot;
   }
 
   findClosest(point, hull) {
     var minDist = Number.POSITIVE_INFINITY;
     var closestPt = [];
-    for (var i = 0; i < hull.length-1; i++) {
-      const dist = this.distToEdge(point, hull[i], hull[(i+1)]);
+    for (var i = 0; i < hull.length; i++) {
+      const dist = this.distToEdge(point, hull[(i+1) % hull.length], hull[i]);
       if (dist < minDist) {
         minDist = dist;
-        const pt = new Vector2(point[0], point[1]);
-        const pt1 = new Vector2(hull[i][0], hull[i][1]);
-        const pt2 = new Vector2(hull[i+1][0], hull[i+1][1]);
-        const dir = (pt2-pt1).normalize();
-        const norm = new Vector2(-dir[1], dir[0]);
-        closestPt = pt + dist*norm; 
+        // const pt = new Vector2(point[0], point[1]);
+        // const pt1 = new Vector2(hull[i][0], hull[i][1]);
+        // const pt2 = new Vector2(hull[i+1][0], hull[i+1][1]);
+        // const dir = (pt2-pt1).normalize();
+        // const norm = new Vector2(-dir[1], dir[0]);
+        // closestPt = pt + dist*norm; 
       }
       // minDist = Math.min(minDist, dist);
     }
-    return [minDist, closestPt];
+    return minDist; //[minDist, closestPt];
 
     // var hullClone = hull.slice();
     // hullClone.sort(function (p1, p2) {
@@ -216,8 +250,8 @@ export class FloatingIsland {
 
   falloff(point, rad, hull) {
     const minDist = this.findClosest(point, hull);
-    if (minDist < 20) {
-      return -Math.pow((20-minDist)/20, 10) + 1;
+    if (minDist < 15) {
+      return -Math.pow((15-minDist)/15, 20) + 1;
     }
     return 1;
     // const pt = new THREE.Vector2(point[0], point[1]);
@@ -272,14 +306,31 @@ export class FloatingIsland {
             (-(1.5 / ((this.width*.9) / 2)) * Math.abs(verts[i]) + 1.5) *
             (-(1.5 / ((this.height*.9) / 2)) * Math.abs(verts[i + 1]) + 1.5) *
             // this.falloff(pt, this.RAD, hull) *
-            (this.perlin(1 / 8, 10, verts[i], verts[i + 1]) +
-              this.perlin(1 / 4, 40, verts[i], verts[i + 1]) +
+            (this.perlin(1 / 16, 5, verts[i], verts[i + 1]) +
+              this.perlin(1 / 4, 10, verts[i], verts[i + 1]) +
+              this.perlin(1 / 2, 40, verts[i], verts[i + 1]) +
               this.perlin(1, 400, verts[i], verts[i + 1]))
         );
-      verts[i + 2] = positive ? 1.5 * newZ : -3 * newZ;
+        newZ *= this.falloff(pt, this.RAD, hull);
+      verts[i + 2] = positive ? newZ : -2 * newZ;
     }
     geometry.attributes.position.needsUpdate = true;
     geometry.computeVertexNormals();
+  }
+
+  sampleVines(geometry) {
+    const norms = geometry.attributes.normal.array;
+    const verts = geometry.attributes.position.array;
+    const vert = [0, 0, 1];
+    const locs = [];
+    for (var i = 0; i < norms.length; i += 3) {
+      if (norms[i + 2] > 0.9 && verts[i + 2] < -10) {
+        if (Math.random() > 0.95) {
+          locs.push(i);
+        }
+      }
+    }
+    return locs;
   }
 
   sampleTrees(geometry) {
@@ -305,6 +356,14 @@ export class FloatingIsland {
     return new Float32Array(attr);
   }
 
+  async loadVine() {
+    const result = await loadObj(
+      "../models/ivy.mtl",
+      "../models/ivy.obj"
+    );
+    return result[0];
+  }
+
   async loadAlienTree() {
     const result = await loadObj(
       "../models/lowpolytree.mtl",
@@ -313,9 +372,42 @@ export class FloatingIsland {
     return result[0];
   }
 
-  async loadVine() {
-    const result = await loadObj();
-    return result[0];
+  getSamples(treeLocs, posArr, sampleObj, islandLoc, islandLocLen, scale=1, type) {
+    const samples = [];
+    for (var i = 0; i < treeLocs.length; i++) {
+      const idx = treeLocs[i];
+      const newObj = new Object3D();
+      newObj.copy(sampleObj);
+      const dir = new THREE.Vector3(
+        posArr[idx],
+        posArr[idx + 1],
+        posArr[idx + 2]
+      );
+      dir.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+      const len = dir.length();
+      // console.log(dir.normalize(), dir.length());
+      // newTree.translateY(-10);
+      const rotAxis = new THREE.Vector3(0,1,0);
+      // newTree.translateY(100);
+      // console.log("POST ROTATION", newTree.position);
+      newObj.translateOnAxis(islandLoc, islandLocLen);
+      newObj.translateOnAxis(dir.normalize(), len);
+      newObj.rotateOnAxis(rotAxis, this.randomInRange(0,2*Math.PI));
+      // if (type === "vine") {
+      //   newObj.rotateOnAxis(new THREE.Vector3(0,0,1), Math.PI);
+      // }
+      newObj.scale.set(scale,scale,scale);
+      // await newTree.traverse(function (node) {
+      //   if (node.isMesh) {
+      //     node.geometry.computeVertexNormals();
+      //   }
+      // });
+
+      // console.log("new pos", newTree.position);
+
+      samples.push(newObj);
+    }
+    return samples;
   }
 
   async generateIslandBase(x, y, z, w, h) {
@@ -323,7 +415,7 @@ export class FloatingIsland {
     var geometry = new THREE.PlaneGeometry(200, 200, 512, 512);
     var geometry2 = new THREE.PlaneGeometry(200, 200, 512, 512);
 
-    const hull = this.polarSample(30, w, h);
+    const hull = this.polarSample(40, w, h);
 
     this.augmentVerts(geometry, hull, true);
     this.augmentVerts(geometry2, hull, false);
@@ -334,7 +426,6 @@ export class FloatingIsland {
     console.log("TREE OBJ", treeOBJ);
 
     const geos = [geometry, geometry2];
-    const trees = [];
     // const geos = [];
     let mergedGeos = BufferGeometryUtils.mergeBufferGeometries(geos);
     // merged.rotateY(-Math.PI/2);
@@ -343,34 +434,19 @@ export class FloatingIsland {
     const posArr = merged.attributes.position.array;
     const treeLocs = this.sampleTrees(merged);
 
+    const vineLocs = this.sampleVines(merged);
+    const vineObj = await this.loadVine();
+
     const islandLoc = new THREE.Vector3(x, y, z);
     const islandLocLen = islandLoc.length();
     islandLoc.normalize();
     islandLoc.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 
-    for (var i = 0; i < treeLocs.length; i++) {
-      const idx = treeLocs[i];
-      const newTree = new Object3D();
-      newTree.copy(treeOBJ);
-      const dir = new THREE.Vector3(
-        posArr[idx],
-        posArr[idx + 1],
-        posArr[idx + 2]
-      );
-      dir.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
-      const len = dir.length();
-      // console.log(dir.normalize(), dir.length());
-      // newTree.translateY(-10);
-      // const rotAxis = new THREE.Vector3(0,1,0);
-      // newTree.rotateOnAxis(rotAxis, this.randomInRange(0,2*Math.PI));
-      // console.log("POST ROTATION", newTree.position);
-      newTree.translateOnAxis(islandLoc, islandLocLen);
-      newTree.translateOnAxis(dir.normalize(), len);
-      // console.log("new pos", newTree.position);
+    const trees = this.getSamples(treeLocs, posArr, treeOBJ, islandLoc, islandLocLen);
+    const vines = this.getSamples(vineLocs, posArr, vineObj, islandLoc, islandLocLen, 2);
 
-      trees.push(newTree);
-    }
-    // console.log(trees);
+    console.log(trees.length);
+    console.log(vines.length);
 
     var material = new THREE.MeshStandardMaterial({
       color: 0x836582,
@@ -387,6 +463,15 @@ export class FloatingIsland {
     return {
       islandTerrain: terrain,
       islandTrees: trees,
+      islandVines: vines,
+      islandWaterfall: new ParticleSystem({
+        parent: SCENEDATA.scene,
+        camera: SCENEDATA.camera,
+        location: new THREE.Vector3(
+          x + this.waterfallLoc[0],
+          y ,
+          -z+ this.waterfallLoc[1])
+      })
     };
   }
 }
