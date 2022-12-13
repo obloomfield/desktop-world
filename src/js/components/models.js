@@ -154,6 +154,7 @@ emissiveIntensity: 0});
   o.rotateZ(Math.PI/6);
 
   o.layers.enable(1);
+
   SCENEDATA.scene.add(o)
 
   const waterGeometry = new THREE.SphereGeometry(
