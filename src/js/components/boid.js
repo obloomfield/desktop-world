@@ -120,9 +120,6 @@ export default class Boid {
 
     var neighbor_cnt = 0;
 
-    boids.forEach(neighbor => {
-      
-    })
-
+    boids.forEach((neighbor) => {});
   }
 }
