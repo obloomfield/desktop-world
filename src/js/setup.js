@@ -2,6 +2,8 @@ import * as THREE from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { setupBloom } from "./components/bloom";
+import { setupBoids } from "./components/boidHandler";
+import { buildClouds, makeRain } from "./components/clouds";
 import { addIslands } from "./components/island";
 import { addLights } from "./components/lighting";
 import { addModels } from "./components/models";
@@ -10,7 +12,6 @@ import { addSky } from "./components/sky";
 import { addTerrain } from "./components/terrain";
 import { makeGUI, makeStats } from "./components/ui";
 import { buildWater2 } from "./components/water";
-import { buildClouds, makeRain } from "./components/clouds";
 import { setupEvents } from "./events";
 import { loop } from "./update";
 
@@ -25,6 +26,10 @@ export class SCENEDATA {
 
   static objects = new Map();
   static islands = new Array();
+
+  static obstacles = new Array();
+
+  static boidHandler;
 
   // # means private in JS - strange lol
   static #setupScene() {
@@ -68,6 +73,12 @@ export class SCENEDATA {
     this.scene.add(object);
   }
 
+  // add keyed to scene, with obstacle collision add as well
+  static addObstacle(key, object) {
+    this.add(key, object);
+    this.obstacles.push(object);
+  }
+
   // get keyed object3d from scene
   static get(key) {
     return this.objects.get(key);
@@ -89,6 +100,7 @@ export class SCENEDATA {
 
     addLights();
     
+
     addTerrain();
 
     await addIslands();
@@ -104,6 +116,8 @@ export class SCENEDATA {
     addSky();
 
     addModels();
+
+    this.boidHandler = setupBoids();
 
     makeStats();
     makeGUI();

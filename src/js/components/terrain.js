@@ -25,12 +25,15 @@ export function addTerrain() {
   // });
   var terrain = new THREE.Mesh(
     geometry,
+    // new THREE.MeshToonMaterial({
+    //   color: new THREE.Color("green"),
+    // })
     circle_constraint_material(new THREE.Vector4(0, 1, 0, 1))
   );
 
-  // if (terrainParams.FLAT_SHADING) {
-  //   terrain.geometry = terrain.geometry.toNonIndexed();
-  // }
+  if (terrainParams.FLAT_SHADING) {
+    terrain.geometry = terrain.geometry.toNonIndexed();
+  }
   terrain.rotation.x = -Math.PI / 2;
   SCENEDATA.add("terrain", terrain);
 }
