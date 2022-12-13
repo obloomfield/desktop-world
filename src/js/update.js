@@ -9,6 +9,7 @@ import { renderBloom } from "./components/bloom";
 import { updateClouds, updateWeather } from "./components/clouds";
 import { SCENEDATA } from "./setup";
 import { bloomParam } from "./components/bloom";
+import {updateParticleSystem} from "./components/particleSystem";
 
 var clock = new THREE.Clock();
 var times = [0, Math.PI / 3, -Math.PI / 4, Math.PI / 6, Math.PI / 5];
@@ -37,8 +38,11 @@ function update() {
 
 function render() {
   SCENEDATA.controls.update();
-  renderBloom();
-  SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
+  if (bloomParam.bloomEnabled) {
+    renderBloom();
+  } else {
+    SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
+  }
 }
 
 export function loop() {
