@@ -147,7 +147,7 @@ export async function addModels() {
   o.rotateZ(-Math.PI/6);
 
   //o.layers.enable(1);
-  //SCENEDATA.scene.add(o)
+  SCENEDATA.scene.add(o)
 
   const waterGeometry = new THREE.SphereGeometry(
     550,
