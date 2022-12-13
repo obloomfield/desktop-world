@@ -8,13 +8,13 @@ import { addIslands } from "./components/island";
 import { addLights } from "./components/lighting";
 import { addModels } from "./components/models";
 import { createClusters } from "./components/particles";
+import { addParticleSystem } from "./components/particleSystem";
 import { addSky } from "./components/sky";
 import { addTerrain } from "./components/terrain";
 import { makeGUI, makeStats } from "./components/ui";
 import { buildWater2 } from "./components/water";
 import { setupEvents } from "./events";
 import { loop } from "./update";
-import {addParticleSystem} from "./components/particleSystem";
 
 export class SCENEDATA {
   static WIDTH;
@@ -35,7 +35,6 @@ export class SCENEDATA {
   // # means private in JS - strange lol
   static #setupScene() {
     this.scene = new THREE.Scene();
-    
   }
 
   static #setupCamera() {
@@ -125,7 +124,7 @@ export class SCENEDATA {
     makeStats();
     makeGUI();
 
-    // setupEvents();
+    setupEvents();
 
     loop();
   }
