@@ -125,7 +125,7 @@ export class SCENEDATA {
     makeStats();
     makeGUI();
 
-    // setupEvents();
+    setupEvents();
 
     loop();
   }

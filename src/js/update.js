@@ -25,10 +25,11 @@ function update() {
   // terrain.position.z += SPEED * delta;
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
-  if (buttonState != lampParam.lampOn) {
-    updateButton();
-    buttonState = lampParam.lampOn
-  }
+  
+  // if (buttonState != lampParam.lampOn) {
+  //   updateButton();
+  //   buttonState = lampParam.lampOn
+  // }
   
 
   updateParticleSystem(delta);
