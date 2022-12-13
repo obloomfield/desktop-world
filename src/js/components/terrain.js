@@ -35,6 +35,7 @@ export function addTerrain() {
     terrain.geometry = terrain.geometry.toNonIndexed();
   }
   terrain.rotation.x = -Math.PI / 2;
+   terrain.layers.enable(1);
   SCENEDATA.add("terrain", terrain);
 }
 

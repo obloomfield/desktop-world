@@ -71,6 +71,9 @@ function buildCloud(size, height, pos, rotationY) {
     // })
     new THREE.MeshToonMaterial({ color: new THREE.Color("white") })
   );
+
+  //cloud.layers.enable(1);
+
   clouds.push(cloud);
   geos.push(geo);
   bobbing.push(THREE.MathUtils.randFloatSpread(5, 10))

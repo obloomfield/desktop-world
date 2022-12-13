@@ -32,7 +32,7 @@ export function setupBloom() {
   bloomComposer.renderToScreen = false;
   bloomComposer.addPass(renderScene);
   bloomComposer.addPass(
-    new UnrealBloomPass({ x: 1024, y: 1024 }, 1.0, 0.0, 0.0)
+    new UnrealBloomPass({ x: 1024, y: 1024 }, 0.5, 5.0, 0.0)
   );
 
   // uniformData.bloomTexture.value = bloomComposer.renderTarget2.texture;
@@ -60,7 +60,7 @@ function traverseBloom() {
 }
 function darkenNonBloomed(obj) {
   // console.log(bloomLayer);
-  if (obj.isMesh && bloomLayer.test( obj.layers )) {
+  if (!(obj.isMesh && bloomLayer.test( obj.layers ))) {
     materials[obj.uuid] = obj.material;
     obj.material = DARK_MATERIAL;
   }

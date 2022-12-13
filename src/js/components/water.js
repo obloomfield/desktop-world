@@ -117,6 +117,8 @@ export function buildWater2() {
   );
   o.position.y = -0;
   SCENEDATA.add("water_top", o);
+  //o.layers.enable(1);
   let o2 = new THREE.Mesh(bottom, m2);
+  //o2.layers.enable(1);
   SCENEDATA.add("water_bowl", o2);
 }
