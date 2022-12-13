@@ -108,7 +108,7 @@ varying vec3 v_Pos;
 varying vec2 vertexUV;
 
 uniform float RADIUS;
-uniform vec4 COLOR;
+uniform vec3 COLOR;
 
 void main() {
   float lum = (abs(v_Normal[0]) + abs(v_Normal[1]) + abs(v_Normal[2]))/3.0;
@@ -116,7 +116,7 @@ void main() {
   if (distance(v_Pos,vec3(0,0,0)) > RADIUS) {
     discard;
   }
-  gl_FragColor = vec4(vec3(COLOR)*lum,1);
+  gl_FragColor = vec4(COLOR*lum,1);
 }
 `;
 

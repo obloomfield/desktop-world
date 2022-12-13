@@ -28,7 +28,7 @@ export function addTerrain() {
     // new THREE.MeshToonMaterial({
     //   color: new THREE.Color("green"),
     // })
-    circle_constraint_material(new THREE.Vector4(0, 1, 0, 1))
+    circle_constraint_material(new THREE.Color("green"))
   );
 
   if (terrainParams.FLAT_SHADING) {
