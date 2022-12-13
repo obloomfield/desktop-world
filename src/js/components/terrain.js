@@ -23,18 +23,18 @@ export function addTerrain() {
   //   color: 0x00ff00,
   //   side: THREE.Side,
   // });
-  geometry.computeVertexNormals();
+  // geometry.computeVertexNormals();
 
   var terrain = new THREE.Mesh(
     geometry,
     // new THREE.MeshToonMaterial({
     //   color: new THREE.Color("green"),
     // })
-    // circle_constraint_material(new THREE.Vector4(0, 1, 0, 1))
-    toonShader({
-      color: new THREE.Color(0, 0.2, 0),
-      rad_constraint: { value: true },
-    })
+    circle_constraint_material(new THREE.Vector4(0, 1, 0, 1))
+    // toonShader({
+    //   color: new THREE.Color(0, 0.2, 0),
+    //   rad_constraint: { value: true },
+    // })
   );
 
   terrain.castShadow = false;

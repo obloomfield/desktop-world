@@ -158,8 +158,8 @@ varying vec3 v_ViewDir;
   
       float dampening = (abs(v_Normal[0]) + abs(v_Normal[1]) + abs(v_Normal[2]))/3.0;
       // dampening = smoothstep(0.0, 0.5,lum);
-      // dampening = 0.6;
-      dampening = 1.0;
+      dampening = 0.6;
+      // dampening = 1.0;
 
       gl_FragColor = vec4(dampening*uColor * (ambientLightColor + light + specular + rim), 1.0);
   }
