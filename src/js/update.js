@@ -7,6 +7,7 @@ import { stats } from "./components/ui";
 import { updateWater2 } from "./components/water";
 import { renderBloom } from "./components/bloom";
 import { SCENEDATA } from "./setup";
+import {updateParticleSystem} from "./components/particleSystem";
 
 var clock = new THREE.Clock();
 var times = [0, Math.PI / 3, -Math.PI / 4, Math.PI / 6, Math.PI / 5];
@@ -18,21 +19,23 @@ function update() {
   // terrain.position.z += SPEED * delta;
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
+  updateParticleSystem(delta);
+
   updateSun();
 
   updateParticles(elapsed);
-  updateTerrain(SCENEDATA.terrain);
+  // updateTerrain(SCENEDATA.terrain);
 
   updateIslands();
   //updateWater(water, sun_pivot.position);
-  updateWater2(elapsed);
+  // updateWater2(elapsed);
   i++;
 }
 
 function render() {
   SCENEDATA.controls.update();
-  renderBloom();
-  // SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
+  // renderBloom();
+  SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
   
 }
 

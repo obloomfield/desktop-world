@@ -9,6 +9,7 @@ import { BufferGeometry, Object3D, Vector2 } from "three";
 import { SCENEDATA } from "../setup";
 import { loadObj } from "./models";
 import { islandMaterial } from "./shader";
+import {ParticleSystem} from "./particleSystem";
 
 function euclideanDistance(p1, p2) {
   return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
@@ -60,6 +61,8 @@ export async function addIslands() {
         islandBase.islandVines[j]
       );
     }
+    console.log(islandBase.islandWaterfall);
+    SCENEDATA.add(["waterfall", i].join("-"), islandBase.islandWaterfall.points);
   }
 }
 
@@ -91,6 +94,7 @@ export class FloatingIsland {
     this.ellipseHeight = 20;
 
     this.treeGeometry = null;
+    this. waterfallLoc = [];
   }
 
   IsPointInPolygon(poly_array, test_point) {
@@ -157,11 +161,8 @@ export class FloatingIsland {
     }
     coords.push(coords[0]);
     // console.log(coords);
-
-    const newCoords = [];
-    for (var i = 0; i < coords.length; i++) {
-
-    }
+    this.waterfallLoc = coords[Math.floor(Math.random() * coords.length)];
+    console.log("waterfall loc", this.waterfallLoc);
 
     return coords;
   }
@@ -357,8 +358,8 @@ export class FloatingIsland {
 
   async loadVine() {
     const result = await loadObj(
-      "../models/root.mtl",
-      "../models/root.obj"
+      "../models/ivy.mtl",
+      "../models/ivy.obj"
     );
     return result[0];
   }
@@ -392,9 +393,9 @@ export class FloatingIsland {
       newObj.translateOnAxis(islandLoc, islandLocLen);
       newObj.translateOnAxis(dir.normalize(), len);
       newObj.rotateOnAxis(rotAxis, this.randomInRange(0,2*Math.PI));
-      if (type === "vine") {
-        newObj.rotateOnAxis(new THREE.Vector3(0,0,1), Math.PI);
-      }
+      // if (type === "vine") {
+      //   newObj.rotateOnAxis(new THREE.Vector3(0,0,1), Math.PI);
+      // }
       newObj.scale.set(scale,scale,scale);
       // await newTree.traverse(function (node) {
       //   if (node.isMesh) {
@@ -442,7 +443,7 @@ export class FloatingIsland {
     islandLoc.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 
     const trees = this.getSamples(treeLocs, posArr, treeOBJ, islandLoc, islandLocLen);
-    const vines = this.getSamples(vineLocs, posArr, vineObj, islandLoc, islandLocLen, 4, "vine");
+    const vines = this.getSamples(vineLocs, posArr, vineObj, islandLoc, islandLocLen, 2);
 
     console.log(trees.length);
     console.log(vines.length);
@@ -462,7 +463,15 @@ export class FloatingIsland {
     return {
       islandTerrain: terrain,
       islandTrees: trees,
-      islandVines: vines
+      islandVines: vines,
+      islandWaterfall: new ParticleSystem({
+        parent: SCENEDATA.scene,
+        camera: SCENEDATA.camera,
+        location: new THREE.Vector3(
+          x + this.waterfallLoc[0],
+          y ,
+          -z+ this.waterfallLoc[1])
+      })
     };
   }
 }

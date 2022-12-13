@@ -88,7 +88,7 @@ void main() {
     if (n[0] == 0.0 && n[1] == 0.0 && n[2] == 1.0 && v_Pos[2] == 0.0) {
         discard;
     } 
-    else if (v_Pos[2] > 0.0) {
+    else if (v_Pos[2] > 2.0) {
       if (n[2] < 0.55) { 
         gl_FragColor = vec4(lum,lum,lum, 1);
       } else {
