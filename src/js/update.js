@@ -20,29 +20,25 @@ function update() {
   // terrain.position.z += SPEED * delta;
   // camera.position.z += SPEED * delta;
   /* Moving the terrain forward. */
+  updateParticleSystem(delta);
+
   updateSun();
 
   updateParticles(elapsed);
-  updateTerrain(SCENEDATA.terrain);
+  // updateTerrain(SCENEDATA.terrain);
 
   updateIslands();
   updateClouds(elapsed);
   updateWeather();
   //updateWater(water, sun_pivot.position);
-  updateWater2(elapsed);
+  // updateWater2(elapsed);
   i++;
 }
 
 function render() {
   SCENEDATA.controls.update();
-  if (bloomParam.bloomEnabled) {
-    renderBloom();
-  }
-  else {
-    SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
-
-  }
-  
+  renderBloom();
+  // SCENEDATA.renderer.render(SCENEDATA.scene, SCENEDATA.camera);
   
 }
 

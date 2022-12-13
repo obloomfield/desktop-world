@@ -10,7 +10,7 @@ function falloff(point, rad) {
 }
 
 export var terrainParams = new (function () {
-  this.PEAK = 150;
+  this.PEAK = 1;
   this.RAD = 400;
   this.ORIGIN = new THREE.Vector2(0, 0);
   this.FLAT_SHADING = true;
