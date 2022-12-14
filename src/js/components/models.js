@@ -230,7 +230,7 @@ export async function addModels() {
 
   const material = new THREE.MeshStandardMaterial({
     color: "white",
-    opacity: 0.1,
+    opacity: 0.3,
     transparent: true,
     wireframe: false,
     emissiveIntensity: 0,
