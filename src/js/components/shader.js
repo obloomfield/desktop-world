@@ -160,6 +160,7 @@ varying vec2 vertexUV;
 
 uniform float RADIUS;
 uniform vec3 COLOR;
+uniform vec3 SHORE_COLOR;
 uniform sampler2D terrainTexture;
 
 float falloff(float z) {
@@ -182,6 +183,10 @@ void main() {
   //   color = vec4(mix(color.rgb, green, falloff(v_Pos[2])),1.0);
   // } 
   gl_FragColor = color;
+
+  if (abs(v_Pos[2]) < 3.0) { // close to y = 0, shore coloring
+    gl_FragColor = mix(vec4(SHORE_COLOR,1.0),color,0.2);
+  }
 }
 `;
 
@@ -216,12 +221,10 @@ uniform vec3 uGreen;
 uniform vec3 uBlue;
 
 uniform sampler2D islandTexture;
-uniform sampler2D islandStoneTexture;
 
 const float _TRI_SCALE = 100.0;
 
 void main() {
-    vec3 color;
 
     vec3 n = v_Normal;
     float R = n[0];
@@ -237,21 +240,15 @@ void main() {
     if (n[0] == 0.0 && n[1] == 0.0 && n[2] == 1.0 && v_Pos[2] == 0.0) {
         discard;
     } 
-    // else if (v_Pos[2] > 2.0) {
-    //   color = texture2D(islandTexture, vec2(0, v_Pos[2]/50.0)).rgb;
-
-    //   // if (n[2] < 0.55) { 
-    //   //   gl_FragColor = texture2D(islandTexture, vec2(0, v_Pos[2]/100.0)); //vec4(uGreen * lum, 1);
-    //   // } 
-    //   // else {
-    //   //   gl_FragColor = vec4(uGreen * lum, 1);
-    //   // }
-    // } else {
-    //   color = texture2D(islandStoneTexture, vec2(0, v_Pos[2]/50.0)).rgb; //vec4(uBlue*lum, 1);
-    // }
-    float zpos = (v_Pos[2] + 50.0) / 150.0;
-    color = texture2D(islandTexture, vec2(0, zpos)).rgb;
-    gl_FragColor = vec4(color * lum, 1);
+    else if (v_Pos[2] > 2.0) {
+      if (n[2] < 0.55) { 
+        gl_FragColor = vec4(uGreen * lum, 1);
+      } else {
+        gl_FragColor = vec4(uGreen * lum, 1);
+      }
+    } else {
+      gl_FragColor = vec4(uBlue*lum, 1);
+    }
 }
 `;
 
@@ -289,6 +286,9 @@ export const circle_constraint_material = function (color, isTerrain) {
       COLOR: {
         value: color,
       },
+      SHORE_COLOR: {
+        value: new THREE.Color("white"),
+      },
       terrainTexture: {
         value: new THREE.TextureLoader().load(
           "../../../public/models/daytime2.png"
@@ -306,35 +306,36 @@ export const circle_constraint_material = function (color, isTerrain) {
   });
 };
 
-export const islandMaterial = function () { return new THREE.ShaderMaterial({
-  uniforms: {
-    islandTexture: {
-      value: new THREE.TextureLoader().load(
-        "../../../public/models/daytime2.png"
-      ),
+export const islandMaterial = function () {
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      islandTexture: {
+        value: new THREE.TextureLoader().load(
+          "../../../public/models/daytime2.png"
+        ),
+      },
+      islandStoneTexture: {
+        value: new THREE.TextureLoader().load(
+          "../../../public/models/dirtTexture.png"
+        ),
+      },
+      uGreen: {
+        type: "c",
+        value: STANDARD_PALLETE.terrain,
+      },
+      uBlue: {
+        type: "c",
+        value: STANDARD_PALLETE.water,
+      },
     },
-    islandStoneTexture: {
-      value: new THREE.TextureLoader().load(
-        "../../../public/models/dirtTexture.png"
-      ),
-    },
-    uGreen: {
-      type: "c",
-      value: STANDARD_PALLETE.terrain,
-    },
-    uBlue: {
-      type: "c",
-      value: STANDARD_PALLETE.water,
-    },
-  },
-  vertexShader: ISLAND_VERTEX_SHADER,
-  fragmentShader: ISLAND_FRAGMENT_SHADER,
-  opacity: 0,
-  transparent: 1,
-  side: THREE.DoubleSide,
-  depthWrite: true,
-});
-}
+    vertexShader: ISLAND_VERTEX_SHADER,
+    fragmentShader: ISLAND_FRAGMENT_SHADER,
+    opacity: 0,
+    transparent: 1,
+    side: THREE.DoubleSide,
+    depthWrite: true,
+  });
+};
 // islandMaterial.opacity = 0;
 // islandMaterial.transparent = 1;
 // islandMaterial.side = THREE.DoubleSide;
