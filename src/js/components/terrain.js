@@ -4,6 +4,9 @@ import { perlin, perlinParams } from "./perlin";
 import { SCENEDATA } from "../setup";
 import { circle_constraint_material } from "./shader";
 
+export const DAY_TEXTURE = new THREE.TextureLoader().load("../../../public/models/daytime2.png");
+export const NIGHT_TEXTURE = new THREE.TextureLoader().load("../../../public/models/nightime.png");
+
 function falloff(point, rad) {
   let x = point.length() / rad;
   return -Math.pow(x, 10) + 1;

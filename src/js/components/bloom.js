@@ -32,7 +32,7 @@ export function setupBloom() {
   bloomComposer.renderToScreen = false;
   bloomComposer.addPass(renderScene);
   bloomComposer.addPass(
-    new UnrealBloomPass({ x: 1024, y: 1024 }, 0.5, 5.0, 0.0)
+    new UnrealBloomPass({ x: 1024, y: 1024 }, 0.9, 5.0, 0.0)
   );
 
   // uniformData.bloomTexture.value = bloomComposer.renderTarget2.texture;
