@@ -75,7 +75,7 @@ export async function addIslands() {
         islandBase.islandVines[j]
       );
     }
-    console.log(islandBase.islandWaterfall);
+    // console.log(islandBase.islandWaterfall);
     SCENEDATA.add(
       ["waterfall", i].join("-"),
       islandBase.islandWaterfall.points
@@ -195,7 +195,7 @@ export class FloatingIsland {
     coords.push(coords[0]);
     // console.log(coords);
     this.waterfallLoc = coords[Math.floor(Math.random() * coords.length)];
-    console.log("waterfall loc", this.waterfallLoc);
+    // console.log("waterfall loc", this.waterfallLoc);
 
     return coords;
   }
@@ -431,7 +431,7 @@ export class FloatingIsland {
     const treeOBJ = await this.loadAlienTree();
     // treeOBJ.castShadow = true;
     
-    console.log("TREE OBJ", treeOBJ);
+    // console.log("TREE OBJ", treeOBJ);
 
     const geos = [geometry, geometry2];
     // const geos = [];
@@ -467,8 +467,8 @@ export class FloatingIsland {
       2
     );
 
-    console.log(trees.length);
-    console.log(vines.length);
+    // console.log(trees.length);
+    // console.log(vines.length);
 
     var material = new THREE.MeshStandardMaterial({
       color: 0x836582,

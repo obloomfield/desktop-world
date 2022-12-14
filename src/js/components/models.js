@@ -43,7 +43,7 @@ export function loadObj(matFile, objFile) {
   return new Promise((resolve, reject) => {
     var matLoader = new MTLLoader();
     matLoader.load(matFile, function (materials) {
-      console.log("MATERIALS", materials);
+      // console.log("MATERIALS", materials);
       materials.preload();
 
       var loader = new OBJLoader();
@@ -104,7 +104,7 @@ export async function addModels() {
   );
   const deskObj = desk[0];
   setObjShadow(deskObj);
-  console.log(deskObj);
+  // console.log(deskObj);
 
   deskObj.scale.set(5000, 5000, 5000);
   deskObj.translateY(-2475);
@@ -115,6 +115,18 @@ export async function addModels() {
   // desk.scale.set(2000,2000,2000);
   // desk.position.y = -2100; //.translate(0,-500,0);
   SCENEDATA.add("desk", deskObj);
+
+  // const notepad = await loadObj(
+  //   "public/models/notepad.mtl",
+  //   "public/models/notepad.obj"
+  // );
+  // const noteObj = notepad[0];
+  // setObjShadow(noteObj);
+  // noteObj.scale.set(200, 200, 200);
+  // noteObj.translateY(300);
+  // noteObj.translateZ(500);
+  // noteObj.translateX(-5000);
+  // SCENEDATA.add("noteObj", noteObj);
 
   const books = await loadObj(
     "public/models/books.mtl",
@@ -128,6 +140,7 @@ export async function addModels() {
   bookObj.translateX(-2200);
   SCENEDATA.add("books", bookObj);
 
+
   const lamp = await loadObj(
     "public/models/toonLamp.mtl",
     "public/models/toonLamp.obj"
@@ -135,7 +148,7 @@ export async function addModels() {
   const lampObj = lamp[0];
   setObjShadow(lampObj);
 
-  console.log(lampObj);
+  // console.log(lampObj);
   lampObj.scale.set(2500, 2500, 2500);
 
   lampObj.rotateY(Math.PI / 4);

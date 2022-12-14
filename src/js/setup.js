@@ -57,7 +57,7 @@ export class SCENEDATA {
 
   static #setupRenderer() {
     this.renderer = new THREE.WebGLRenderer({ alpha: true });
-    console.log("reached setup");
+    // console.log("reached setup");
     this.renderer.setClearColor(0x000000);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.WIDTH, this.HEIGHT);

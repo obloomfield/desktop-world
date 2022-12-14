@@ -18,7 +18,7 @@ export function setupEvents() {
   //   modifyTerrain(intersect.object, intersect, SCENEDATA.scene);
   // };
   SCENEDATA.get("water_top").callback = function (intersect) {
-    console.log("clicked the water!");
+    // console.log("clicked the water!");
 
     // add a function here
     modifyTerrain(intersect.object, intersect, SCENEDATA.scene);
@@ -66,17 +66,17 @@ function onDocumentPointerDown(event) {
   // console.log(intersects);
 
   if (intersect_water.length > 0) {
-    console.log("INTERSECT FOUND!");
-    console.log(intersect_water);
+    // console.log("INTERSECT FOUND!");
+    // console.log(intersect_water);
     intersect_water[0].object.callback(intersect_water[0]);
   } else {
-    console.log("no intersect found...");
+    // console.log("no intersect found...");
   }
 
   var intersect_button = raycaster.intersectObject(SCENEDATA.get("button"));
 
   if (intersect_button.length > 0) {
-    console.log("BUTTON PRESS");
+    // console.log("BUTTON PRESS");
     intersect_button[0].object.callback();
   }
   // console.log(intersects);
@@ -87,7 +87,7 @@ function onDocumentMouseMove(event) {
   event.preventDefault();
   event_cnt++;
   if (event_cnt % eventParams.MOUSE_CAST_FREQUENCY !== 0) return;
-  console.log("raycast of terrain!!");
+  // console.log("raycast of terrain!!");
 
   mouse.x = (event.clientX / SCENEDATA.renderer.domElement.clientWidth) * 2 - 1;
   mouse.y =
@@ -109,10 +109,10 @@ function onDocumentMouseMove(event) {
   // console.log(intersects);
 
   if (intersect_water.length > 0) {
-    console.log("INTERSECT FOUND!");
-    console.log(intersect_water);
+    // console.log("INTERSECT FOUND!");
+    // console.log(intersect_water);
     intersect_water[0].object.callback(intersect_water[0]);
   } else {
-    console.log("no intersect found...");
+    // console.log("no intersect found...");
   }
 }

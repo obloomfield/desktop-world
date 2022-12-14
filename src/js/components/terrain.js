@@ -69,7 +69,7 @@ export function sampleTreesTerrain(terrain) {
   const rotAxis = new THREE.Vector3(0, 1, 0);
   // newTree.scale.set(scale, scale, scale);
 
-  console.log("Sampling trees!");
+  // console.log("Sampling trees!");
 
   for (let i = 0; i < treeLocs.length; i++) {
     const idx = treeLocs[i];

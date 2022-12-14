@@ -128,7 +128,7 @@ export class ParticleSystem {
 
         this.addParticles();
         this.updateGeometry();
-        console.log("POINT GEO", this.geometry);
+        // console.log("POINT GEO", this.geometry);
 
         this.toRemove = [];
         // console.log(SCENEDATA.objects);

@@ -77,7 +77,7 @@ export default class Boid {
       this.mesh.position.distanceTo(boidParams.ORIGIN) >
         boidParams.BOUNDARY_RAD + 100
     ) {
-      console.log("IMPROPER POSITION FOR BOID... RESETTING");
+      // console.log("IMPROPER POSITION FOR BOID... RESETTING");
       this.mesh.position.copy(randomStartPos());
     }
 
@@ -123,7 +123,7 @@ export default class Boid {
       boidParams.RAYCASTING &&
       Math.round(elapsed) % boidParams.RAYCAST_SEC_DELAY === 0
     ) {
-      console.log("ran this...");
+      // console.log("ran this...");
       var vert = new THREE.Vector3().fromBufferAttribute(
         this.geom.attributes.position,
         0

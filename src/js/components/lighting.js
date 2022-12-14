@@ -65,7 +65,7 @@ export function addLights() {
     sun.position.y * 300,
     sun.position.z * 300
   );
-  console.log(sun.position);
+  // console.log(sun.position);
   //SCENEDATA.add("sun_pivot", sun_pivot);
 
   const hemiLight = new THREE.HemisphereLight(

@@ -104,7 +104,7 @@ export function setupBoids() {
     null
   );
 
-  console.log(handler.boids);
+  // console.log(handler.boids);
 
   for (var i = 0; i < handler.boids.length; i++) {
     SCENEDATA.add("boid-".concat(i), handler.boids[i].mesh);
@@ -163,7 +163,7 @@ export default class BoidHandler {
   }
 
   resetTargets() {
-    console.log("RESETTING BOID TARGETING");
+    // console.log("RESETTING BOID TARGETING");
     this.boids.forEach((boid) => {
       boid.target = null;
     });
