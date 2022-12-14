@@ -61,7 +61,7 @@ export default class Boid {
     return [mesh, geom, mat];
   }
 
-  update(delta, boids, obstacles) {
+  update(delta, boids, obstacles, elapsed) {
     this.update_cnt++;
     this.wander_cnt++;
 
@@ -112,23 +112,27 @@ export default class Boid {
     var origin = this.mesh.position.clone();
     // console.log(this.geom);
     // console.log(this.geom.isBufferGeometry);
-    var vert = new THREE.Vector3().fromBufferAttribute(
-      this.geom.attributes.position,
-      0
-    );
-    var global_vert = vert.applyMatrix4(this.mesh.matrix);
-    var dir_vect = global_vert.sub(this.mesh.position);
-    var raycast = new THREE.Raycaster(origin, dir_vect.clone().normalize());
 
-    var collisions = raycast.intersectObjects(obstacles);
-    if (collisions.length > 0) {
-      for (let i = 0; i < sphereRays.length; i++) {
-        const dir = sphereRays[i];
-        raycast = new THREE.Raycaster(origin, dir, 0, boidParams.VISION_MAX);
-        var cur_collision = raycast.intersectObject(collisions[0].object);
-        if (cur_collision.length === 0) {
-          this.accel.add(dir.clone().multiplyScalar(100));
-          break;
+    if (elapsed % 50 === 0) {
+      var vert = new THREE.Vector3().fromBufferAttribute(
+        this.geom.attributes.position,
+        0
+      );
+      var global_vert = vert.applyMatrix4(this.mesh.matrix);
+      var dir_vect = global_vert.sub(this.mesh.position);
+      var raycast = new THREE.Raycaster(origin, dir_vect.clone().normalize());
+
+      var collisions = raycast.intersectObjects(obstacles);
+      if (collisions.length > 0 && collisions[0].distance < 100) {
+        for (let i = 0; i < sphereRays.length; i++) {
+          const dir = sphereRays[i];
+          raycast = new THREE.Raycaster(origin, dir, 0, boidParams.VISION_MAX);
+          var cur_collision = raycast.intersectObject(collisions[0].object);
+
+          if (cur_collision.length === 0) {
+            this.accel.add(dir.clone().multiplyScalar(100));
+            break;
+          }
         }
       }
     }

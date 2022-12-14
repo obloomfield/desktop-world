@@ -13,8 +13,12 @@ export var eventParams = new (function () {
 })();
 
 export function setupEvents() {
-  SCENEDATA.get("terrain").callback = function (intersect) {
-    console.log("clicked the plane!");
+  // SCENEDATA.get("terrain").callback = function (intersect) {
+  //   console.log("clicked the plane!");
+  //   modifyTerrain(intersect.object, intersect, SCENEDATA.scene);
+  // };
+  SCENEDATA.get("water_top").callback = function (intersect) {
+    console.log("clicked the water!");
     modifyTerrain(intersect.object, intersect, SCENEDATA.scene);
   };
   SCENEDATA.get("button").callback = function () {
@@ -44,13 +48,24 @@ function onDocumentPointerDown(event) {
 
   raycaster.setFromCamera(mouse, SCENEDATA.camera);
 
-  var intersect_terrain = raycaster.intersectObject(SCENEDATA.get("terrain"));
+  // var intersect_terrain = raycaster.intersectObject(SCENEDATA.get("terrain"));
+  // // console.log(intersects);
+
+  // if (intersect_terrain.length > 0) {
+  //   console.log("INTERSECT FOUND!");
+  //   console.log(intersect_terrain);
+  //   intersect_terrain[0].object.callback(intersect_terrain[0]);
+  // } else {
+  //   console.log("no intersect found...");
+  // }
+
+  var intersect_water = raycaster.intersectObject(SCENEDATA.get("water_top"));
   // console.log(intersects);
 
-  if (intersect_terrain.length > 0) {
+  if (intersect_water.length > 0) {
     console.log("INTERSECT FOUND!");
-    console.log(intersect_terrain);
-    intersect_terrain[0].object.callback(intersect_terrain[0]);
+    console.log(intersect_water);
+    intersect_water[0].object.callback(intersect_water[0]);
   } else {
     console.log("no intersect found...");
   }
@@ -77,13 +92,23 @@ function onDocumentMouseMove(event) {
 
   raycaster.setFromCamera(mouse, SCENEDATA.camera);
 
-  var intersect_terrain = raycaster.intersectObject(SCENEDATA.get("terrain"));
+  // var intersect_terrain = raycaster.intersectObject(SCENEDATA.get("terrain"));
+  // // console.log(intersects);
+
+  // if (intersect_terrain.length > 0) {
+  //   console.log("INTERSECT FOUND!");
+  //   console.log(intersect_terrain);
+  //   intersect_terrain[0].object.callback(intersect_terrain[0]);
+  // } else {
+  //   console.log("no intersect found...");
+  // }
+  var intersect_water = raycaster.intersectObject(SCENEDATA.get("water_top"));
   // console.log(intersects);
 
-  if (intersect_terrain.length > 0) {
+  if (intersect_water.length > 0) {
     console.log("INTERSECT FOUND!");
-    console.log(intersect_terrain);
-    intersect_terrain[0].object.callback(intersect_terrain[0]);
+    console.log(intersect_water);
+    intersect_water[0].object.callback(intersect_water[0]);
   } else {
     console.log("no intersect found...");
   }
