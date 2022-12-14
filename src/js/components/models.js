@@ -162,15 +162,25 @@ export async function addModels() {
   SCENEDATA.add("rWall", rWall);
 
   const floorGeometry = new THREE.BoxGeometry( 10000, 50, 10000 );
+  
   const floorMaterial = new THREE.MeshStandardMaterial( {color: 0x5e483d} );
   const floor = new THREE.Mesh( floorGeometry, floorMaterial );
+
+
+
   floor.translateY(-2400);
   SCENEDATA.add("floor", floor);
 
   const floorBox = new THREE.BoxGeometry();
 
 
-  const lightCone = new THREE.ConeGeometry(750, 2000, 500, 100, true, 0, 2 * Math.PI)
+  const lightCone = new THREE.ConeGeometry(1600, 3800, 500, 100, true, 0, 2 * Math.PI)
+
+  var bottom = 1400;
+  var verts = lightCone.attributes.position.array;
+  for (var i = 0; i < verts.length; i += 3) {
+    verts[i + 1] = Math.min(verts[i + 1], bottom);
+  }
 
   const material = new THREE.MeshStandardMaterial({  
       color: "white",
@@ -179,20 +189,26 @@ export async function addModels() {
   wireframe:false,
   emissiveIntensity: 0});
 
+
+  // var axesHelper = new THREE.AxesHelper( 5 );
+  // scene.add( axesHelper );
+    const alphaloader = new THREE.TextureLoader();
   const material2 = new THREE.MeshBasicMaterial({  
     color: "white",
-    opacity: 0.1, 
+    opacity: 0.2, 
   transparent: true, 
 wireframe:false,
-emissiveIntensity: 0});
+emissiveIntensity: 0,
+alphaMap: alphaloader.load("/public/models/alphalightcone.png" ),
+});
 
  
 
   let o = new THREE.Mesh(lightCone, material2);
-  o.translateX(-750);
-  o.translateY(450);
-  o.translateZ(-150);
-  o.rotateZ(Math.PI/3);
+  o.translateX(-0);
+  o.translateY(170);
+  o.translateZ(-100);
+  o.rotateZ(Math.PI/2.7);
 
   o.layers.enable(1);
   
