@@ -33,6 +33,8 @@ export var boidParams = new (function () {
   this.RAYCASTING = false;
   this.RAYCAST_SEC_DELAY = 1;
   this.RAYCAST_MAX_DIST = 500;
+  this.NORMAL_EMISSIVE = 0xffffff;
+  this.BLOOM_EMISSIVE = 0xdaa520;
 })();
 
 function azimuthal(inclination, azimuth) {
@@ -173,6 +175,15 @@ export default class BoidHandler {
       var alpha = (Math.sin(elapsed * 10) + 1.0) / 2.0;
       cur_boid.mat.opacity = alpha;
     }
+  }
+
+  updateBoidBloom(is_bloom) {
+    var new_emissive = is_bloom
+      ? boidParams.BLOOM_EMISSIVE
+      : boidParams.NORMAL_EMISSIVE;
+    this.boids.forEach((boid) => {
+      boid.mat.emissive.setHex(new_emissive);
+    });
   }
 
   updateBoids(delta, elapsed) {

@@ -47,12 +47,17 @@ export default class Boid {
 
     var mat = new THREE.MeshToonMaterial({
       color,
-      emissive: 0xffffff,
+      emissive: boidParams.NORMAL_EMISSIVE,
       side: THREE.DoubleSide,
       flatShading: true,
     });
 
     var mesh = new THREE.Mesh(geom, mat);
+
+    // const map = new THREE.TextureLoader().load("../../../public/alpha3.png");
+    // const mat = new THREE.SpriteMaterial({ map: map });
+
+    // const mesh = new THREE.Sprite(mat);
 
     mesh.position.copy(pos);
     if (quat) {

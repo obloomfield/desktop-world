@@ -25,6 +25,7 @@ export function setupEvents() {
     lampParam.lampOn = !lampParam.lampOn;
     bloomParam.bloomEnabled = !bloomParam.bloomEnabled;
     updateButton();
+    SCENEDATA.boidHandler.updateBoidBloom(bloomParam.bloomEnabled);
   };
 
   SCENEDATA.renderer.domElement.addEventListener(
