@@ -48,6 +48,7 @@ export async function addIslands() {
     SCENEDATA.islands.push(islandBase);
     // scene.add(islandBase.islandTerrain);
     SCENEDATA.add(["island", "terrain", i].join("-"), islandBase.islandTerrain);
+    SCENEDATA.get("island-terrain-0").layers.enable(1);
     // console.log("")
     for (var j = 0; j < islandBase.islandTrees.length; j++) {
       SCENEDATA.add(
