@@ -160,6 +160,7 @@ varying vec2 vertexUV;
 
 uniform float RADIUS;
 uniform vec3 COLOR;
+uniform vec3 SHORE_COLOR;
 uniform sampler2D terrainTexture;
 
 float falloff(float z) {
@@ -182,6 +183,10 @@ void main() {
   //   color = vec4(mix(color.rgb, green, falloff(v_Pos[2])),1.0);
   // } 
   gl_FragColor = color;
+
+  if (abs(v_Pos[2]) < 3.0) { // close to y = 0, shore coloring
+    gl_FragColor = mix(vec4(SHORE_COLOR,1.0),color,0.2);
+  }
 }
 `;
 
@@ -280,6 +285,9 @@ export const circle_constraint_material = function (color, isTerrain) {
       },
       COLOR: {
         value: color,
+      },
+      SHORE_COLOR: {
+        value: new THREE.Color("white"),
       },
       terrainTexture: {
         value: new THREE.TextureLoader().load(

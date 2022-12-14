@@ -8,12 +8,14 @@ export const STANDARD_PALLETE = {
   terrain: new THREE.Color(0x81c69b), //pastel green
   rock: new THREE.Color(0xc9c4c3), //grey
   trees: new THREE.Color(0x066537), //tree green
+  shore: new THREE.Color("white"),
 };
 export const BLOOM_PALLETE = {
   water: new THREE.Color(0x48937a), //cyan
   terrain: new THREE.Color(0x00ff9f), //cyber green
   rock: new THREE.Color(0x3e4466), //grey #5d5473 #3e4466
   trees: new THREE.Color(0xbd00ff), //purple
+  shore: new THREE.Color(0x324d67),
 };
 
 export function updateColors() {
@@ -28,6 +30,8 @@ export function updateColors() {
     );
     SCENEDATA.get("terrain").material.uniforms.terrainTexture.value =
       DAY_TEXTURE;
+    SCENEDATA.get("terrain").material.uniforms.SHORE_COLOR.value =
+      STANDARD_PALLETE.shore;
 
     SCENEDATA.get("island-terrain-0").material.uniforms.uGreen.value =
       STANDARD_PALLETE.trees;
@@ -48,6 +52,9 @@ export function updateColors() {
     );
     SCENEDATA.get("terrain").material.uniforms.terrainTexture.value =
       NIGHT_TEXTURE;
+
+    SCENEDATA.get("terrain").material.uniforms.SHORE_COLOR.value =
+      BLOOM_PALLETE.shore;
     SCENEDATA.get("island-terrain-0").material.uniforms.uGreen.value =
       BLOOM_PALLETE.water;
     SCENEDATA.get("island-terrain-0").material.uniforms.uBlue.value =
