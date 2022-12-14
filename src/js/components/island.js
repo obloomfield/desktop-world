@@ -84,6 +84,25 @@ export function updateIslands() {
   }
 }
 
+export function sampleTrees(geometry, prob) {
+  const norms = geometry.attributes.normal.array;
+  const verts = geometry.attributes.position.array;
+  const vert = [0, 0, 1];
+  const locs = [];
+  for (var i = 0; i < norms.length; i += 3) {
+    // const curr = norms[i];
+    // console.log(curr);
+    // const dot = curr[2];
+    if (norms[i + 2] > 0.8 && verts[i + 2] > 10) {
+      // console.log("VALID");
+      if (Math.random() > prob) {
+        locs.push(i);
+      }
+    }
+  }
+  return locs;
+}
+
 export class FloatingIsland {
   constructor() {
     this.islandMeshes = [];
@@ -335,24 +354,7 @@ export class FloatingIsland {
     return locs;
   }
 
-  sampleTrees(geometry) {
-    const norms = geometry.attributes.normal.array;
-    const verts = geometry.attributes.position.array;
-    const vert = [0, 0, 1];
-    const locs = [];
-    for (var i = 0; i < norms.length; i += 3) {
-      // const curr = norms[i];
-      // console.log(curr);
-      // const dot = curr[2];
-      if (norms[i + 2] > 0.8 && verts[i + 2] > 10) {
-        // console.log("VALID");
-        if (Math.random() > 0.995) {
-          locs.push(i);
-        }
-      }
-    }
-    return locs;
-  }
+  
 
   cloneAttribute(attr) {
     return new Float32Array(attr);
@@ -368,6 +370,7 @@ export class FloatingIsland {
       "../models/lowpolytree.mtl",
       "../models/lowpolytree.obj"
     );
+    SCENEDATA.treeObj = result[0];
     return result[0];
   }
 
@@ -392,26 +395,11 @@ export class FloatingIsland {
       );
       dir.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
       const len = dir.length();
-      // console.log(dir.normalize(), dir.length());
-      // newTree.translateY(-10);
       const rotAxis = new THREE.Vector3(0, 1, 0);
-      // newTree.translateY(100);
-      // console.log("POST ROTATION", newTree.position);
       newObj.translateOnAxis(islandLoc, islandLocLen);
       newObj.translateOnAxis(dir.normalize(), len);
       newObj.rotateOnAxis(rotAxis, this.randomInRange(0, 2 * Math.PI));
-      // if (type === "vine") {
-      //   newObj.rotateOnAxis(new THREE.Vector3(0,0,1), Math.PI);
-      // }
       newObj.scale.set(scale, scale, scale);
-      // await newTree.traverse(function (node) {
-      //   if (node.isMesh) {
-      //     node.geometry.computeVertexNormals();
-      //   }
-      // });
-
-      // console.log("new pos", newTree.position);
-
       samples.push(newObj);
     }
     return samples;
@@ -419,8 +407,8 @@ export class FloatingIsland {
 
   async generateIslandBase(x, y, z, w, h) {
     // Instantiating plane mesh
-    var geometry = new THREE.PlaneGeometry(400, 400, 128, 128);
-    var geometry2 = new THREE.PlaneGeometry(400, 400, 128, 128);
+    var geometry = new THREE.PlaneGeometry(400, 400, 512, 512);
+    var geometry2 = new THREE.PlaneGeometry(400, 400, 512, 512);
 
     const hull = this.polarSample(40, w, h);
 
@@ -439,7 +427,7 @@ export class FloatingIsland {
     const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
     merged.computeVertexNormals();
     const posArr = merged.attributes.position.array;
-    const treeLocs = this.sampleTrees(merged);
+    const treeLocs = sampleTrees(merged, .995);
 
     const vineLocs = this.sampleVines(merged);
     const vineObj = await this.loadVine();
