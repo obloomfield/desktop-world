@@ -76,12 +76,12 @@ export function updateButton() {
 }
 
 function setObjShadow(obj) {
-  obj.traverse( function( node ) { 
-    if ( node instanceof THREE.Mesh ) { 
-      node.castShadow = true; 
+  obj.traverse(function (node) {
+    if (node instanceof THREE.Mesh) {
+      node.castShadow = true;
       node.receiveShadow = true;
-    } 
-  } );
+    }
+  });
 }
 
 export async function addModels() {
@@ -110,7 +110,6 @@ export async function addModels() {
   deskObj.translateY(-2475);
   deskObj.translateZ(-1000);
   deskObj.translateX(1000);
-
 
   // const desk = await load_model("public/models/simple_dirty_desk.glb", "desk");
   // desk.scale.set(2000,2000,2000);
@@ -158,7 +157,7 @@ export async function addModels() {
   cork.translateY(450);
   cork.translateX(300);
   cork.rotateZ(-Math.PI / 5.75);
-  SCENEDATA.add("cork", cork);
+  // SCENEDATA.add("cork", cork);
 
   const buttonChamfergeometry = new THREE.TorusGeometry(50, 15, 3, 100);
   const buttonChamfermaterial = new THREE.MeshStandardMaterial({
@@ -209,8 +208,8 @@ export async function addModels() {
 
   const floorGeometry = new THREE.BoxGeometry(6000, 500, 6000);
 
-  const floorMaterial = new THREE.MeshStandardMaterial({ 
-    color: 0xc3ada2, 
+  const floorMaterial = new THREE.MeshStandardMaterial({
+    color: 0xc3ada2,
   });
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 
@@ -238,7 +237,7 @@ export async function addModels() {
 
   const material = new THREE.MeshStandardMaterial({
     color: "white",
-    opacity: 0.1,
+    opacity: 0.3,
     transparent: true,
     wireframe: false,
     emissiveIntensity: 0,
@@ -282,4 +281,5 @@ export async function addModels() {
   o2.layers.enable(1);
   o.layers.enable(1);
   SCENEDATA.scene.add(o2);
+  o.renderOrder = 0.5;
 }

@@ -127,8 +127,8 @@ export class SCENEDATA {
 
     this.boidHandler = setupBoids();
 
-    makeStats();
-    makeGUI();
+    // makeStats();
+    // makeGUI();
 
     setupEvents();
 

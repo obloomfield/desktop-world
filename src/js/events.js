@@ -19,6 +19,8 @@ export function setupEvents() {
   // };
   SCENEDATA.get("water_top").callback = function (intersect) {
     console.log("clicked the water!");
+
+    // add a function here
     modifyTerrain(intersect.object, intersect, SCENEDATA.scene);
   };
   SCENEDATA.get("button").callback = function () {
