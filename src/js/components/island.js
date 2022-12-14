@@ -10,6 +10,7 @@ import { SCENEDATA } from "../setup";
 import { loadObj } from "./models";
 import { ParticleSystem } from "./particleSystem";
 import { islandMaterial } from "./shader";
+import {perlin, perlinParams} from "./perlin";
 
 function euclideanDistance(p1, p2) {
   return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
@@ -169,6 +170,7 @@ export class FloatingIsland {
       var cosT = Math.cos(i);
       var sinT = Math.sin(i);
       var rad =
+        // perlin(perlinParams, 20 * cosT, 20*sinT) *
         this.randomInRange(min, max) *
         Math.sqrt(
           Math.pow(wRad * hRad, 2) /
@@ -324,10 +326,11 @@ export class FloatingIsland {
             (-(1.5 / ((this.height * 0.9) / 2)) * Math.abs(verts[i + 1]) +
               1.5) *
             // this.falloff(pt, this.RAD, hull) *
-            (this.perlin(1 / 16, 5, verts[i], verts[i + 1]) +
-              this.perlin(1 / 4, 10, verts[i], verts[i + 1]) +
-              this.perlin(1 / 2, 40, verts[i], verts[i + 1]) +
-              this.perlin(1, 400, verts[i], verts[i + 1]))
+            // perlin(perlinParams, verts[i], verts[i + 1])
+            (this.perlin(1 / 4, 20, verts[i], verts[i + 1]) +
+              // this.perlin(1 / 2, 10, verts[i], verts[i + 1]) +
+              this.perlin(1, 40, verts[i], verts[i + 1]) +
+              this.perlin(2, 400, verts[i], verts[i + 1]))
         );
       newZ *= this.falloff(pt, this.RAD, hull);
       verts[i + 2] = positive ? newZ : -2 * newZ;
