@@ -3,6 +3,8 @@ import { perlin, perlinParams } from "./perlin";
 
 import { SCENEDATA } from "../setup";
 import { circle_constraint_material } from "./shader";
+import {sampleTrees} from "./island";
+import {loadObj} from "./models";
 
 export const DAY_TEXTURE = new THREE.TextureLoader().load(
   "../../../public/models/daytime2.png"
@@ -17,8 +19,8 @@ function falloff(point, rad) {
 }
 
 export var terrainParams = new (function () {
+  this.RAD = 499.5;
   this.PEAK = 350;
-  this.RAD = 400;
   this.ORIGIN = new THREE.Vector2(0, 0);
   this.FLAT_SHADING = true;
   this.SHOW_INTERSECTION = false;
@@ -46,6 +48,41 @@ export function addTerrain() {
   SCENEDATA.addObstacle("terrain", terrain);
 }
 
+export function sampleTreesTerrain() {
+  var terrain = SCENEDATA.get("terrain");
+  var positions = terrain.geometry.attributes.position.array;
+  const treeLocs = sampleTrees(terrain.geometry);
+  // const treeLoaded =  //await loadObj("../models/lowPolyTree.mtl", "../models/lowPolyTree.obj");
+  const tree = SCENEDATA.treeObj;// treeLoaded[0];
+  const rotAxis = new THREE.Vector3(0, 1, 0);
+  tree.rotateOnAxis(rotAxis, THREE.MathUtils.randFloat(0, 2 * Math.PI));
+  // newTree.scale.set(scale, scale, scale);
+
+  console.log("Sampling trees!");
+
+  for (let i = 0; i < treeLocs.length; i++) {
+    const idx = treeLocs[i];
+    const dir = new THREE.Vector3(
+      positions[idx],
+      positions[idx + 1],
+      positions[idx + 2]
+    );
+    const newTree = new THREE.Object3D;
+    newTree.copy(tree);
+    dir.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+    const len = dir.length();
+    newTree.translateOnAxis(dir.normalize(), len);
+    
+    const treeLabel = ["terrainTree-",i].join("");
+    if (SCENEDATA.objects.has(treeLabel)) {
+      SCENEDATA.scene.remove(SCENEDATA.get(treeLabel));
+      SCENEDATA.add(treeLabel, newTree);
+    } else {
+      SCENEDATA.add(treeLabel, newTree);
+    }
+  }
+}
+
 export function updateTerrain() {
   var terrain = SCENEDATA.get("terrain");
   var verts = terrain.geometry.attributes.position.array;
@@ -61,7 +98,7 @@ export function updateTerrain() {
     verts[i + 2] =
       terrainParams.PEAK *
       //(300 / (r.length() + 50)) *
-      //falloff(pt, terrainParams.RAD) *
+      falloff(pt, terrainParams.RAD) *
       perlin(perlinParams, verts[i], verts[i + 1]);
   }
   terrain.geometry.attributes.position.needsUpdate = true;
@@ -69,6 +106,7 @@ export function updateTerrain() {
 
   // no way back from flat shading !! loss of info !!
   terrain.geometry.computeVertexNormals();
+  // sampleTreesTerrain();
 }
 
 var intersect_cubes = [];

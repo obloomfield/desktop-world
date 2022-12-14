@@ -29,18 +29,15 @@ float falloff(float x) {
   if (x > RADIUS) {
     return 0.0;
   }
-  if (RADIUS - x > 1.0) {
-    return 1.0;
-  }
+  // if (RADIUS - x > 1.0) {
+  //   return 1.0;
+  // }
   float diff = (RADIUS - x)/RADIUS;
-  return diff * diff;
+  return pow(diff, 10.0);
 }
 
 void main() {
     v_Pos = position;
-    float dist = distance(v_Pos,vec3(0,0,0));
-    
-    v_Pos.z *= falloff(dist);
     gl_Position = projectionMatrix * modelViewMatrix * vec4(v_Pos, 1.0);
     v_Normal = normal;
     vertexUV = uv;
@@ -161,15 +158,26 @@ uniform float RADIUS;
 uniform vec3 COLOR;
 uniform sampler2D terrainTexture;
 
+float falloff(float z) {
+  return pow((300.0 - z)/300.0, 2.0);
+}
+
 void main() {
+  vec3 green = vec3(0,1,0);
   float lum = (abs(v_Normal[0]) + abs(v_Normal[1]) + abs(v_Normal[2]))/3.0;
 
+  vec4 color;
   if (distance(v_Pos,vec3(0,0,0)) > RADIUS) {
     discard;
   } else {
     vec3 terrainColor = texture2D(terrainTexture, vec2(0, v_Pos.z/300.0)).rgb;
-    gl_FragColor = vec4(terrainColor * lum, 1); //vec4(COLOR*lum,1);
+    color = vec4(terrainColor * lum, 1); //vec4(COLOR*lum,1);
   }
+
+  if (v_Normal[2] > 0.55) { 
+    color = vec4(mix(color.rgb, green, falloff(v_Pos[2])),1.0);
+  } 
+  gl_FragColor = color;
 }
 `;
 

@@ -32,6 +32,8 @@ export class SCENEDATA {
 
   static boidHandler;
 
+  static treeObj;
+
   // # means private in JS - strange lol
   static #setupScene() {
     this.scene = new THREE.Scene();
