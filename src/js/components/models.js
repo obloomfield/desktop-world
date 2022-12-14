@@ -66,7 +66,7 @@ export function updateButton() {
     SCENEDATA.get("button").translateY(-10);
     SCENEDATA.get("lightCone").visible = true;
     SCENEDATA.get("spotlight").intensity = 1.0;
-    SCENEDATA.get("pointlight").intensity = 0.2;
+    SCENEDATA.get("pointlight").intensity = 0.4;
   } else {
     SCENEDATA.get("button").translateY(10);
     SCENEDATA.get("lightCone").visible = false;
@@ -117,11 +117,18 @@ export async function addModels() {
   // desk.position.y = -2100; //.translate(0,-500,0);
   SCENEDATA.add("desk", deskObj);
 
-  // const lamp = await load_model("public/models/desk_lamp.glb", "lamp");
-  // lamp.scale.set(650,650,650);
-  // lamp.position.y = -500;
-  // lamp.position.x = 800;
-  // lamp.rotation.y = -Math.PI;
+  const books = await loadObj(
+    "public/models/books.mtl",
+    "public/models/books.obj"
+  );
+  const bookObj = books[0];
+  setObjShadow(bookObj);
+  bookObj.scale.set(750, 750, 750);
+  bookObj.translateY(-300);
+  bookObj.translateZ(500);
+  bookObj.translateX(-2200);
+  SCENEDATA.add("books", bookObj);
+
   const lamp = await loadObj(
     "public/models/toonLamp.mtl",
     "public/models/toonLamp.obj"
@@ -155,7 +162,7 @@ export async function addModels() {
 
   const buttonChamfergeometry = new THREE.TorusGeometry(50, 15, 3, 100);
   const buttonChamfermaterial = new THREE.MeshStandardMaterial({
-    color: 0xffff00,
+    color: 0xBFBFBF,
   });
   const buttonChamferTorus = new THREE.Mesh(
     buttonChamfergeometry,
@@ -168,7 +175,7 @@ export async function addModels() {
   SCENEDATA.add("buttonChamfer", buttonChamferTorus);
 
   const buttonGeometry = new THREE.CylinderGeometry(50, 50, 70, 40);
-  const buttonMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff });
+  const buttonMaterial = new THREE.MeshStandardMaterial({ color: 0xD599E8 });
   const buttonCylinder = new THREE.Mesh(buttonGeometry, buttonMaterial);
   buttonCylinder.translateX(-1620);
   buttonCylinder.translateY(-500);

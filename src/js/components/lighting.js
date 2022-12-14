@@ -17,7 +17,7 @@ export function addLights() {
   // SCENEDATA.add("ambient", ambLight);
   var pointLight = new THREE.PointLight(0xffffff);
   pointLight.position.set(0,4000,0);
-  pointLight.intensity = 0.2;
+  pointLight.intensity = 0.4;
   pointLight.castShadow = false;
   pointLight.shadow.mapSize.width = 2048;
   pointLight.shadow.mapSize.height = 2048;
