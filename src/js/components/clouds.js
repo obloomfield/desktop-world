@@ -87,7 +87,7 @@ export function makeRain() {
   raining = Math.random() <= 0.5;
   for (let i = 0; i < clouds.length; i++) {
     let cloudposition = cloudPos[i];
-    for (let j = 0; j < 10; j++) {
+    for (let j = 0; j < 20; j++) {
       let rainDropPos = new THREE.Vector3(
         cloudposition.x,
         cloudposition.y,
@@ -98,7 +98,7 @@ export function makeRain() {
 
       const material = new THREE.SpriteMaterial({ map: map });
       let particle = new THREE.Sprite(material);
-      particle.scale.set(2, 2, 2);
+      particle.scale.set(1, 2, 1);
       particle.position.set(rainDropPos.x, rainDropPos.y, rainDropPos.z);
       rainDrops.push(particle);
       SCENEDATA.scene.add(particle);

@@ -23,7 +23,7 @@ export var terrainParams = new (function () {
 })();
 
 export function addTerrain() {
-  var geometry = new THREE.PlaneGeometry(1000, 1000, 64, 64);
+  var geometry = new THREE.PlaneGeometry(1000, 1000, 128, 128);
   // var material = new THREE.MeshStandardMaterial({
   //   color: 0x00ff00,
   //   side: THREE.Side,
@@ -50,8 +50,8 @@ function sampleTreesTerrrain(geometry, prob) {
   const vert = [0, 0, 1];
   const locs = [];
   for (var i = 0; i < norms.length; i += 3) {
-    // const vec = THREE.Vector3(verts[i], verts[i+1]);
-    if (norms[i+2] < 1 && norms[i + 2] > 0.8 && verts[i + 2] > 30) {
+    const vec = new THREE.Vector3(verts[i], verts[i+1], verts[i+2]);
+    if (vec.length() < terrainParams.RAD && norms[i + 2] > 0.8 && verts[i + 2] > 30 && verts[i+2] < 250) {
       if (Math.random() > prob) {
         locs.push(i);
       }
@@ -63,7 +63,7 @@ function sampleTreesTerrrain(geometry, prob) {
 export function sampleTreesTerrain(terrain) {
   // var terrain = SCENEDATA.get("terrain");
   var positions = terrain.geometry.attributes.position.array;
-  const treeLocs = sampleTrees(terrain.geometry, 0.8);
+  const treeLocs = sampleTreesTerrrain(terrain.geometry, 0.8);
   // const treeLoaded =  //await loadObj("../models/lowPolyTree.mtl", "../models/lowPolyTree.obj");
   const tree = SCENEDATA.treeObj; // treeLoaded[0];
   const rotAxis = new THREE.Vector3(0, 1, 0);
