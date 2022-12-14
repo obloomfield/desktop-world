@@ -98,6 +98,7 @@ export async function addModels() {
   deskObj.translateY(-2400);
   deskObj.translateZ(-1000);
   deskObj.translateX(1000);
+  deskObj.castShadow = true;
 
   // const desk = await load_model("public/models/simple_dirty_desk.glb", "desk");
   // desk.scale.set(2000,2000,2000);
@@ -169,27 +170,28 @@ export async function addModels() {
 
   //SCENEDATA.add("buttonLight", buttonLight);
 
-  const lGeometry = new THREE.BoxGeometry(50, 8000, 10000);
-  const lMaterial = new THREE.MeshStandardMaterial({ color: 0x453341 });
+  const lGeometry = new THREE.BoxGeometry(500, 6000, 6000);
+  const lMaterial = new THREE.MeshStandardMaterial({ color: 0xbea7b9 });
   const lWall = new THREE.Mesh(lGeometry, lMaterial);
-  lWall.translateX(5000);
-  lWall.translateY(1600);
+  lWall.translateX(3000);
+  lWall.translateY(600);
   SCENEDATA.add("lWall", lWall);
 
-  const rGeometry = new THREE.BoxGeometry(10000, 8000, 50);
-  const rMaterial = new THREE.MeshStandardMaterial({ color: 0x2d3547 });
+  const rGeometry = new THREE.BoxGeometry(6000, 6000, 500);
+  const rMaterial = new THREE.MeshStandardMaterial({ color: 0xa2acc3 });
   const rWall = new THREE.Mesh(rGeometry, rMaterial);
-  rWall.translateZ(5000);
-  rWall.translateY(1600);
+  rWall.translateZ(3000);
+  rWall.translateY(600);
 
   SCENEDATA.add("rWall", rWall);
 
-  const floorGeometry = new THREE.BoxGeometry(10000, 50, 10000);
+  const floorGeometry = new THREE.BoxGeometry(6000, 500, 6000);
 
-  const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x5e483d });
+  const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xc3ada2 });
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 
   floor.translateY(-2400);
+  floor.receiveShadow = true;
   SCENEDATA.add("floor", floor);
 
   const floorBox = new THREE.BoxGeometry();

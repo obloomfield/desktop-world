@@ -16,20 +16,22 @@ export function addLights() {
   // var ambLight = new THREE.AmbientLight(0xffffff);
   // SCENEDATA.add("ambient", ambLight);
 
-  var spotLight = new THREE.PointLight({color: 0xffffff, 
-  position: new THREE.Vector3(-1, 0, 1)})
+  var spotLight = new THREE.PointLight(0xffffff);
+  spotLight.position.set(0,4000,0);
+  // spotLight.castShadow = true;
 
   SCENEDATA.add("spotlight", spotLight);
 
   var sunlight = new THREE.DirectionalLight(0xffffff, 1);
   sunlight.position
-    .set(
-      SCENEDATA.camera.position.x,
-      SCENEDATA.camera.position.y + 500,
-      SCENEDATA.camera.position.z + 500
+    .set( 0,1,0
+      // SCENEDATA.camera.position.x,
+      // SCENEDATA.camera.position.y + 500,
+      // SCENEDATA.camera.position.z + 500
     )
-    .normalize();
-  //SCENEDATA.add("sunlight", sunlight);
+  sunlight.castShadow = true;
+    // .normalize();
+  // SCENEDATA.add("sunlight", sunlight);
   // console.log(sunlight.color);
 
   var sun = new THREE.Mesh(

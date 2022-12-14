@@ -109,7 +109,10 @@ export function buildWater2() {
   let m2 = new THREE.MeshStandardMaterial({
     color: "blue",
     roughness: 1.0,
-    side: THREE.Side,
+    side: THREE.FrontSide,
+    emissive: new THREE.Color("blue"),
+    emissiveIntensity: 0.5,
+    emissiveMap: new THREE.TextureLoader().load("/public/models/watergradient3.png")
   });
   let o = new THREE.Mesh(
     g,
