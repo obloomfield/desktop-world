@@ -262,11 +262,13 @@ export const circle_constraint_material = function (color, isTerrain) {
       },
     },
     vertexShader: isTerrain ? TERRAIN_VERTEX_SHADER : STANDARD_VERTEX_SHADER,
-    fragmentShader: isTerrain ? TERRAIN_CONSTRAINT_FRAGMENT_SHADER : CIRCULAR_CONSTRAINT_FRAGMENT_SHADER,
+    fragmentShader: isTerrain
+      ? TERRAIN_CONSTRAINT_FRAGMENT_SHADER
+      : CIRCULAR_CONSTRAINT_FRAGMENT_SHADER,
     side: THREE.DoubleSide,
     transparent: 1,
     depthWrite: true,
-    flatShading: true
+    flatShading: true,
   });
 };
 

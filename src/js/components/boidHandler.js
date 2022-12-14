@@ -8,7 +8,7 @@ export var sphereRays = [];
 
 export var boidParams = new (function () {
   this.NUM_RAYS = 100;
-  this.NUM_BOIDS = 50;
+  this.NUM_BOIDS = 20;
   this.GEN_HEIGHT_MIN = terrainParams.PEAK; // min offset to make sure boids don't generate under terrain
   this.FOLLOW_TARGET = true;
   this.MIN_VELOCITY = -1;
