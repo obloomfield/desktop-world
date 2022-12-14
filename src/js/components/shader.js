@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { ShaderMaterial } from "three";
 
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { STANDARD_PALLETE } from "./colors";
 
 const STANDARD_VERTEX_SHADER = `
 
@@ -192,6 +193,9 @@ varying vec3 v_Normal;
 varying vec3 v_Pos;
 varying vec2 vertexUV;
 
+uniform vec3 uGreen;
+uniform vec3 uBlue;
+
 uniform sampler2D islandTexture;
 
 const float _TRI_SCALE = 100.0;
@@ -203,7 +207,7 @@ void main() {
     float G = n[1];
     float B = n[2];
     float lum = (abs(R) + abs(G) + abs(B))/3.0;
-    // float dotProd = dot(v_Normal, vec3(0,0,1));
+    // float dotProd = dot(v_Normal, uBlue);
 
     if (v_Pos[2] == 0.0) {
         discard;
@@ -214,12 +218,12 @@ void main() {
     } 
     else if (v_Pos[2] > 2.0) {
       if (n[2] < 0.55) { 
-        gl_FragColor = vec4(lum,lum,lum, 1);
+        gl_FragColor = vec4(uGreen * lum, 1);
       } else {
-        gl_FragColor = vec4(vec3(0,1,0) * lum, 1);
+        gl_FragColor = vec4(uGreen * lum, 1);
       }
     } else {
-      gl_FragColor = vec4(lum,lum,lum, 1);
+      gl_FragColor = vec4(uBlue*lum, 1);
     }
 }
 `;
@@ -265,11 +269,13 @@ export const circle_constraint_material = function (color, isTerrain) {
       },
     },
     vertexShader: isTerrain ? TERRAIN_VERTEX_SHADER : STANDARD_VERTEX_SHADER,
-    fragmentShader: isTerrain ? TERRAIN_CONSTRAINT_FRAGMENT_SHADER : CIRCULAR_CONSTRAINT_FRAGMENT_SHADER,
+    fragmentShader: isTerrain
+      ? TERRAIN_CONSTRAINT_FRAGMENT_SHADER
+      : CIRCULAR_CONSTRAINT_FRAGMENT_SHADER,
     side: THREE.DoubleSide,
     transparent: 1,
     depthWrite: true,
-    flatShading: true
+    flatShading: true,
   });
 };
 
@@ -280,9 +286,19 @@ export const islandMaterial = new THREE.ShaderMaterial({
         "../../../public/models/texturetest.jpeg"
       ),
     },
+    uGreen: {
+      type: "c",
+      value: STANDARD_PALLETE.terrain,
+    },
+    uBlue: {
+      type: "c",
+      value: STANDARD_PALLETE.water,
+
+    }
   },
   vertexShader: STANDARD_VERTEX_SHADER,
   fragmentShader: ISLAND_FRAGMENT_SHADER,
+  
 });
 islandMaterial.opacity = 0;
 islandMaterial.transparent = 1;

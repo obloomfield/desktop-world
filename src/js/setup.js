@@ -10,7 +10,7 @@ import { addModels } from "./components/models";
 import { createClusters } from "./components/particles";
 import { addParticleSystem } from "./components/particleSystem";
 import { addSky } from "./components/sky";
-import { addTerrain } from "./components/terrain";
+import { addTerrain, updateTerrain } from "./components/terrain";
 import { makeGUI, makeStats } from "./components/ui";
 import { buildWater2 } from "./components/water";
 import { setupEvents } from "./events";
@@ -129,6 +129,8 @@ export class SCENEDATA {
     makeGUI();
 
     setupEvents();
+
+    updateTerrain(this.terrain);
 
     loop();
   }

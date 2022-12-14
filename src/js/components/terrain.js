@@ -2,16 +2,12 @@ import * as THREE from "three";
 import { perlin, perlinParams } from "./perlin";
 
 import { SCENEDATA } from "../setup";
+import { sampleTrees } from "./island";
+import { loadObj } from "./models";
 import { circle_constraint_material } from "./shader";
-import {sampleTrees} from "./island";
-import {loadObj} from "./models";
 
-export const DAY_TEXTURE = new THREE.TextureLoader().load(
-  "../../../public/models/daytime2.png"
-);
-export const NIGHT_TEXTURE = new THREE.TextureLoader().load(
-  "../../../public/models/nightime.png"
-);
+export const DAY_TEXTURE = new THREE.TextureLoader().load("../../../public/models/daytime2.png");
+export const NIGHT_TEXTURE = new THREE.TextureLoader().load("../../../public/models/nightime2.png");
 
 function falloff(point, rad) {
   let x = point.length() / rad;
@@ -69,8 +65,7 @@ export function sampleTreesTerrain(terrain) {
   var positions = terrain.geometry.attributes.position.array;
   const treeLocs = sampleTrees(terrain.geometry, 0.8);
   // const treeLoaded =  //await loadObj("../models/lowPolyTree.mtl", "../models/lowPolyTree.obj");
-  const tree = SCENEDATA.treeObj;// treeLoaded[0];
-  console.log(tree);
+  const tree = SCENEDATA.treeObj; // treeLoaded[0];
   const rotAxis = new THREE.Vector3(0, 1, 0);
   // newTree.scale.set(scale, scale, scale);
 
@@ -83,7 +78,7 @@ export function sampleTreesTerrain(terrain) {
       positions[idx + 1],
       positions[idx + 2]
     );
-    const newTree = new THREE.Object3D;
+    const newTree = new THREE.Object3D();
     newTree.copy(tree);
     dir.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
     const len = dir.length();
