@@ -257,7 +257,7 @@ export const circle_constraint_material = function (color, isTerrain) {
       },
       terrainTexture: {
         value: new THREE.TextureLoader().load(
-          "../../../public/models/newTexture.jpg"
+          "../../../public/models/daytime2.png"
         ),
       },
     },

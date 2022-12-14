@@ -6,14 +6,17 @@ import { circle_constraint_material } from "./shader";
 import {sampleTrees} from "./island";
 import {loadObj} from "./models";
 
+export const DAY_TEXTURE = new THREE.TextureLoader().load("../../../public/models/daytime2.png");
+export const NIGHT_TEXTURE = new THREE.TextureLoader().load("../../../public/models/nightime.png");
+
 function falloff(point, rad) {
   let x = point.length() / rad;
   return -Math.pow(x, 10) + 1;
 }
 
 export var terrainParams = new (function () {
-  this.PEAK = 100;
   this.RAD = 499.5;
+  this.PEAK = 350;
   this.ORIGIN = new THREE.Vector2(0, 0);
   this.FLAT_SHADING = true;
   this.SHOW_INTERSECTION = false;

@@ -42,8 +42,7 @@ export function makeGUI() {
   waterFolder.add(waterParams, "AMPLITUDE", 1, 100);
   waterFolder.add(waterParams, "PHASE", 1, 100);
 
-  const bloomFolder = gui.addFolder("Bloom");
-  bloomFolder.add(bloomParam, "bloomEnabled");
+
 
   // const buttonFolder = gui.addFolder("Lamp");
   // buttonFolder.add(lampParam, "lampOn");

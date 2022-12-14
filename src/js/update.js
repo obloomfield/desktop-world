@@ -10,6 +10,7 @@ import { updateTerrain } from "./components/terrain";
 import { stats } from "./components/ui";
 import { updateWater2 } from "./components/water";
 import { SCENEDATA } from "./setup";
+import { updateColors } from "./components/colors";
 
 var clock = new THREE.Clock();
 var times = [0, Math.PI / 3, -Math.PI / 4, Math.PI / 6, Math.PI / 5];
@@ -44,6 +45,7 @@ function update() {
   updateWeather();
   // updateWater(water, sun_pivot.position);
   updateWater2(elapsed);
+  updateColors();
   i++;
 }
 
