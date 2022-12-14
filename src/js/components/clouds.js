@@ -73,7 +73,7 @@ function buildCloud(size, height, pos, rotationY) {
     new THREE.MeshToonMaterial({ color: new THREE.Color("white") })
   );
 
-  //cloud.layers.enable(1);
+  // cloud.layers.enable(1);
 
   clouds.push(cloud);
   geos.push(geo);
@@ -100,6 +100,7 @@ export function makeRain() {
       let particle = new THREE.Sprite(material);
       particle.scale.set(2, 2, 2);
       particle.position.set(rainDropPos.x, rainDropPos.y, rainDropPos.z);
+      particle.layers.enable(1); //enable bloom
       rainDrops.push(particle);
       SCENEDATA.scene.add(particle);
       rainDropPoses.push(rainDropPos);

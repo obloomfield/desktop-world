@@ -3,6 +3,7 @@ import { Vector3 } from "three";
 import { Water } from "three/examples/jsm/objects/Water.js";
 import { sunParams } from "./lighting";
 import { circle_constraint_material } from "./shader";
+import  {STANDARD_PALLETE} from "./colors"
 
 import { SCENEDATA } from "../setup";
 
@@ -113,7 +114,7 @@ export function buildWater2() {
   });
   let o = new THREE.Mesh(
     g,
-    circle_constraint_material(new THREE.Color("blue"))
+    circle_constraint_material(STANDARD_PALLETE.water)
   );
   o.position.y = -0;
   SCENEDATA.add("water_top", o);

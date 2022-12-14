@@ -1,9 +1,6 @@
 import { GUI } from "dat.gui";
 import Stats from "stats.js";
 import { SCENEDATA } from "../setup";
-import { bloomParam } from "./bloom";
-import { lightParams, sunParams } from "./lighting";
-import { lampParam } from "./models";
 import { fireflyParams } from "./particles";
 import { perlinParams } from "./perlin";
 import { terrainParams } from "./terrain";
@@ -42,8 +39,7 @@ export function makeGUI() {
   waterFolder.add(waterParams, "AMPLITUDE", 1, 100);
   waterFolder.add(waterParams, "PHASE", 1, 100);
 
-  const bloomFolder = gui.addFolder("Bloom");
-  bloomFolder.add(bloomParam, "bloomEnabled");
+  
 
   // const buttonFolder = gui.addFolder("Lamp");
   // buttonFolder.add(lampParam, "lampOn");
