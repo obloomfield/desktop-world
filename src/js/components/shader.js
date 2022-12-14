@@ -38,6 +38,9 @@ float falloff(float x) {
 
 void main() {
     v_Pos = position;
+    // if (distance(v_Pos, vec3(0,0,0)) > RADIUS) {
+    //   v_Pos = RADIUS * 1.1 * normalize(v_Pos);
+    // }
     gl_Position = projectionMatrix * modelViewMatrix * vec4(v_Pos, 1.0);
     v_Normal = normal;
     vertexUV = uv;
@@ -167,7 +170,7 @@ void main() {
   float lum = (abs(v_Normal[0]) + abs(v_Normal[1]) + abs(v_Normal[2]))/3.0;
 
   vec4 color;
-  if (distance(v_Pos,vec3(0,0,0)) > RADIUS) {
+  if (distance(v_Pos, vec3(0,0,0)) > RADIUS) {
     discard;
   } else {
     vec3 terrainColor = texture2D(terrainTexture, vec2(0, v_Pos.z/300.0)).rgb;
