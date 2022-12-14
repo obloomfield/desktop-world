@@ -306,12 +306,10 @@ export const islandMaterial = new THREE.ShaderMaterial({
     uBlue: {
       type: "c",
       value: STANDARD_PALLETE.water,
-
-    }
+    },
   },
   vertexShader: STANDARD_VERTEX_SHADER,
   fragmentShader: ISLAND_FRAGMENT_SHADER,
-  
 });
 islandMaterial.opacity = 0;
 islandMaterial.transparent = 1;

@@ -37,7 +37,6 @@ function load_model(model_filepath, model_name) {
       }
     );
   });
-  
 }
 
 export function loadObj(matFile, objFile) {
@@ -67,7 +66,6 @@ export function updateButton() {
     SCENEDATA.get("button").translateY(-10);
     SCENEDATA.get("lightCone").visible = true;
     SCENEDATA.get("spotlight").intensity = 1.0;
-
   } else {
     SCENEDATA.get("button").translateY(10);
     SCENEDATA.get("lightCone").visible = false;
@@ -81,19 +79,22 @@ export async function addModels() {
   //desk.position.y = -2100; //.translate(0,-500,0);
   //desk.layers.enable(1);
   //SCENEDATA.add("desk", desk);
-  
+
   //const lamp = await load_model("public/models/desk_lamp.glb", "lamp");
   //lamp.scale.set(650,650,650);
   //lamp.position.y = -500;
   //lamp.position.x = 800;
   // lamp.rotation.y = -Math.PI;
   // SCENEDATA.add("lamp", lamp);
-  
-  const desk = await loadObj("public/models/toonDesk.mtl", "public/models/toonDesk.obj");
+
+  const desk = await loadObj(
+    "public/models/toonDesk.mtl",
+    "public/models/toonDesk.obj"
+  );
   const deskObj = desk[0];
   console.log(deskObj);
 
-  deskObj.scale.set(5000,5000,5000);
+  deskObj.scale.set(5000, 5000, 5000);
   deskObj.translateY(-2400);
   deskObj.translateZ(-1000);
   deskObj.translateX(1000);
@@ -108,13 +109,16 @@ export async function addModels() {
   // lamp.position.y = -500;
   // lamp.position.x = 800;
   // lamp.rotation.y = -Math.PI;
-  const lamp = await loadObj("public/models/toonLamp.mtl", "public/models/toonLamp.obj");
+  const lamp = await loadObj(
+    "public/models/toonLamp.mtl",
+    "public/models/toonLamp.obj"
+  );
   const lampObj = lamp[0];
   console.log(lampObj);
-  lampObj.scale.set(2500,2500,2500);
+  lampObj.scale.set(2500, 2500, 2500);
 
-  lampObj.rotateY(Math.PI/4);
-  
+  lampObj.rotateY(Math.PI / 4);
+
   lampObj.translateX(-10300);
   lampObj.translateY(-2450);
   lampObj.translateZ(-600);
@@ -122,59 +126,83 @@ export async function addModels() {
 
   SCENEDATA.add("lamp", lampObj);
 
-  const buttonChamfergeometry = new THREE.TorusGeometry( 50, 15, 3, 100 );
-  const buttonChamfermaterial = new THREE.MeshStandardMaterial( { color: 0xffff00 } );
-  const buttonChamferTorus = new THREE.Mesh( buttonChamfergeometry, buttonChamfermaterial );
+  const corkModels = await loadObj(
+    "public/models/flask.mtl",
+    "public/models/flask.obj"
+  );
+  const cork = corkModels[0];
+  cork.scale.set(100, 100, 100);
+  cork.translateY(450);
+  cork.translateX(300);
+  cork.rotateZ(-Math.PI / 5);
+  SCENEDATA.add("cork", cork);
+
+  const buttonChamfergeometry = new THREE.TorusGeometry(50, 15, 3, 100);
+  const buttonChamfermaterial = new THREE.MeshStandardMaterial({
+    color: 0xffff00,
+  });
+  const buttonChamferTorus = new THREE.Mesh(
+    buttonChamfergeometry,
+    buttonChamfermaterial
+  );
   buttonChamferTorus.translateX(-1620);
   buttonChamferTorus.translateY(-395);
   buttonChamferTorus.translateZ(-110);
-  buttonChamferTorus.rotateX(Math.PI/2);
-  SCENEDATA.add( "buttonChamfer", buttonChamferTorus );
+  buttonChamferTorus.rotateX(Math.PI / 2);
+  SCENEDATA.add("buttonChamfer", buttonChamferTorus);
 
-  const buttonGeometry = new THREE.CylinderGeometry( 50, 50, 70, 40 );
-  const buttonMaterial = new THREE.MeshStandardMaterial( {color: 0x00ffff} );
-  const buttonCylinder = new THREE.Mesh( buttonGeometry, buttonMaterial );
+  const buttonGeometry = new THREE.CylinderGeometry(50, 50, 70, 40);
+  const buttonMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff });
+  const buttonCylinder = new THREE.Mesh(buttonGeometry, buttonMaterial);
   buttonCylinder.translateX(-1620);
   buttonCylinder.translateY(-400);
   buttonCylinder.translateZ(-110);
   buttonCylinder.layers.enable(1);
-  SCENEDATA.add( "button", buttonCylinder );
+  SCENEDATA.add("button", buttonCylinder);
 
+  var buttonLight = new THREE.PointLight({
+    color: 0xffffff,
+    position: new THREE.Vector3(-1620, -410, -110),
+    distance: 0.1,
+    decay: 10.0,
+  });
 
-  var buttonLight = new THREE.PointLight({color: 0xffffff, 
-  position: new THREE.Vector3(-1620, -410, -110), distance: 0.1, decay: 10.0})
-  
   //SCENEDATA.add("buttonLight", buttonLight);
 
-  const lGeometry = new THREE.BoxGeometry( 50, 8000, 10000 );
-  const lMaterial = new THREE.MeshStandardMaterial( {color: 0x453341} );
-  const lWall = new THREE.Mesh( lGeometry, lMaterial );
+  const lGeometry = new THREE.BoxGeometry(50, 8000, 10000);
+  const lMaterial = new THREE.MeshStandardMaterial({ color: 0x453341 });
+  const lWall = new THREE.Mesh(lGeometry, lMaterial);
   lWall.translateX(5000);
   lWall.translateY(1600);
   SCENEDATA.add("lWall", lWall);
 
-  const rGeometry = new THREE.BoxGeometry( 10000, 8000, 50 );
-  const rMaterial = new THREE.MeshStandardMaterial( {color: 0x2d3547} );
-  const rWall = new THREE.Mesh( rGeometry, rMaterial );
+  const rGeometry = new THREE.BoxGeometry(10000, 8000, 50);
+  const rMaterial = new THREE.MeshStandardMaterial({ color: 0x2d3547 });
+  const rWall = new THREE.Mesh(rGeometry, rMaterial);
   rWall.translateZ(5000);
   rWall.translateY(1600);
 
   SCENEDATA.add("rWall", rWall);
 
-  const floorGeometry = new THREE.BoxGeometry( 10000, 50, 10000 );
-  
-  const floorMaterial = new THREE.MeshStandardMaterial( {color: 0x5e483d} );
-  const floor = new THREE.Mesh( floorGeometry, floorMaterial );
+  const floorGeometry = new THREE.BoxGeometry(10000, 50, 10000);
 
-
+  const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x5e483d });
+  const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 
   floor.translateY(-2400);
   SCENEDATA.add("floor", floor);
 
   const floorBox = new THREE.BoxGeometry();
 
-
-  const lightCone = new THREE.ConeGeometry(1600, 3800, 500, 100, true, 0, 2 * Math.PI)
+  const lightCone = new THREE.ConeGeometry(
+    1600,
+    3800,
+    500,
+    100,
+    true,
+    0,
+    2 * Math.PI
+  );
 
   var bottom = 1400;
   var verts = lightCone.attributes.position.array;
@@ -182,36 +210,33 @@ export async function addModels() {
     verts[i + 1] = Math.min(verts[i + 1], bottom);
   }
 
-  const material = new THREE.MeshStandardMaterial({  
-      color: "white",
-      opacity: 0.1, 
-    transparent: true, 
-  wireframe:false,
-  emissiveIntensity: 0});
-
+  const material = new THREE.MeshStandardMaterial({
+    color: "white",
+    opacity: 0.1,
+    transparent: true,
+    wireframe: false,
+    emissiveIntensity: 0,
+  });
 
   // var axesHelper = new THREE.AxesHelper( 5 );
   // scene.add( axesHelper );
-    const alphaloader = new THREE.TextureLoader();
-  const material2 = new THREE.MeshBasicMaterial({  
+  const alphaloader = new THREE.TextureLoader();
+  const material2 = new THREE.MeshBasicMaterial({
     color: "white",
-    opacity: 0.2, 
-  transparent: true, 
-wireframe:false,
-emissiveIntensity: 0,
-alphaMap: alphaloader.load("/public/models/alphalightcone.png" ),
-});
-
- 
+    opacity: 0.2,
+    transparent: true,
+    wireframe: false,
+    emissiveIntensity: 0,
+    alphaMap: alphaloader.load("/public/models/alphalightcone.png"),
+  });
 
   let o = new THREE.Mesh(lightCone, material2);
   o.translateX(-0);
   o.translateY(170);
   o.translateZ(-100);
-  o.rotateZ(Math.PI/2.7);
+  o.rotateZ(Math.PI / 2.7);
 
   o.layers.enable(1);
-  
 
   SCENEDATA.add("lightCone", o);
 
@@ -224,12 +249,9 @@ alphaMap: alphaloader.load("/public/models/alphalightcone.png" ),
     0,
     Math.PI
   );
-  let o2 = new THREE.Mesh(waterGeometry, material)
+  let o2 = new THREE.Mesh(waterGeometry, material);
 
   o2.layers.enable(1);
   o.layers.enable(1);
-  SCENEDATA.scene.add(o2)
-  
-  
-
+  SCENEDATA.scene.add(o2);
 }
