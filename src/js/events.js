@@ -65,7 +65,7 @@ function onDocumentPointerDown(event) {
 }
 
 function onDocumentMouseMove(event) {
-  console.log(event_cnt);
+  // console.log(event_cnt);
   event.preventDefault();
   event_cnt++;
   if (event_cnt % eventParams.MOUSE_CAST_FREQUENCY !== 0) return;

@@ -41,7 +41,7 @@ export default class Boid {
 
     // pos = new THREE.Vector3(0, 100, 0);
 
-    var geom = new THREE.SphereGeometry(1, 10, 10); // TODO: change geometry to sprite?
+    var geom = new THREE.SphereGeometry(2, 10, 10); // TODO: change geometry to sprite?
 
     geom.rotateX(THREE.MathUtils.degToRad(90));
 

@@ -6,8 +6,12 @@ import { circle_constraint_material } from "./shader";
 import {sampleTrees} from "./island";
 import {loadObj} from "./models";
 
-export const DAY_TEXTURE = new THREE.TextureLoader().load("../../../public/models/daytime2.png");
-export const NIGHT_TEXTURE = new THREE.TextureLoader().load("../../../public/models/nightime.png");
+export const DAY_TEXTURE = new THREE.TextureLoader().load(
+  "../../../public/models/daytime2.png"
+);
+export const NIGHT_TEXTURE = new THREE.TextureLoader().load(
+  "../../../public/models/nightime.png"
+);
 
 function falloff(point, rad) {
   let x = point.length() / rad;
@@ -135,11 +139,11 @@ export function modifyTerrain(terrain, intersect, scene) {
   }
 
   const i = intersect.faceIndex * 3;
-  console.log(i);
+  // console.log(i);
 
   verts[i + 2] += 10;
-  console.log(intersect.index);
-  console.log(terrain.geometry);
+  // console.log(intersect.index);
+  // console.log(terrain.geometry);
 
   // console.log(terrain.geometry.vertices[intersect.index]);
 }
