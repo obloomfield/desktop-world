@@ -174,9 +174,9 @@ void main() {
     color = vec4(terrainColor * lum, 1); //vec4(COLOR*lum,1);
   }
 
-  if (v_Normal[2] > 0.55) { 
-    color = vec4(mix(color.rgb, green, falloff(v_Pos[2])),1.0);
-  } 
+  // if (v_Normal[2] > 0.55) { 
+  //   color = vec4(mix(color.rgb, green, falloff(v_Pos[2])),1.0);
+  // } 
   gl_FragColor = color;
 }
 `;

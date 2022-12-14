@@ -34,6 +34,8 @@ export class SCENEDATA {
 
   static treeObj;
 
+  static updateTerrain = true;
+
   // # means private in JS - strange lol
   static #setupScene() {
     this.scene = new THREE.Scene();

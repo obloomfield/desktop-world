@@ -47,9 +47,10 @@ export function addTerrain() {
 export function sampleTreesTerrain() {
   var terrain = SCENEDATA.get("terrain");
   var positions = terrain.geometry.attributes.position.array;
-  const treeLocs = sampleTrees(terrain.geometry);
+  const treeLocs = sampleTrees(terrain.geometry, 0.99);
   // const treeLoaded =  //await loadObj("../models/lowPolyTree.mtl", "../models/lowPolyTree.obj");
   const tree = SCENEDATA.treeObj;// treeLoaded[0];
+  console.log(tree);
   const rotAxis = new THREE.Vector3(0, 1, 0);
   tree.rotateOnAxis(rotAxis, THREE.MathUtils.randFloat(0, 2 * Math.PI));
   // newTree.scale.set(scale, scale, scale);
@@ -80,6 +81,9 @@ export function sampleTreesTerrain() {
 }
 
 export function updateTerrain() {
+  if (!SCENEDATA.updateTerrain) {
+    return;
+  }
   var terrain = SCENEDATA.get("terrain");
   var verts = terrain.geometry.attributes.position.array;
   for (var i = 0; i <= verts.length; i += 3) {
@@ -102,7 +106,8 @@ export function updateTerrain() {
 
   // no way back from flat shading !! loss of info !!
   terrain.geometry.computeVertexNormals();
-  // sampleTreesTerrain();
+  sampleTreesTerrain();
+  SCENEDATA.updateTerrain = false;
 }
 
 var intersect_cubes = [];
