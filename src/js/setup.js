@@ -69,7 +69,7 @@ export class SCENEDATA {
     this.controls.target.set(0, 0, 0);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
-    this.controls.enableZoom = false;
+    this.controls.enableZoom = true;
   }
 
   // add keyed object3d to scene

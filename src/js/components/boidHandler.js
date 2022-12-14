@@ -8,28 +8,33 @@ export var sphereRays = [];
 
 export var boidParams = new (function () {
   this.NUM_RAYS = 100;
-  this.NUM_BOIDS = 20;
+  this.NUM_BOIDS = 50;
   this.GEN_HEIGHT_MIN = terrainParams.PEAK; // min offset to make sure boids don't generate under terrain
   this.FOLLOW_TARGET = true;
   this.MIN_VELOCITY = -1;
-  this.MAX_VELOCITY = 1;
+  this.MAX_VELOCITY = 0.8;
   this.WANDER_WEIGHT = 0.4;
   this.WANDER_MIN_DIST = 5;
   this.WANDER_MAX_CNT = 500;
   this.COHESION_WEIGHT = 0.8;
   this.COHESION_DIST = 50;
   this.SEPARATION_WEIGHT = 1;
-  this.SEPARATION_DIST = 30;
+  this.SEPARATION_DIST = 100;
   this.ALIGNMENT_WEIGHT = 1;
   this.ALIGNMENT_DIST = 50;
   this.VISION_MAX = 150;
-  this.BOUNDARY_RAD = terrainParams.RAD + 50;
+  this.BOUNDARY_RAD = terrainParams.RAD;
   this.ORIGIN = new THREE.Vector3(0, 0, 0);
   this.LOOK_SMOOTHING = true;
   this.SMOOTHING_SAMPLES = 20;
   this.TARGETING_ERROR = 10;
   this.TARGETING_FORGET_CNT = 200; // how many frames required for the boid to forget its previous targeting...
   this.FLICKER = true;
+  this.RAYCASTING = false;
+  this.RAYCAST_SEC_DELAY = 1;
+  this.RAYCAST_MAX_DIST = 500;
+  this.NORMAL_EMISSIVE = 0xffffff;
+  this.BLOOM_EMISSIVE = 0xdaa520;
 })();
 
 function azimuthal(inclination, azimuth) {
@@ -172,6 +177,15 @@ export default class BoidHandler {
     }
   }
 
+  updateBoidBloom(is_bloom) {
+    var new_emissive = is_bloom
+      ? boidParams.BLOOM_EMISSIVE
+      : boidParams.NORMAL_EMISSIVE;
+    this.boids.forEach((boid) => {
+      boid.mat.emissive.setHex(new_emissive);
+    });
+  }
+
   updateBoids(delta, elapsed) {
     // console.log(this.ticks_since_target);
     if (this.target !== null) this.ticks_since_target++;
@@ -183,7 +197,7 @@ export default class BoidHandler {
     }
 
     this.boids.forEach((boid) => {
-      boid.update(delta, this.boids, SCENEDATA.obstacles);
+      boid.update(delta, this.boids, SCENEDATA.obstacles, elapsed);
     });
   }
 }

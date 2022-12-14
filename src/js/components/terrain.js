@@ -129,7 +129,7 @@ export function updateTerrain() {
 
 var intersect_cubes = [];
 export function modifyTerrain(terrain, intersect, scene) {
-  var verts = terrain.geometry.attributes.position.array;
+  // var verts = terrain.geometry.attributes.position.array;
 
   let x = intersect.point.x;
   let z = intersect.point.z;
@@ -151,10 +151,10 @@ export function modifyTerrain(terrain, intersect, scene) {
     intersect_cubes.forEach((cube) => scene.remove(cube));
   }
 
-  const i = intersect.faceIndex * 3;
+  // const i = intersect.faceIndex * 3;
   // console.log(i);
 
-  verts[i + 2] += 10;
+  // verts[i + 2] += 10;
   // console.log(intersect.index);
   // console.log(terrain.geometry);
 
