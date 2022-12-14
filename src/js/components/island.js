@@ -28,10 +28,19 @@ export async function addIslands() {
   // const islandBase = generateBase(0,0,50,100,100);
   const islandGenerator = new FloatingIsland();
 
-  const islandLocs = [[200, 100, 250]]; //, [-200,140,100], [75, 76, 85]];// [-150, -190, 125], [-145, 160, 104]];
+  const islandLocs = [[
+    THREE.MathUtils.randFloat(-250,250), 
+    THREE.MathUtils.randFloat(-250,250), 
+    THREE.MathUtils.randFloat(250, 400)
+  ],
+  [
+    THREE.MathUtils.randFloat(-250,250), 
+    THREE.MathUtils.randFloat(-250,250), 
+    THREE.MathUtils.randFloat(250, 400)
+  ]]; //, [-200,140,100], [75, 76, 85]];// [-150, -190, 125], [-145, 160, 104]];
   const islandSize = [
     [300, 250],
-    [30, 50],
+    [100, 150],
     [60, 90],
     [100, 70],
     [45, 36],
@@ -48,8 +57,9 @@ export async function addIslands() {
     );
     SCENEDATA.islands.push(islandBase);
     // scene.add(islandBase.islandTerrain);
-    SCENEDATA.add(["island", "terrain", i].join("-"), islandBase.islandTerrain);
-    SCENEDATA.get("island-terrain-0").layers.enable(1);
+    const islandLabel = ["island", "terrain", i].join("-")
+    SCENEDATA.add(islandLabel, islandBase.islandTerrain);
+    SCENEDATA.get(islandLabel).layers.enable(1);
     // console.log("")
     for (var j = 0; j < islandBase.islandTrees.length; j++) {
       SCENEDATA.add(
@@ -408,8 +418,8 @@ export class FloatingIsland {
 
   async generateIslandBase(x, y, z, w, h) {
     // Instantiating plane mesh
-    var geometry = new THREE.PlaneGeometry(400, 400, 512, 512);
-    var geometry2 = new THREE.PlaneGeometry(400, 400, 512, 512);
+    var geometry = new THREE.PlaneGeometry(w, h, 512, 512);
+    var geometry2 = new THREE.PlaneGeometry(w, h, 512, 512);
 
     const hull = this.polarSample(40, w, h);
 
@@ -463,7 +473,7 @@ export class FloatingIsland {
       side: THREE.DoubleSide,
     });
 
-    var terrain = new THREE.Mesh(merged, islandMaterial);
+    var terrain = new THREE.Mesh(merged, islandMaterial());
 
     terrain.rotation.x = -Math.PI / 2;
     terrain.translateX(x);

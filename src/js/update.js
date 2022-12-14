@@ -47,7 +47,7 @@ function update() {
     updateTerrain();
   }
 
-  updateIslands();
+  // updateIslands();
   updateClouds(elapsed);
   updateWeather();
   // updateWater(water, sun_pivot.position);

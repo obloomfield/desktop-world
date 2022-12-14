@@ -186,6 +186,25 @@ void main() {
 `;
 
 ////////////////////////////////////////////////////////
+const ISLAND_VERTEX_SHADER = `
+
+varying vec3 v_Normal;
+varying vec3 v_Pos;
+varying vec2 vertexUV;
+
+void main() {
+  vec3 n = v_Normal;
+  v_Normal = normal;
+  v_Pos = position;
+
+  if (n[2] == 1.0) {
+    gl_Position = vec4(0,0,0,1);
+  } else {
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+  vertexUV = uv;
+}
+`;
 
 const ISLAND_FRAGMENT_SHADER = `
 
@@ -287,7 +306,7 @@ export const circle_constraint_material = function (color, isTerrain) {
   });
 };
 
-export const islandMaterial = new THREE.ShaderMaterial({
+export const islandMaterial = function () { return new THREE.ShaderMaterial({
   uniforms: {
     islandTexture: {
       value: new THREE.TextureLoader().load(
@@ -309,15 +328,19 @@ export const islandMaterial = new THREE.ShaderMaterial({
 
     }
   },
-  vertexShader: STANDARD_VERTEX_SHADER,
+  vertexShader: ISLAND_VERTEX_SHADER,
   fragmentShader: ISLAND_FRAGMENT_SHADER,
-  
+  opacity: 0,
+  transparent: 1,
+  side: THREE.DoubleSide,
+  depthWrite: true,
 });
-islandMaterial.opacity = 0;
-islandMaterial.transparent = 1;
-islandMaterial.side = THREE.DoubleSide;
-islandMaterial.depthWrite = true;
-islandMaterial.flatShading = true;
+}
+// islandMaterial.opacity = 0;
+// islandMaterial.transparent = 1;
+// islandMaterial.side = THREE.DoubleSide;
+// islandMaterial.depthWrite = true;
+// islandMaterial.flatShading = true;
 // islandMaterial.depthTest =
 
 export const bloomPass = function (bloomTexture) {

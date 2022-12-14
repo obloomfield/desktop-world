@@ -34,7 +34,7 @@ void main() {
     gl_Position = projectionMatrix * mvPosition;
     // gl_PointSize = size * pointMultiplier / gl_Position.w;
 
-    gl_PointSize = 200.0 * size / length(vec3(gl_Position) - cameraPos); //clamp(size - length(vec3(gl_Position) - cameraPos)/size, 1.0, 35.0);
+    gl_PointSize = 300.0 * size / length(vec3(gl_Position) - cameraPos); //clamp(size - length(vec3(gl_Position) - cameraPos)/size, 1.0, 35.0);
     vAngle = vec2(cos(angle), sin(angle));
 
     vColour = colour;
