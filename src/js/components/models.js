@@ -66,10 +66,12 @@ export function updateButton() {
   if (lampParam.lampOn) {
     SCENEDATA.get("button").translateY(-10);
     SCENEDATA.get("lightCone").visible = true;
+    SCENEDATA.get("spotlight").intensity = 1.0;
 
   } else {
     SCENEDATA.get("button").translateY(10);
     SCENEDATA.get("lightCone").visible = false;
+    SCENEDATA.get("spotlight").intensity = 0.2;
   }
 }
 
@@ -135,7 +137,14 @@ export async function addModels() {
   buttonCylinder.translateX(-1620);
   buttonCylinder.translateY(-400);
   buttonCylinder.translateZ(-110);
+  buttonCylinder.layers.enable(1);
   SCENEDATA.add( "button", buttonCylinder );
+
+
+  var buttonLight = new THREE.PointLight({color: 0xffffff, 
+  position: new THREE.Vector3(-1620, -410, -110), distance: 0.1, decay: 10.0})
+  
+  //SCENEDATA.add("buttonLight", buttonLight);
 
   const lGeometry = new THREE.BoxGeometry( 50, 8000, 10000 );
   const lMaterial = new THREE.MeshStandardMaterial( {color: 0x453341} );
@@ -186,6 +195,7 @@ emissiveIntensity: 0});
   o.rotateZ(Math.PI/3);
 
   o.layers.enable(1);
+  
 
   SCENEDATA.add("lightCone", o);
 
