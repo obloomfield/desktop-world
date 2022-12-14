@@ -9,8 +9,8 @@ import { BufferGeometry, Object3D, Vector2 } from "three";
 import { SCENEDATA } from "../setup";
 import { loadObj } from "./models";
 import { ParticleSystem } from "./particleSystem";
+import { perlin, perlinParams } from "./perlin";
 import { islandMaterial } from "./shader";
-import {perlin, perlinParams} from "./perlin";
 
 function euclideanDistance(p1, p2) {
   return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
@@ -28,16 +28,18 @@ export async function addIslands() {
   // const islandBase = generateBase(0,0,50,100,100);
   const islandGenerator = new FloatingIsland();
 
-  const islandLocs = [[
-    THREE.MathUtils.randFloat(-250,250), 
-    THREE.MathUtils.randFloat(-250,250), 
-    THREE.MathUtils.randFloat(250, 400)
-  ],
-  [
-    THREE.MathUtils.randFloat(-250,250), 
-    THREE.MathUtils.randFloat(-250,250), 
-    THREE.MathUtils.randFloat(250, 400)
-  ]]; //, [-200,140,100], [75, 76, 85]];// [-150, -190, 125], [-145, 160, 104]];
+  const islandLocs = [
+    [
+      THREE.MathUtils.randFloat(-250, 250),
+      THREE.MathUtils.randFloat(-250, 250),
+      THREE.MathUtils.randFloat(250, 400),
+    ],
+    [
+      THREE.MathUtils.randFloat(-250, 250),
+      THREE.MathUtils.randFloat(-250, 250),
+      THREE.MathUtils.randFloat(250, 400),
+    ],
+  ]; //, [-200,140,100], [75, 76, 85]];// [-150, -190, 125], [-145, 160, 104]];
   const islandSize = [
     [300, 250],
     [100, 150],
@@ -57,7 +59,7 @@ export async function addIslands() {
     );
     SCENEDATA.islands.push(islandBase);
     // scene.add(islandBase.islandTerrain);
-    const islandLabel = ["island", "terrain", i].join("-")
+    const islandLabel = ["island", "terrain", i].join("-");
     SCENEDATA.add(islandLabel, islandBase.islandTerrain);
     SCENEDATA.get(islandLabel).layers.enable(1);
     // console.log("")
@@ -364,8 +366,6 @@ export class FloatingIsland {
     return locs;
   }
 
-  
-
   cloneAttribute(attr) {
     return new Float32Array(attr);
   }
@@ -409,7 +409,7 @@ export class FloatingIsland {
       newObj.translateOnAxis(islandLoc, islandLocLen);
       newObj.translateOnAxis(dir.normalize(), len);
       newObj.rotateOnAxis(rotAxis, this.randomInRange(0, 2 * Math.PI));
-      const scaleVal = THREE.MathUtils.randFloat(scale, scale+2);
+      const scaleVal = THREE.MathUtils.randFloat(scale, scale + 2);
       newObj.scale.set(scaleVal, scaleVal, scaleVal);
       samples.push(newObj);
     }
@@ -430,7 +430,7 @@ export class FloatingIsland {
 
     const treeOBJ = await this.loadAlienTree();
     treeOBJ.castShadow = true;
-    
+
     console.log("TREE OBJ", treeOBJ);
 
     const geos = [geometry, geometry2];
@@ -440,7 +440,7 @@ export class FloatingIsland {
     const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
     merged.computeVertexNormals();
     const posArr = merged.attributes.position.array;
-    const treeLocs = sampleTrees(merged, .999);
+    const treeLocs = sampleTrees(merged, 0.999);
 
     const vineLocs = this.sampleVines(merged);
     const vineObj = await this.loadVine();

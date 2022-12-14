@@ -111,8 +111,10 @@ export function buildWater2() {
     roughness: 1.0,
     side: THREE.FrontSide,
     emissive: new THREE.Color("blue"),
-    emissiveIntensity: 0.5,
-    emissiveMap: new THREE.TextureLoader().load("/public/models/watergradient3.png")
+    emissiveIntensity: 0.2,
+    emissiveMap: new THREE.TextureLoader().load(
+      "/public/models/watergradient3.png"
+    ),
   });
   let o = new THREE.Mesh(
     g,
@@ -120,8 +122,8 @@ export function buildWater2() {
   );
   o.position.y = -0;
   SCENEDATA.add("water_top", o);
-  //o.layers.enable(1);
+  o.layers.enable(1);
   let o2 = new THREE.Mesh(bottom, m2);
-  //o2.layers.enable(1);
+  // o2.layers.enable(1);
   SCENEDATA.add("water_bowl", o2);
 }
