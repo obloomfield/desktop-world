@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { ShaderMaterial } from "three";
 
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { STANDARD_PALLETE } from "./colors";
 
 const STANDARD_VERTEX_SHADER = `
 
@@ -38,6 +39,9 @@ float falloff(float x) {
 
 void main() {
     v_Pos = position;
+    // if (distance(v_Pos, vec3(0,0,0)) > RADIUS) {
+    //   v_Pos = RADIUS * 1.1 * normalize(v_Pos);
+    // }
     gl_Position = projectionMatrix * modelViewMatrix * vec4(v_Pos, 1.0);
     v_Normal = normal;
     vertexUV = uv;
@@ -167,7 +171,7 @@ void main() {
   float lum = (abs(v_Normal[0]) + abs(v_Normal[1]) + abs(v_Normal[2]))/3.0;
 
   vec4 color;
-  if (distance(v_Pos,vec3(0,0,0)) > RADIUS) {
+  if (distance(v_Pos, vec3(0,0,0)) > RADIUS) {
     discard;
   } else {
     vec3 terrainColor = texture2D(terrainTexture, vec2(0, v_Pos.z/300.0)).rgb;
@@ -189,6 +193,9 @@ varying vec3 v_Normal;
 varying vec3 v_Pos;
 varying vec2 vertexUV;
 
+uniform vec3 uGreen;
+uniform vec3 uBlue;
+
 uniform sampler2D islandTexture;
 
 const float _TRI_SCALE = 100.0;
@@ -200,7 +207,7 @@ void main() {
     float G = n[1];
     float B = n[2];
     float lum = (abs(R) + abs(G) + abs(B))/3.0;
-    // float dotProd = dot(v_Normal, vec3(0,0,1));
+    // float dotProd = dot(v_Normal, uBlue);
 
     if (v_Pos[2] == 0.0) {
         discard;
@@ -211,12 +218,12 @@ void main() {
     } 
     else if (v_Pos[2] > 2.0) {
       if (n[2] < 0.55) { 
-        gl_FragColor = vec4(lum,lum,lum, 1);
+        gl_FragColor = vec4(uGreen * lum, 1);
       } else {
-        gl_FragColor = vec4(vec3(0,1,0) * lum, 1);
+        gl_FragColor = vec4(uGreen * lum, 1);
       }
     } else {
-      gl_FragColor = vec4(lum,lum,lum, 1);
+      gl_FragColor = vec4(uBlue*lum, 1);
     }
 }
 `;
@@ -279,9 +286,19 @@ export const islandMaterial = new THREE.ShaderMaterial({
         "../../../public/models/texturetest.jpeg"
       ),
     },
+    uGreen: {
+      type: "c",
+      value: STANDARD_PALLETE.terrain,
+    },
+    uBlue: {
+      type: "c",
+      value: STANDARD_PALLETE.water,
+
+    }
   },
   vertexShader: STANDARD_VERTEX_SHADER,
   fragmentShader: ISLAND_FRAGMENT_SHADER,
+  
 });
 islandMaterial.opacity = 0;
 islandMaterial.transparent = 1;

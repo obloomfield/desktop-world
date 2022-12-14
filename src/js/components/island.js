@@ -48,6 +48,7 @@ export async function addIslands() {
     SCENEDATA.islands.push(islandBase);
     // scene.add(islandBase.islandTerrain);
     SCENEDATA.add(["island", "terrain", i].join("-"), islandBase.islandTerrain);
+    SCENEDATA.get("island-terrain-0").layers.enable(1);
     // console.log("")
     for (var j = 0; j < islandBase.islandTrees.length; j++) {
       SCENEDATA.add(
@@ -90,11 +91,7 @@ export function sampleTrees(geometry, prob) {
   const vert = [0, 0, 1];
   const locs = [];
   for (var i = 0; i < norms.length; i += 3) {
-    // const curr = norms[i];
-    // console.log(curr);
-    // const dot = curr[2];
     if (norms[i + 2] > 0.8 && verts[i + 2] > 10) {
-      // console.log("VALID");
       if (Math.random() > prob) {
         locs.push(i);
       }
@@ -399,7 +396,8 @@ export class FloatingIsland {
       newObj.translateOnAxis(islandLoc, islandLocLen);
       newObj.translateOnAxis(dir.normalize(), len);
       newObj.rotateOnAxis(rotAxis, this.randomInRange(0, 2 * Math.PI));
-      newObj.scale.set(scale, scale, scale);
+      const scaleVal = THREE.MathUtils.randFloat(scale, scale+2);
+      newObj.scale.set(scaleVal, scaleVal, scaleVal);
       samples.push(newObj);
     }
     return samples;
@@ -427,7 +425,7 @@ export class FloatingIsland {
     const merged = BufferGeometryUtils.mergeVertices(mergedGeos);
     merged.computeVertexNormals();
     const posArr = merged.attributes.position.array;
-    const treeLocs = sampleTrees(merged, .995);
+    const treeLocs = sampleTrees(merged, .999);
 
     const vineLocs = this.sampleVines(merged);
     const vineObj = await this.loadVine();
@@ -442,7 +440,8 @@ export class FloatingIsland {
       posArr,
       treeOBJ,
       islandLoc,
-      islandLocLen
+      islandLocLen,
+      1
     );
     const vines = this.getSamples(
       vineLocs,
