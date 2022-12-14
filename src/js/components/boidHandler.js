@@ -133,7 +133,7 @@ export default class BoidHandler {
 
     for (let i = 0; i < numBoids; i++) {
       position = randomStartPos();
-      console.log(position);
+      // console.log(position);
       color = null; // will use default color in getBoid
       followTarget = boidParams.FOLLOW_TARGET;
       quaternion = null;
@@ -173,7 +173,7 @@ export default class BoidHandler {
   }
 
   updateBoids(delta, elapsed) {
-    console.log(this.ticks_since_target);
+    // console.log(this.ticks_since_target);
     if (this.target !== null) this.ticks_since_target++;
     if (this.ticks_since_target > boidParams.TARGETING_FORGET_CNT) {
       this.resetTargets();

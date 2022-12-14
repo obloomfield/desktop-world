@@ -27,9 +27,9 @@ export async function addIslands() {
   // const islandBase = generateBase(0,0,50,100,100);
   const islandGenerator = new FloatingIsland();
 
-  const islandLocs = [[200, 150, 150]]; //, [-200,140,100], [75, 76, 85], [-150, -190, 125], [-145, 160, 104]];
+  const islandLocs = [[200, 100, 250]]; //, [-200,140,100], [75, 76, 85]];// [-150, -190, 125], [-145, 160, 104]];
   const islandSize = [
-    [100, 150],
+    [300, 250],
     [30, 50],
     [60, 90],
     [100, 70],
@@ -419,8 +419,8 @@ export class FloatingIsland {
 
   async generateIslandBase(x, y, z, w, h) {
     // Instantiating plane mesh
-    var geometry = new THREE.PlaneGeometry(200, 200, 512, 512);
-    var geometry2 = new THREE.PlaneGeometry(200, 200, 512, 512);
+    var geometry = new THREE.PlaneGeometry(400, 400, 128, 128);
+    var geometry2 = new THREE.PlaneGeometry(400, 400, 128, 128);
 
     const hull = this.polarSample(40, w, h);
 
@@ -489,8 +489,8 @@ export class FloatingIsland {
         camera: SCENEDATA.camera,
         location: new THREE.Vector3(
           x + this.waterfallLoc[0],
-          y,
-          -z + this.waterfallLoc[1]
+          z,
+          -y - this.waterfallLoc[1]
         ),
       }),
     };

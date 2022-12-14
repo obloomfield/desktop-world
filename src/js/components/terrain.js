@@ -18,7 +18,7 @@ export var terrainParams = new (function () {
 })();
 
 export function addTerrain() {
-  var geometry = new THREE.PlaneGeometry(1000, 1000, 20, 20);
+  var geometry = new THREE.PlaneGeometry(1000, 1000, 64, 64);
   // var material = new THREE.MeshStandardMaterial({
   //   color: 0x00ff00,
   //   side: THREE.Side,
@@ -28,11 +28,11 @@ export function addTerrain() {
     // new THREE.MeshToonMaterial({
     //   color: new THREE.Color("green"),
     // })
-    circle_constraint_material(new THREE.Color("green"))
+    circle_constraint_material(new THREE.Color("green"), true)
   );
 
   if (terrainParams.FLAT_SHADING) {
-    terrain.geometry = terrain.geometry.toNonIndexed();
+    // terrain.geometry = terrain.geometry.toNonIndexed();
   }
   terrain.rotation.x = -Math.PI / 2;
   terrain.layers.enable(1);
@@ -58,9 +58,10 @@ export function updateTerrain() {
       perlin(perlinParams, verts[i], verts[i + 1]);
   }
   terrain.geometry.attributes.position.needsUpdate = true;
+  // terrain.geometry.attributes.normal.needsUpdate = true;
 
   // no way back from flat shading !! loss of info !!
-  // terrain.geometry.computeVertexNormals();
+  terrain.geometry.computeVertexNormals();
 }
 
 var intersect_cubes = [];

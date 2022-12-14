@@ -113,7 +113,7 @@ export function buildWater2() {
   });
   let o = new THREE.Mesh(
     g,
-    circle_constraint_material(new THREE.Color("blue"))
+    circle_constraint_material(new THREE.Color("blue"), false)
   );
   o.position.y = -0;
   SCENEDATA.add("water_top", o);

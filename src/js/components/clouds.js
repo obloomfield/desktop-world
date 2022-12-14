@@ -20,19 +20,19 @@ var rainDropPoses = [];
 var rainDropSpeeds = [];
 
 export function buildClouds() {
-  var numClouds = THREE.MathUtils.randInt(5, 30);
+  var numClouds = THREE.MathUtils.randInt(5, 15);
   for (let i = 0; i < numClouds; i++) {
-    var height = THREE.MathUtils.randFloat(200, 300);
+    var height = THREE.MathUtils.randFloat(300, 400);
     var pos = new THREE.Vector3(
-      THREE.MathUtils.randFloat(-300, 300),
+      THREE.MathUtils.randFloat(-250, 250),
       height,
-      THREE.MathUtils.randFloat(-300, 300)
+      THREE.MathUtils.randFloat(-250, 250)
     );
     var rotation = THREE.MathUtils.randFloat(0, 2 * Math.PI);
     cloudPos.push(pos);
     buildCloud(
       THREE.MathUtils.randFloat(10, 20),
-      THREE.MathUtils.randFloat(200, 300),
+      THREE.MathUtils.randFloat(300, 400),
       pos,
       rotation
     );
@@ -118,7 +118,7 @@ export function updateClouds(elapsed) {
 }
 
 export function updateWeather() {
-  console.log(raining);
+  // console.log(raining);
   if (raining) {
     raining = Math.random() <= 0.9993;
   } else {

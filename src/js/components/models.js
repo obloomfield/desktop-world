@@ -142,7 +142,7 @@ export async function addModels() {
   const lWall = new THREE.Mesh( lGeometry, lMaterial );
   lWall.translateX(5000);
   lWall.translateY(1600);
-  // SCENEDATA.add("lWall", lWall);
+  SCENEDATA.add("lWall", lWall);
 
   const rGeometry = new THREE.BoxGeometry( 10000, 8000, 50 );
   const rMaterial = new THREE.MeshStandardMaterial( {color: 0x2d3547} );
