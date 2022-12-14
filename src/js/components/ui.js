@@ -2,6 +2,7 @@ import { GUI } from "dat.gui";
 import Stats from "stats.js";
 import { SCENEDATA } from "../setup";
 import { bloomParam } from "./bloom";
+import { boidParams } from "./boidHandler";
 import { lightParams, sunParams } from "./lighting";
 import { lampParam } from "./models";
 import { fireflyParams } from "./particles";
@@ -42,7 +43,9 @@ export function makeGUI() {
   waterFolder.add(waterParams, "AMPLITUDE", 1, 100);
   waterFolder.add(waterParams, "PHASE", 1, 100);
 
-
+  const boidFolder = gui.addFolder("Boids");
+  boidFolder.add(boidParams, "RAYCASTING");
+  boidFolder.add(boidParams, "MAX_VELOCITY");
 
   // const buttonFolder = gui.addFolder("Lamp");
   // buttonFolder.add(lampParam, "lampOn");

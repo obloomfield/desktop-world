@@ -113,7 +113,12 @@ export default class Boid {
     // console.log(this.geom);
     // console.log(this.geom.isBufferGeometry);
 
-    if (elapsed % 50 === 0) {
+    // console.log(elapsed);
+    if (
+      boidParams.RAYCASTING &&
+      Math.round(elapsed) % boidParams.RAYCAST_SEC_DELAY === 0
+    ) {
+      console.log("ran this...");
       var vert = new THREE.Vector3().fromBufferAttribute(
         this.geom.attributes.position,
         0
@@ -123,7 +128,10 @@ export default class Boid {
       var raycast = new THREE.Raycaster(origin, dir_vect.clone().normalize());
 
       var collisions = raycast.intersectObjects(obstacles);
-      if (collisions.length > 0 && collisions[0].distance < 100) {
+      if (
+        collisions.length > 0 &&
+        collisions[0].distance < boidParams.RAYCAST_MAX_DIST
+      ) {
         for (let i = 0; i < sphereRays.length; i++) {
           const dir = sphereRays[i];
           raycast = new THREE.Raycaster(origin, dir, 0, boidParams.VISION_MAX);

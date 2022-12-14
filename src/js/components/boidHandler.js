@@ -30,6 +30,9 @@ export var boidParams = new (function () {
   this.TARGETING_ERROR = 10;
   this.TARGETING_FORGET_CNT = 200; // how many frames required for the boid to forget its previous targeting...
   this.FLICKER = true;
+  this.RAYCASTING = false;
+  this.RAYCAST_SEC_DELAY = 1;
+  this.RAYCAST_MAX_DIST = 500;
 })();
 
 function azimuthal(inclination, azimuth) {
