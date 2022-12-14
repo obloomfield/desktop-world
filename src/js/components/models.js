@@ -274,4 +274,5 @@ export async function addModels() {
   o2.layers.enable(1);
   o.layers.enable(1);
   SCENEDATA.scene.add(o2);
+  o.renderOrder = 0.5;
 }
