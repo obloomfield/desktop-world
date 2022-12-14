@@ -358,7 +358,7 @@ export class FloatingIsland {
     const locs = [];
     for (var i = 0; i < norms.length; i += 3) {
       if (norms[i + 2] > 0.9 && verts[i + 2] < -10) {
-        if (Math.random() > 0.95) {
+        if (Math.random() > 0.97) {
           locs.push(i);
         }
       }
