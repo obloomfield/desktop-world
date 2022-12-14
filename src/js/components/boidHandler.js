@@ -34,7 +34,7 @@ export var boidParams = new (function () {
   this.RAYCAST_SEC_DELAY = 1;
   this.RAYCAST_MAX_DIST = 500;
   this.NORMAL_EMISSIVE = 0xffffff;
-  this.BLOOM_EMISSIVE = 0xdaa520;
+  this.BLOOM_EMISSIVE = 0xeed490; //0xdaa520;
 })();
 
 function azimuthal(inclination, azimuth) {

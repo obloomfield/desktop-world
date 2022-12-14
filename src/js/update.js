@@ -35,7 +35,7 @@ function update() {
   //   buttonState = lampParam.lampOn
   // }
 
-  // updateParticleSystem(delta);
+  updateParticleSystem(delta);
 
   // updateSun();
 
