@@ -44,7 +44,7 @@ function buildCloud(size, height, pos, rotationY) {
   tuft1.translate(-2.0 * size, height, 0);
 
   const tuft2 = new THREE.SphereGeometry(1.5 * size, 7, 8);
-  tuft2.translate(2.0 * size , height, 0);
+  tuft2.translate(2.0 * size, height, 0);
 
   const tuft3 = new THREE.SphereGeometry(2.0 * size, 7, 8);
   tuft3.translate(0, height, 0);
@@ -57,7 +57,7 @@ function buildCloud(size, height, pos, rotationY) {
     verts[i + 1] = Math.max(verts[i + 1], bottom);
   }
   geo.rotateY(rotationY);
-  geo.translate(pos.x, 0, pos.z)
+  geo.translate(pos.x, 0, pos.z);
   geo.attributes.position.needsUpdate = true;
   geo.computeVertexNormals();
 
@@ -77,7 +77,7 @@ function buildCloud(size, height, pos, rotationY) {
 
   clouds.push(cloud);
   geos.push(geo);
-  bobbing.push(THREE.MathUtils.randFloatSpread(5, 10))
+  bobbing.push(THREE.MathUtils.randFloatSpread(5, 10));
   SCENEDATA.scene.add(cloud);
 }
 

@@ -325,8 +325,7 @@ export const islandMaterial = function () { return new THREE.ShaderMaterial({
     uBlue: {
       type: "c",
       value: STANDARD_PALLETE.water,
-
-    }
+    },
   },
   vertexShader: ISLAND_VERTEX_SHADER,
   fragmentShader: ISLAND_FRAGMENT_SHADER,
