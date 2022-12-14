@@ -66,11 +66,22 @@ export function updateButton() {
     SCENEDATA.get("button").translateY(-10);
     SCENEDATA.get("lightCone").visible = true;
     SCENEDATA.get("spotlight").intensity = 1.0;
+    SCENEDATA.get("pointlight").intensity = 0.2;
   } else {
     SCENEDATA.get("button").translateY(10);
     SCENEDATA.get("lightCone").visible = false;
-    SCENEDATA.get("spotlight").intensity = 0.2;
+    SCENEDATA.get("spotlight").intensity = 0.0;
+    SCENEDATA.get("pointlight").intensity = 0.1;
   }
+}
+
+function setObjShadow(obj) {
+  obj.traverse( function( node ) { 
+    if ( node instanceof THREE.Mesh ) { 
+      node.castShadow = true; 
+      node.receiveShadow = true;
+    } 
+  } );
 }
 
 export async function addModels() {
@@ -92,13 +103,14 @@ export async function addModels() {
     "public/models/toonDesk.obj"
   );
   const deskObj = desk[0];
+  setObjShadow(deskObj);
   console.log(deskObj);
 
   deskObj.scale.set(5000, 5000, 5000);
-  deskObj.translateY(-2400);
+  deskObj.translateY(-2475);
   deskObj.translateZ(-1000);
   deskObj.translateX(1000);
-  deskObj.castShadow = true;
+
 
   // const desk = await load_model("public/models/simple_dirty_desk.glb", "desk");
   // desk.scale.set(2000,2000,2000);
@@ -115,14 +127,17 @@ export async function addModels() {
     "public/models/toonLamp.obj"
   );
   const lampObj = lamp[0];
+  setObjShadow(lampObj);
+
   console.log(lampObj);
   lampObj.scale.set(2500, 2500, 2500);
 
   lampObj.rotateY(Math.PI / 4);
 
   lampObj.translateX(-10300);
-  lampObj.translateY(-2450);
+  lampObj.translateY(-2550);
   lampObj.translateZ(-600);
+  lampObj.castShadow = true;
   // lampObj.translateZ(3000);
 
   SCENEDATA.add("lamp", lampObj);
@@ -135,7 +150,7 @@ export async function addModels() {
   cork.scale.set(100, 100, 100);
   cork.translateY(450);
   cork.translateX(300);
-  cork.rotateZ(-Math.PI / 5);
+  cork.rotateZ(-Math.PI / 5.75);
   SCENEDATA.add("cork", cork);
 
   const buttonChamfergeometry = new THREE.TorusGeometry(50, 15, 3, 100);
@@ -147,7 +162,7 @@ export async function addModels() {
     buttonChamfermaterial
   );
   buttonChamferTorus.translateX(-1620);
-  buttonChamferTorus.translateY(-395);
+  buttonChamferTorus.translateY(-495);
   buttonChamferTorus.translateZ(-110);
   buttonChamferTorus.rotateX(Math.PI / 2);
   SCENEDATA.add("buttonChamfer", buttonChamferTorus);
@@ -156,7 +171,7 @@ export async function addModels() {
   const buttonMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff });
   const buttonCylinder = new THREE.Mesh(buttonGeometry, buttonMaterial);
   buttonCylinder.translateX(-1620);
-  buttonCylinder.translateY(-400);
+  buttonCylinder.translateY(-500);
   buttonCylinder.translateZ(-110);
   buttonCylinder.layers.enable(1);
   SCENEDATA.add("button", buttonCylinder);
@@ -187,7 +202,9 @@ export async function addModels() {
 
   const floorGeometry = new THREE.BoxGeometry(6000, 500, 6000);
 
-  const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xc3ada2 });
+  const floorMaterial = new THREE.MeshStandardMaterial({ 
+    color: 0xc3ada2, 
+  });
   const floor = new THREE.Mesh(floorGeometry, floorMaterial);
 
   floor.translateY(-2400);
@@ -234,12 +251,13 @@ export async function addModels() {
 
   let o = new THREE.Mesh(lightCone, material2);
   o.translateX(-0);
-  o.translateY(170);
+  o.translateY(70);
   o.translateZ(-100);
   o.rotateZ(Math.PI / 2.7);
 
   o.layers.enable(1);
 
+  // o.castShadow = true;
   SCENEDATA.add("lightCone", o);
 
   const waterGeometry = new THREE.SphereGeometry(
@@ -252,6 +270,7 @@ export async function addModels() {
     Math.PI
   );
   let o2 = new THREE.Mesh(waterGeometry, material);
+  o2.castShadow = true;
 
   o2.layers.enable(1);
   o.layers.enable(1);

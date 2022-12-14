@@ -62,7 +62,7 @@ export class SCENEDATA {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.WIDTH, this.HEIGHT);
     this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFShadowMap;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.body.appendChild(this.renderer.domElement);
   }
 

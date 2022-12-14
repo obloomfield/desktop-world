@@ -429,7 +429,7 @@ export class FloatingIsland {
     // var treeGeo = new THREE.BufferGeometry();
 
     const treeOBJ = await this.loadAlienTree();
-    treeOBJ.castShadow = true;
+    // treeOBJ.castShadow = true;
     
     console.log("TREE OBJ", treeOBJ);
 
@@ -476,8 +476,8 @@ export class FloatingIsland {
     });
 
     var terrain = new THREE.Mesh(merged, islandMaterial());
-    terrain.castShadow = true;
-    terrain.receiveShadow = true;
+    // terrain.castShadow = true;
+    // terrain.receiveShadow = true;
 
     terrain.rotation.x = -Math.PI / 2;
     terrain.translateX(x);
