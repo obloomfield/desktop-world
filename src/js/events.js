@@ -3,6 +3,7 @@ import { bloomParam } from "./components/bloom";
 import { lampParam, updateButton } from "./components/models";
 import { modifyTerrain } from "./components/terrain";
 import { SCENEDATA } from "./setup";
+import { updateClickedWater } from "./components/water";
 
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
@@ -19,6 +20,7 @@ export function setupEvents() {
   // };
   SCENEDATA.get("water_top").callback = function (intersect) {
     console.log("clicked the water!");
+    updateClickedWater(intersect);
     modifyTerrain(intersect.object, intersect, SCENEDATA.scene);
   };
   SCENEDATA.get("button").callback = function () {

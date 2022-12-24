@@ -127,3 +127,7 @@ export function buildWater2() {
   // o2.layers.enable(1);
   SCENEDATA.add("water_bowl", o2);
 }
+
+export function updateClickedWater(intersect) {
+  intersect.object.material.color.value = new THREE.Color("red");
+}
