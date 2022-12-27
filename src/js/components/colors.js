@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { SCENEDATA } from "../setup";
-import { lampParam } from "./models";
-import { DAY_TEXTURE, NIGHT_TEXTURE } from "./terrain";
+import { SCENEDATA } from "../setup.js";
+import { lampParam } from "./models.js";
+import { DAY_TEXTURE, NIGHT_TEXTURE } from "./terrain.js";
 
 export const STANDARD_PALLETE = {
   water: new THREE.Color(0x2794cf), //baby blueish

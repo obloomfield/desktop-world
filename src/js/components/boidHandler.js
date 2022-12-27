@@ -1,8 +1,8 @@
 import * as THREE from "three";
-import { SCENEDATA } from "../setup";
-import { terrainParams } from "./terrain";
+import { SCENEDATA } from "../setup.js";
+import { terrainParams } from "./terrain.js";
 
-import Boid from "./boid";
+import Boid from "./boid.js";
 
 export var sphereRays = [];
 

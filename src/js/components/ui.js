@@ -1,14 +1,11 @@
 import { GUI } from "dat.gui";
 import Stats from "stats.js";
-import { SCENEDATA } from "../setup";
-import { bloomParam } from "./bloom";
-import { boidParams } from "./boidHandler";
-import { lightParams, sunParams } from "./lighting";
-import { lampParam } from "./models";
-import { fireflyParams } from "./particles";
-import { perlinParams } from "./perlin";
-import { terrainParams } from "./terrain";
-import { waterParams } from "./water";
+import { SCENEDATA } from "../setup.js";
+import { boidParams } from "./boidHandler.js";
+import { fireflyParams } from "./particles.js";
+import { perlinParams } from "./perlin.js";
+import { terrainParams } from "./terrain.js";
+import { waterParams } from "./water.js";
 
 export var stats = new Stats();
 

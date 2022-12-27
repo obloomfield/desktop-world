@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { SCENEDATA } from "../setup";
+import { SCENEDATA } from "../setup.js";
 
 export function addParticleSystem(x,y,z) {
     SCENEDATA.particleSystem = new ParticleSystem({

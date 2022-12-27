@@ -4,7 +4,7 @@ import {
   randomStartPos,
   randomVelocity,
   sphereRays,
-} from "./boidHandler";
+} from "./boidHandler.js";
 
 // inspired by the Sebastian Lague implementation: https://www.youtube.com/watch?v=bqtqltqcQhw
 export default class Boid {

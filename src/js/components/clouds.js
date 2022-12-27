@@ -1,11 +1,8 @@
 import * as THREE from "three";
-import { Scene, Vector3 } from "three";
 
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
-import { BufferGeometry, Object3D } from "three";
-
-import { SCENEDATA } from "../setup";
+import { SCENEDATA } from "../setup.js";
 
 const map = (val, smin, smax, emin, emax) =>
   ((emax - emin) * (val - smin)) / (smax - smin) + emin;

@@ -1,3 +1,3 @@
-import { SCENEDATA } from "./setup";
+import { SCENEDATA } from "./setup.js";
 
 SCENEDATA.setup();

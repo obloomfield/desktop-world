@@ -1,20 +1,16 @@
 import * as THREE from "three";
 
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { setupBloom } from "./components/bloom";
-import { setupBoids } from "./components/boidHandler";
-import { buildClouds, makeRain } from "./components/clouds";
-import { addIslands } from "./components/island";
-import { addLights } from "./components/lighting";
-import { addModels } from "./components/models";
-import { createClusters } from "./components/particles";
-import { addParticleSystem } from "./components/particleSystem";
-import { addSky } from "./components/sky";
-import { addTerrain, updateTerrain } from "./components/terrain";
-import { makeGUI, makeStats } from "./components/ui";
-import { buildWater2 } from "./components/water";
-import { setupEvents } from "./events";
-import { loop } from "./update";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { setupBloom } from "./components/bloom.js";
+import { setupBoids } from "./components/boidHandler.js";
+import { buildClouds, makeRain } from "./components/clouds.js";
+import { addIslands } from "./components/island.js";
+import { addLights } from "./components/lighting.js";
+import { addModels } from "./components/models.js";
+import { addTerrain, updateTerrain } from "./components/terrain.js";
+import { buildWater2 } from "./components/water.js";
+import { setupEvents } from "./events.js";
+import { loop } from "./update.js";
 
 export class SCENEDATA {
   static WIDTH;

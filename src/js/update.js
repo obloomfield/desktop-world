@@ -1,17 +1,13 @@
 import * as THREE from "three";
-import { bloomParam, renderBloom } from "./components/bloom";
-import { updateClouds, updateWeather } from "./components/clouds";
-import { updateColors } from "./components/colors";
-import { updateIslands } from "./components/island";
-import { updateSun } from "./components/lighting";
-import { lampParam, updateButton } from "./components/models";
-import { updateParticles } from "./components/particles";
-import { updateParticleSystem } from "./components/particleSystem";
-import { perlinParams } from "./components/perlin";
-import { terrainParams, updateTerrain } from "./components/terrain";
-import { stats } from "./components/ui";
-import { updateWater2 } from "./components/water";
-import { SCENEDATA } from "./setup";
+import { bloomParam, renderBloom } from "./components/bloom.js";
+import { updateClouds, updateWeather } from "./components/clouds.js";
+import { updateColors } from "./components/colors.js";
+import { updateParticleSystem } from "./components/particleSystem.js";
+import { perlinParams } from "./components/perlin.js";
+import { terrainParams, updateTerrain } from "./components/terrain.js";
+import { stats } from "./components/ui.js";
+import { updateWater2 } from "./components/water.js";
+import { SCENEDATA } from "./setup.js";
 
 var clock = new THREE.Clock();
 var times = [0, Math.PI / 3, -Math.PI / 4, Math.PI / 6, Math.PI / 5];

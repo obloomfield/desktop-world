@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { SCENEDATA } from "../setup";
+import { SCENEDATA } from "../setup.js";
 
 var particles = [];
 var pLights = [];

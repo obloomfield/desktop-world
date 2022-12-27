@@ -1,8 +1,8 @@
 import * as THREE from "three";
-import { bloomParam } from "./components/bloom";
-import { lampParam, updateButton } from "./components/models";
-import { modifyTerrain } from "./components/terrain";
-import { SCENEDATA } from "./setup";
+import { bloomParam } from "./components/bloom.js";
+import { lampParam, updateButton } from "./components/models.js";
+import { modifyTerrain } from "./components/terrain.js";
+import { SCENEDATA } from "./setup.js";
 
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();

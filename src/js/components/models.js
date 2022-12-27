@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { TetrahedronGeometry } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-import { SCENEDATA } from "../setup";
+import { SCENEDATA } from "../setup.js";
 
 const loader = new GLTFLoader();
 

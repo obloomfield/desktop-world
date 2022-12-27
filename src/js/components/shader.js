@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { ShaderMaterial } from "three";
 
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
-import { STANDARD_PALLETE } from "./colors";
+import { STANDARD_PALLETE } from "./colors.js";
 
 const STANDARD_VERTEX_SHADER = `
 

@@ -1,7 +1,5 @@
 import * as THREE from "three";
 
-import { SCENEDATA } from "../setup";
-
 export function addSky() {
   var back = new THREE.SphereGeometry(
     500,

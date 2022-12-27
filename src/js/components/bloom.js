@@ -1,12 +1,11 @@
 import * as THREE from "three";
 
-import { SCENEDATA } from "../setup";
+import { SCENEDATA } from "../setup.js";
 
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
-import { bloomPass } from "./shader";
+import { bloomPass } from "./shader.js";
 
 const ENTIRE_SCENE = 0,
   BLOOM_SCENE = 1;

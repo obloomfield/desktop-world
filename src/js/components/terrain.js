@@ -1,10 +1,8 @@
 import * as THREE from "three";
-import { perlin, perlinParams } from "./perlin";
+import { perlin, perlinParams } from "./perlin.js";
 
-import { SCENEDATA } from "../setup";
-import { sampleTrees } from "./island";
-import { loadObj } from "./models";
-import { circle_constraint_material } from "./shader";
+import { SCENEDATA } from "../setup.js";
+import { circle_constraint_material } from "./shader.js";
 
 export const DAY_TEXTURE = new THREE.TextureLoader().load(
   "/models/daytime2.png"

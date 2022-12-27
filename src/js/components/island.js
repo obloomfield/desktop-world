@@ -1,16 +1,14 @@
-import NormalDistribuion from "normal-distribution";
 import { createNoise2D } from "simplex-noise";
 import * as THREE from "three";
 import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
 // import { GrahamScan } from "../graham_scan_TEST.js";
 import "../../public/style.css";
 
-import { BufferGeometry, Object3D, Vector2 } from "three";
-import { SCENEDATA } from "../setup";
-import { loadObj } from "./models";
-import { ParticleSystem } from "./particleSystem";
-import { perlin, perlinParams } from "./perlin";
-import { islandMaterial } from "./shader";
+import { Object3D } from "three";
+import { SCENEDATA } from "../setup.js";
+import { loadObj } from "./models.js";
+import { ParticleSystem } from "./particleSystem.js";
+import { islandMaterial } from "./shader.js";
 
 function euclideanDistance(p1, p2) {
   return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));

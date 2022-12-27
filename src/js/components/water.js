@@ -1,8 +1,6 @@
 import * as THREE from "three";
-import { Vector3 } from "three";
 import { Water } from "three/examples/jsm/objects/Water.js";
-import { sunParams } from "./lighting";
-import { circle_constraint_material } from "./shader";
+import { circle_constraint_material } from "./shader.js";
 
 import { SCENEDATA } from "../setup";
 

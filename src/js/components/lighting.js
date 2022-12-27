@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { SCENEDATA } from "../setup";
+import { SCENEDATA } from "../setup.js";
 
 export var lightParams = new (function () {
   this.HEMI_LIGHT_INTENSITY = 0.2;
