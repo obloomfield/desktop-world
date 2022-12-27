@@ -2,6 +2,8 @@
 
 # procedural-forest
 
+[View on web here](https://desktop-world.netlify.app/)
+
 Final project for CSCI2230 - Computer Graphics. A collaboration project by Smriti Vaidyanathan, Krishi Saripalli, Neil Xu, and Orion Bloomfield.
 
 Built using THREE.js ~ involves custom shaders, procedural terrain, particle systems, boids, selective bloom, and more!
