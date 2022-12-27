@@ -20,7 +20,7 @@ export function buildWater() {
     textureWidth: 512,
     textureHeight: 512,
     waterNormals: new THREE.TextureLoader().load(
-      "public/waternormals.jpeg",
+      "./waternormals.jpeg",
       function (texture) {
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
       }
@@ -112,9 +112,7 @@ export function buildWater2() {
     side: THREE.FrontSide,
     emissive: new THREE.Color("blue"),
     emissiveIntensity: 0.2,
-    emissiveMap: new THREE.TextureLoader().load(
-      "/public/models/watergradient3.png"
-    ),
+    emissiveMap: new THREE.TextureLoader().load("/models/watergradient3.png"),
   });
   let o = new THREE.Mesh(
     g,

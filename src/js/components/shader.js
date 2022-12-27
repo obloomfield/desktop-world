@@ -291,7 +291,7 @@ export const circle_constraint_material = function (color, isTerrain) {
       },
       terrainTexture: {
         value: new THREE.TextureLoader().load(
-          "../../../public/models/daytime2.png"
+          "/models/daytime2.png"
         ),
       },
     },
@@ -311,12 +311,12 @@ export const islandMaterial = function () {
     uniforms: {
       islandTexture: {
         value: new THREE.TextureLoader().load(
-          "../../../public/models/daytime2.png"
+          "/models/daytime2.png"
         ),
       },
       islandStoneTexture: {
         value: new THREE.TextureLoader().load(
-          "../../../public/models/dirtTexture.png"
+          "/models/dirtTexture.png"
         ),
       },
       uGreen: {

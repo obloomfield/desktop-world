@@ -6,8 +6,12 @@ import { sampleTrees } from "./island";
 import { loadObj } from "./models";
 import { circle_constraint_material } from "./shader";
 
-export const DAY_TEXTURE = new THREE.TextureLoader().load("../../../public/models/daytime2.png");
-export const NIGHT_TEXTURE = new THREE.TextureLoader().load("../../../public/models/nightime2.png");
+export const DAY_TEXTURE = new THREE.TextureLoader().load(
+  "/models/daytime2.png"
+);
+export const NIGHT_TEXTURE = new THREE.TextureLoader().load(
+  "/models/nightime2.png"
+);
 
 function falloff(point, rad) {
   let x = point.length() / rad;
@@ -50,8 +54,13 @@ function sampleTreesTerrrain(geometry, prob) {
   const vert = [0, 0, 1];
   const locs = [];
   for (var i = 0; i < norms.length; i += 3) {
-    const vec = new THREE.Vector3(verts[i], verts[i+1], verts[i+2]);
-    if (vec.length() < terrainParams.RAD && norms[i + 2] > 0.8 && verts[i + 2] > 30 && verts[i+2] < 250) {
+    const vec = new THREE.Vector3(verts[i], verts[i + 1], verts[i + 2]);
+    if (
+      vec.length() < terrainParams.RAD &&
+      norms[i + 2] > 0.8 &&
+      verts[i + 2] > 30 &&
+      verts[i + 2] < 250
+    ) {
       if (Math.random() > prob) {
         locs.push(i);
       }
@@ -86,8 +95,8 @@ export function sampleTreesTerrain(terrain) {
     newTree.rotateOnAxis(rotAxis, THREE.MathUtils.randFloat(0, 2 * Math.PI));
     const scale = THREE.MathUtils.randFloat(1, 3);
     newTree.scale.set(scale, scale, scale);
-    
-    const treeLabel = ["terrainTree-",i].join("");
+
+    const treeLabel = ["terrainTree-", i].join("");
     if (SCENEDATA.objects.has(treeLabel)) {
       SCENEDATA.scene.remove(SCENEDATA.get(treeLabel));
       SCENEDATA.add(treeLabel, newTree);

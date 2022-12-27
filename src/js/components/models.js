@@ -98,10 +98,7 @@ export async function addModels() {
   // lamp.rotation.y = -Math.PI;
   // SCENEDATA.add("lamp", lamp);
 
-  const desk = await loadObj(
-    "public/models/toonDesk.mtl",
-    "public/models/toonDesk.obj"
-  );
+  const desk = await loadObj("/models/toonDesk.mtl", "/models/toonDesk.obj");
   const deskObj = desk[0];
   setObjShadow(deskObj);
   // console.log(deskObj);
@@ -128,10 +125,7 @@ export async function addModels() {
   // noteObj.translateX(-5000);
   // SCENEDATA.add("noteObj", noteObj);
 
-  const books = await loadObj(
-    "public/models/books.mtl",
-    "public/models/books.obj"
-  );
+  const books = await loadObj("/models/books.mtl", "/models/books.obj");
   const bookObj = books[0];
   setObjShadow(bookObj);
   bookObj.scale.set(750, 750, 750);
@@ -140,10 +134,9 @@ export async function addModels() {
   bookObj.translateX(-2200);
   SCENEDATA.add("books", bookObj);
 
-
   const lamp = await loadObj(
-    "public/models/toonLamp.mtl",
-    "public/models/toonLamp.obj"
+    "/models/toonLamp.mtl",
+    "/models/toonLamp.obj"
   );
   const lampObj = lamp[0];
   setObjShadow(lampObj);
@@ -161,10 +154,7 @@ export async function addModels() {
 
   SCENEDATA.add("lamp", lampObj);
 
-  const corkModels = await loadObj(
-    "public/models/flask.mtl",
-    "public/models/flask.obj"
-  );
+  const corkModels = await loadObj("/models/flask.mtl", "/models/flask.obj");
   const cork = corkModels[0];
   cork.scale.set(100, 100, 100);
   cork.translateY(450);
@@ -174,7 +164,7 @@ export async function addModels() {
 
   const buttonChamfergeometry = new THREE.TorusGeometry(50, 15, 3, 100);
   const buttonChamfermaterial = new THREE.MeshStandardMaterial({
-    color: 0xBFBFBF,
+    color: 0xbfbfbf,
   });
   const buttonChamferTorus = new THREE.Mesh(
     buttonChamfergeometry,
@@ -187,7 +177,7 @@ export async function addModels() {
   SCENEDATA.add("buttonChamfer", buttonChamferTorus);
 
   const buttonGeometry = new THREE.CylinderGeometry(50, 50, 70, 40);
-  const buttonMaterial = new THREE.MeshStandardMaterial({ color: 0xD599E8 });
+  const buttonMaterial = new THREE.MeshStandardMaterial({ color: 0xd599e8 });
   const buttonCylinder = new THREE.Mesh(buttonGeometry, buttonMaterial);
   buttonCylinder.translateX(-1620);
   buttonCylinder.translateY(-500);
@@ -265,7 +255,7 @@ export async function addModels() {
     transparent: true,
     wireframe: false,
     emissiveIntensity: 0,
-    alphaMap: alphaloader.load("/public/models/alphalightcone.png"),
+    alphaMap: alphaloader.load("/models/alphalightcone.png"),
   });
 
   let o = new THREE.Mesh(lightCone, material2);

@@ -82,7 +82,7 @@ function buildCloud(size, height, pos, rotationY) {
 }
 
 export function makeRain() {
-  const map = new THREE.TextureLoader().load("public/models/raindrop2.png");
+  const map = new THREE.TextureLoader().load("/models/raindrop2.png");
 
   raining = Math.random() <= 0.5;
   for (let i = 0; i < clouds.length; i++) {
