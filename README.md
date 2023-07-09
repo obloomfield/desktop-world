@@ -10,6 +10,6 @@ Final project for CSCI2230 - Computer Graphics. A collaboration project by Smrit
 
 Built using THREE.js ~ involves custom shaders, procedural terrain, particle systems, boids, selective bloom, and more!
 
-# setup
+# setup 
 
 To set up, run `npm install` then `npm run dev`.
